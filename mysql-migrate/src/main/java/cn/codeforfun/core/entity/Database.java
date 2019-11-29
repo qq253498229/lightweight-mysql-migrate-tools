@@ -1,4 +1,4 @@
-package cn.codeforfun.database;
+package cn.codeforfun.core.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
