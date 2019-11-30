@@ -1,6 +1,6 @@
 package cn.codeforfun.config;
 
-import cn.codeforfun.core.properties.DatabaseProperties;
+import cn.codeforfun.migrate.core.properties.DatabaseProperties;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

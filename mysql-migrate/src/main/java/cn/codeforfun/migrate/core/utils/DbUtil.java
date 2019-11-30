@@ -1,7 +1,7 @@
-package cn.codeforfun.utils;
+package cn.codeforfun.migrate.core.utils;
 
-import cn.codeforfun.core.exception.DatabaseConnectException;
-import cn.codeforfun.core.exception.SqlExecuteException;
+import cn.codeforfun.migrate.core.exception.DatabaseConnectException;
+import cn.codeforfun.migrate.core.exception.SqlExecuteException;
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbutils.QueryRunner;

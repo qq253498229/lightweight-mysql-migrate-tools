@@ -1,7 +1,7 @@
-package cn.codeforfun.core;
+package cn.codeforfun.migrate.core;
 
-import cn.codeforfun.core.diff.DiffResult;
-import cn.codeforfun.core.entity.Database;
+import cn.codeforfun.migrate.core.diff.DiffResult;
+import cn.codeforfun.migrate.core.entity.Database;
 import org.junit.jupiter.api.Test;
 
 class MigrateTest {

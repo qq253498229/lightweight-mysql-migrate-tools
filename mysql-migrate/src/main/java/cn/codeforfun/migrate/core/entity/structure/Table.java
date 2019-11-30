@@ -1,7 +1,7 @@
-package cn.codeforfun.core.entity.structure;
+package cn.codeforfun.migrate.core.entity.structure;
 
-import cn.codeforfun.utils.DbUtil;
-import cn.codeforfun.utils.StringUtil;
+import cn.codeforfun.migrate.core.utils.DbUtil;
+import cn.codeforfun.migrate.core.utils.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.ObjectUtils;
@@ -24,6 +24,7 @@ public class Table implements Serializable {
     private static final long serialVersionUID = 411108952654575238L;
 
     public static final String TABLE_REGEX = "\\s*create\\s+table\\s+(?<name>\\S+)[^(]+\\((?<columnSql>[\\s\\S]+)\\)\\s*(?:engine=(?<engine>\\S+))?\\s*(?:default charset=(?<charset>\\S+))?\\s*(?:collate=(?<collate>\\S+))?\\s*(?:comment=(?<comment>\\S+))?";
+
     private String name;
     private String comment;
     private String engine;

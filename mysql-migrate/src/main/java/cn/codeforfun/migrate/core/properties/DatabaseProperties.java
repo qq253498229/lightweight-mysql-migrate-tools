@@ -1,4 +1,4 @@
-package cn.codeforfun.core.properties;
+package cn.codeforfun.migrate.core.properties;
 
 import lombok.Getter;
 import lombok.Setter;

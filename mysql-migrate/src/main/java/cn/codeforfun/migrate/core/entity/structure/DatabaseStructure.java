@@ -1,9 +1,9 @@
-package cn.codeforfun.core.entity.structure;
+package cn.codeforfun.migrate.core.entity.structure;
 
-import cn.codeforfun.core.entity.Database;
-import cn.codeforfun.core.exception.DatabaseReadException;
-import cn.codeforfun.utils.DbUtil;
-import cn.codeforfun.utils.StringUtil;
+import cn.codeforfun.migrate.core.entity.Database;
+import cn.codeforfun.migrate.core.exception.DatabaseReadException;
+import cn.codeforfun.migrate.core.utils.DbUtil;
+import cn.codeforfun.migrate.core.utils.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +33,8 @@ public class DatabaseStructure {
 
     private Connection connection;
 
+    private static final Pattern PATTERN = Pattern.compile("\\s*create\\s+database\\s+(?<name>\\S+)+[\\s\\S]+character\\s+set\\s+(?<character>\\S+)\\s+collate\\s+(?<collate>\\S+)", Pattern.CASE_INSENSITIVE);
+
     public void config(Database database) {
         this.database = database;
         this.connection = DbUtil.getConnection(database.getUrl(), database.getUsername(), database.getPassword());
@@ -57,9 +59,7 @@ public class DatabaseStructure {
     }
 
     private void match(String structureSql) {
-        String regex = "\\s*create\\s+database\\s+(?<name>\\S+)+[\\s\\S]+character\\s+set\\s+(?<character>\\S+)\\s+collate\\s+(?<collate>\\S+)";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(structureSql);
+        Matcher matcher = PATTERN.matcher(structureSql);
         if (matcher.find()) {
             this.name = StringUtil.deleteDot(matcher.group("name"));
             this.character = matcher.group("character");

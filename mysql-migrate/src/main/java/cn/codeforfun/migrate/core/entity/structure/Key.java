@@ -1,4 +1,4 @@
-package cn.codeforfun.core.entity.structure;
+package cn.codeforfun.migrate.core.entity.structure;
 
 import lombok.Getter;
 import lombok.Setter;

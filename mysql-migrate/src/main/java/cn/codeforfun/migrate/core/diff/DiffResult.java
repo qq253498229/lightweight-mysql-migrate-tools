@@ -1,4 +1,4 @@
-package cn.codeforfun.core.diff;
+package cn.codeforfun.migrate.core.diff;
 
 import lombok.Getter;
 import lombok.Setter;

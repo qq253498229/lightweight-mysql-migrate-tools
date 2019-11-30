@@ -1,8 +1,8 @@
-package cn.codeforfun.core;
+package cn.codeforfun.migrate.core;
 
-import cn.codeforfun.core.diff.DiffResult;
-import cn.codeforfun.core.entity.Database;
-import cn.codeforfun.core.entity.structure.DatabaseStructure;
+import cn.codeforfun.migrate.core.diff.DiffResult;
+import cn.codeforfun.migrate.core.entity.Database;
+import cn.codeforfun.migrate.core.entity.structure.DatabaseStructure;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

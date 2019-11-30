@@ -1,6 +1,6 @@
-package cn.codeforfun.core.entity.structure;
+package cn.codeforfun.migrate.core.entity.structure;
 
-import cn.codeforfun.utils.StringUtil;
+import cn.codeforfun.migrate.core.utils.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.ObjectUtils;
@@ -26,7 +26,6 @@ public class Column {
     private Boolean autoIncrement;
     private Boolean unique;
     private Boolean primaryKey;
-
 
     private static final Pattern PATTERN_ALL = Pattern.compile("(?<name>\\S+)\\s*(?<type>\\w+)+(?:\\((?<length>\\d+)\\))?\\s*(?<notNull>not null)?\\s*(?:default\\s+(?<default>\\w+))?\\s*(?<autoIncrement>(?:auto_increment)+)?\\s*(?:comment\\s+(?<comment>\\S+))?.*(?:,|$)", Pattern.CASE_INSENSITIVE);
     private static final Pattern PATTERN_KEY = Pattern.compile("key(?!`)(?<!`)", Pattern.CASE_INSENSITIVE);

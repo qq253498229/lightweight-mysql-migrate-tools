@@ -1,4 +1,4 @@
-package cn.codeforfun.core.exception;
+package cn.codeforfun.migrate.core.exception;
 
 /**
  * @author wangbin

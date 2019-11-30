@@ -1,4 +1,4 @@
-package cn.codeforfun.core.entity;
+package cn.codeforfun.migrate.core.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +36,7 @@ public class Database implements Serializable {
         this.name = name;
         this.username = username;
         this.password = password;
+        this.url = getUrl();
     }
 
     public String getUrl() {
