@@ -74,16 +74,17 @@ class ConvertUtilTest {
                 "  `test_column` int(11) DEFAULT NULL COMMENT '测试字段备注',\n" +
                 "  PRIMARY KEY (`id`)\n" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='测试表备注'";
-        String regex = "(\\s*create\\s+table\\s+)(?<tableName>\\S+)[^(]*\\(\n" +
-                "(?<columnSql>[\\s\\S]+)\\n\\)" +
-                "[^)]+" +
-                "(engine=(?<tableEngine>\\S+)?)" +
-                "[\\s\\S]*" +
-                "(charset=(?<tableCharset>\\S+)?)" +
-                "[\\s\\S]*" +
-                "(collate=(?<tableCollate>\\S+)?)" +
-                "[\\s\\S]*" +
-                "(comment=(?<tableComment>.*?)?)$";
+        String regex = "^\\s*create\\s+table\\s+(?<tableName>\\S+)?[^()]*\\(" +
+                "(?<columnSql>[\\s\\S]+)" +
+                "\\)[\\s]+" +
+                "(engine=(?<tableEngine>\\S+))?" +
+                "[\\s]*" +
+                "(default charset=(?<tableCharset>\\S+))?" +
+                "[\\s]*" +
+                "(collate=(?<tableCollate>\\S+))?" +
+                "[\\s]*" +
+                "(comment=(?<tableComment>\\S+))?" +
+                "$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(sql);
         if (matcher.find()) {
