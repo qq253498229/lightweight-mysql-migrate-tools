@@ -1,19 +1,50 @@
 package cn.codeforfun.utils;
 
+import cn.codeforfun.core.exception.DatabaseConnectException;
+import cn.codeforfun.core.exception.SqlExecuteException;
 import com.alibaba.druid.pool.DruidDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 import javax.sql.DataSource;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author wangbin
  */
+@Slf4j
 public class DbUtil {
+    public static Connection getConnection(String url, String username, String password) {
+        Connection connection;
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            log.error("数据库连接失败,url:{},user:{},password:{}", url, username, password);
+            throw new DatabaseConnectException("数据库连接失败");
+        }
+        return connection;
+    }
+
+    public static List<String> executeSql(Connection connection, String sql) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            List<String> tableNameList = new ArrayList<>();
+            while (rs.next()) {
+                int columnCount = rs.getMetaData().getColumnCount();
+                String tableName = rs.getString(columnCount);
+                tableNameList.add(tableName);
+            }
+            return tableNameList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            throw new SqlExecuteException(e.getMessage());
+        }
+    }
 
     public static DataSource getDataSource(String url, String username, String password) {
         DruidDataSource dataSource = new DruidDataSource();

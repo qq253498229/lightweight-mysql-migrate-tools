@@ -1,5 +1,7 @@
 package cn.codeforfun.utils;
 
+import org.springframework.util.ObjectUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,15 +17,13 @@ public class StringUtil {
 
     public static String getStringByPattern(String str, String prefix, String suffix) {
         List<String> listMatches = getList(str, prefix, suffix);
-        if (listMatches.size() == 1) {
-            return listMatches.get(0);
-        } else if (listMatches.size() == 0) {
+        if (ObjectUtils.isEmpty(listMatches) || ObjectUtils.isEmpty(listMatches.get(0))) {
             return null;
         }
-        throw new RuntimeException("匹配失败");
+        return listMatches.get(0);
     }
 
-    private static List<String> getList(String str, String prefix, String suffix) {
+    public static List<String> getList(String str, String prefix, String suffix) {
         Pattern pattern = Pattern.compile("(" + prefix + ")(.*?)(" + suffix + ")");
         Matcher matcher = pattern.matcher(str);
         List<String> listMatches = new ArrayList<>();

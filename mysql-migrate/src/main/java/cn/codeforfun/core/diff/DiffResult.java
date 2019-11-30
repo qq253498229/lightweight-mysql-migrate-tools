@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DiffResult {
-    public String getString() {
+    public String getSQL() {
         return null;
     }
 }

@@ -1,9 +1,9 @@
 package cn.codeforfun.core;
 
-import cn.codeforfun.core.entity.Database;
 import cn.codeforfun.core.diff.DiffResult;
+import cn.codeforfun.core.entity.Database;
+import cn.codeforfun.core.entity.structure.DatabaseStructure;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @Slf4j
 public class Migrate {
     private Database sourceDatabase;
     private Database targetDatabase;
+
+    private Migrate() {
+    }
 
     public Migrate(Database targetDatabase) {
         this.targetDatabase = targetDatabase;
@@ -27,7 +29,7 @@ public class Migrate {
         this.targetDatabase = targetDatabase;
     }
 
-    public DiffResult diff(Database sourceDatabase, Database targetDatabase) {
+    public static DiffResult diff(Database sourceDatabase, Database targetDatabase) {
         if (sourceDatabase == null) {
             log.error("sourceDatabase 为空");
             throw new NullPointerException("sourceDatabase 不能为空");
@@ -38,9 +40,18 @@ public class Migrate {
             throw new NullPointerException("targetDatabase 不能为空");
         }
         log.debug("开始对比数据库");
+        return compare(sourceDatabase, targetDatabase);
+    }
 
+    private static DiffResult compare(Database sourceDatabase, Database targetDatabase) {
+        DatabaseStructure source = resolveDatabase(sourceDatabase);
+        DatabaseStructure target = resolveDatabase(targetDatabase);
+        return null;
+    }
 
-        log.debug("对比完成");
-        return new DiffResult();
+    private static DatabaseStructure resolveDatabase(Database database) {
+        DatabaseStructure databaseStructure = new DatabaseStructure();
+        databaseStructure.config(database);
+        return databaseStructure;
     }
 }
