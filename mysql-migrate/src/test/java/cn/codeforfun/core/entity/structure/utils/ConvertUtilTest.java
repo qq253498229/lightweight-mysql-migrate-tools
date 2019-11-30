@@ -57,17 +57,6 @@ class ConvertUtilTest {
     }
 
     @Test
-    void tableColumns() {
-        Pattern pattern = Pattern.compile("(\\(\\n)(.*?)(\\n\\))");
-        Matcher matcher = pattern.matcher(TABLE_STRUCTURE);
-        List<String> listMatches = new ArrayList<>();
-        while (matcher.find()) {
-            listMatches.add(matcher.group(2));
-        }
-        assertTrue(listMatches.size() > 0);
-    }
-
-    @Test
     public void test1() {
         String sql = "CREATE TABLE `test_table` (\n" +
                 "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
