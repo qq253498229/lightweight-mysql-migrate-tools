@@ -46,7 +46,7 @@ public class Migrate {
     private static DiffResult compare(Database sourceDatabase, Database targetDatabase) {
         DatabaseStructure source = resolveDatabase(sourceDatabase);
         DatabaseStructure target = resolveDatabase(targetDatabase);
-        return null;
+        return new DiffResult().compare(source, target);
     }
 
     private static DatabaseStructure resolveDatabase(Database database) {

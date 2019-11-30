@@ -9,9 +9,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,13 +42,7 @@ public class DatabaseStructure {
 
     private void configDatabaseStructure() {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("show create database " + database.getName());
-            String createDatabaseSql = null;
-            if (rs.next()) {
-                int columnCount = rs.getMetaData().getColumnCount();
-                createDatabaseSql = rs.getString(columnCount);
-            }
+            String createDatabaseSql = DbUtil.getDatabaseStructureSql(this.connection, database.getName());
             match(createDatabaseSql);
         } catch (SQLException e) {
             log.error("读取数据库失败,url:{},user:{},password:{}", database.getUrl(), database.getUsername(), database.getPassword());

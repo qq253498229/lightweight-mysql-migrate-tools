@@ -17,6 +17,19 @@ import java.util.List;
  */
 @Slf4j
 public class DbUtil {
+    public static final String DATABASE_STRUCTURE_SQL_NAME = "sql/database_structure.sql";
+
+    public static String getDatabaseStructureSql(Connection connection, String databaseName) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("show create database " + databaseName);
+        String createDatabaseSql = null;
+        if (rs.next()) {
+            int columnCount = rs.getMetaData().getColumnCount();
+            createDatabaseSql = rs.getString(columnCount);
+        }
+        return createDatabaseSql;
+    }
+
     public static Connection getConnection(String url, String username, String password) {
         Connection connection;
         try {
