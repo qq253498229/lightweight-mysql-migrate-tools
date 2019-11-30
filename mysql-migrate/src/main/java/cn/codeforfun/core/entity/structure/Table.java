@@ -1,7 +1,7 @@
 package cn.codeforfun.core.entity.structure;
 
-import cn.codeforfun.core.entity.structure.utils.ConvertUtil;
 import cn.codeforfun.utils.DbUtil;
+import cn.codeforfun.utils.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.ObjectUtils;
@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 表定义
@@ -20,6 +22,8 @@ import java.util.List;
 @Setter
 public class Table implements Serializable {
     private static final long serialVersionUID = 411108952654575238L;
+
+    public static final String TABLE_REGEX = "\\s*create\\s+table\\s+(?<name>\\S+)[^(]+\\((?<columnSql>[\\s\\S]+)\\)\\s*(?:engine=(?<engine>\\S+))?\\s*(?:default charset=(?<charset>\\S+))?\\s*(?:collate=(?<collate>\\S+))?\\s*(?:comment=(?<comment>\\S+))?";
     private String name;
     private String comment;
     private String engine;
@@ -37,15 +41,20 @@ public class Table implements Serializable {
         }
         List<Table> tableList = new ArrayList<>();
         for (String tableName : tableNameList) {
-            String tableStructure = DbUtil.executeSql(connection, "show create table " + tableName).get(0);
-            Table table = new Table();
-            table.setName(tableName);
-            table.setEngine(ConvertUtil.tableEngine(tableStructure));
-            table.setCharset(ConvertUtil.tableCharset(tableStructure));
-            table.setCollate(ConvertUtil.tableCollate(tableStructure));
-            table.setComment(ConvertUtil.tableComment(tableStructure));
-            table.setColumns(Column.configure(tableStructure));
-            tableList.add(table);
+            String structureSql = DbUtil.executeSql(connection, "show create table " + tableName).get(0);
+            Pattern pattern = Pattern.compile(TABLE_REGEX, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(structureSql);
+            if (matcher.find()) {
+                Table table = new Table();
+                table.setName(StringUtil.deleteDot(matcher.group("name")));
+                table.setEngine(matcher.group("engine"));
+                table.setCharset(matcher.group("charset"));
+                table.setCollate(matcher.group("collate"));
+                table.setComment(StringUtil.deleteDot(matcher.group("comment")));
+                table.setColumns(Column.configure(matcher.group("columnSql")));
+                tableList.add(table);
+            }
+
         }
         return tableList;
     }
