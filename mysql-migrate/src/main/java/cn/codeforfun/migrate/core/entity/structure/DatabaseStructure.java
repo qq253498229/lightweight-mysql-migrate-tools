@@ -1,18 +1,18 @@
 package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.entity.Database;
-import cn.codeforfun.migrate.core.exception.DatabaseReadException;
+import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
-import cn.codeforfun.migrate.core.utils.StringUtil;
+import cn.codeforfun.migrate.core.utils.FileUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 /**
  * @author wangbin
@@ -22,40 +22,32 @@ import java.util.regex.Pattern;
 @Slf4j
 public class DatabaseStructure {
     private Database database;
-
-    private List<Table> tables;
-
+    @DbUtilProperty("SCHEMA_NAME")
     private String name;
+    @DbUtilProperty("DEFAULT_CHARACTER_SET_NAME")
     private String character;
+    @DbUtilProperty("DEFAULT_COLLATION_NAME")
     private String collate;
+
+    private List<TableStructure> tables;
 
     private Connection connection;
 
-    private static final Pattern PATTERN = Pattern.compile("\\s*create\\s+database\\s+(?<name>\\S+)+[\\s\\S]+character\\s+set\\s+(?<character>\\S+)\\s+collate\\s+(?<collate>\\S+)", Pattern.CASE_INSENSITIVE);
-
-    public void config(Database database) {
+    public void configure(Database database) throws IOException, SQLException {
         this.database = database;
         this.connection = DbUtil.getConnection(database.getUrl(), database.getUsername(), database.getPassword());
-        configDatabaseStructure();
-        this.tables = Table.configTableStructure(connection);
+        configure();
     }
 
-    private void configDatabaseStructure() {
-        try {
-            String createDatabaseSql = DbUtil.getDatabaseStructureSql(this.connection, database.getName());
-            match(createDatabaseSql);
-        } catch (SQLException e) {
-            log.error("读取数据库失败,url:{},user:{},password:{}", database.getUrl(), database.getUsername(), database.getPassword());
-            throw new DatabaseReadException("读取数据库失败");
-        }
+    private void configure() throws IOException, SQLException {
+        String sql = FileUtil.getStringByClasspath("sql/database.sql");
+
+        DatabaseStructure bean = DbUtil.getBean(this.connection, sql, DatabaseStructure.class, this.database.getName());
+        Map<String, Object> structure = DbUtil.getDatabaseStructure(this.connection, this.database.getName());
+        this.name = (String) structure.get("SCHEMA_NAME");
+        this.character = (String) structure.get("DEFAULT_CHARACTER_SET_NAME");
+        this.collate = (String) structure.get("DEFAULT_COLLATION_NAME");
+        this.tables = TableStructure.configure(this.connection, this.name);
     }
 
-    private void match(String structureSql) {
-        Matcher matcher = PATTERN.matcher(structureSql);
-        if (matcher.find()) {
-            this.name = StringUtil.deleteDot(matcher.group("name"));
-            this.character = matcher.group("character");
-            this.collate = matcher.group("collate");
-        }
-    }
 }

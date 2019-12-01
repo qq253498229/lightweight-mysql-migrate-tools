@@ -3,7 +3,6 @@ package cn.codeforfun.migrate.core;
 import cn.codeforfun.migrate.core.entity.Database;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.junit.jupiter.api.Test;
@@ -28,9 +27,9 @@ public class SqlTest {
         Connection connection = DbUtil.getConnection(database.getUrl(), database.getUsername(), database.getPassword());
         QueryRunner qr = new QueryRunner();
         List<Map<String, Object>> list = qr.query(connection, sql, new MapListHandler(), "test_db");
-        for (Map<String, Object> param : list) {
-            //todo
-        }
-        System.out.println(new ObjectMapper().writeValueAsString(list));
+
+//        List<DatabaseDto> databaseDtoList = DatabaseDto.resolve(list);
+
+//        System.out.println(new ObjectMapper().writeValueAsString(databaseDtoList));
     }
 }

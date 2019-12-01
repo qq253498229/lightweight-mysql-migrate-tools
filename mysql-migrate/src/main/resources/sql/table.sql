@@ -1,0 +1,25 @@
+select TABLE_CATALOG,
+       TABLE_SCHEMA,
+       TABLE_NAME,
+       TABLE_TYPE,
+       ENGINE,
+       VERSION,
+       ROW_FORMAT,
+       TABLE_ROWS,
+       AVG_ROW_LENGTH,
+       DATA_LENGTH,
+       MAX_DATA_LENGTH,
+       INDEX_LENGTH,
+       DATA_FREE,
+       AUTO_INCREMENT,
+       CREATE_TIME,
+       UPDATE_TIME,
+       CHECK_TIME,
+       CHARACTER_SET_NAME,
+       TABLE_COLLATION,
+       CHECKSUM,
+       CREATE_OPTIONS,
+       TABLE_COMMENT
+from information_schema.TABLES
+         left join information_schema.COLLATION_CHARACTER_SET_APPLICABILITY on TABLE_COLLATION = COLLATION_NAME
+where TABLE_SCHEMA = ?

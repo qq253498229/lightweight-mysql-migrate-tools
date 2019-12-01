@@ -4,30 +4,59 @@ import cn.codeforfun.migrate.core.exception.DatabaseConnectException;
 import cn.codeforfun.migrate.core.exception.SqlExecuteException;
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.dbutils.BasicRowProcessor;
+import org.apache.commons.dbutils.BeanProcessor;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.MapHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wangbin
  */
 @Slf4j
 public class DbUtil {
-    public static final String DATABASE_STRUCTURE_SQL_NAME = "sql/database_structure.sql";
+    public static final String DATABASE_STRUCTURE_SQL_NAME = "sql/database.sql";
 
-    public static String getDatabaseStructureSql(Connection connection, String databaseName) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("show create database " + databaseName);
-        String createDatabaseSql = null;
-        if (rs.next()) {
-            int columnCount = rs.getMetaData().getColumnCount();
-            createDatabaseSql = rs.getString(columnCount);
-        }
-        return createDatabaseSql;
+    public static <T> List<T> getBeanList(Connection connection, String sql, Class<T> clazz) throws SQLException {
+        QueryRunner runner = new QueryRunner();
+        return runner.query(connection, sql, new BeanListHandler<T>(clazz));
+    }
+
+    public static <T> List<T> getBeanList(Connection connection, String sql, Class<T> clazz, Object... params) throws SQLException {
+        QueryRunner runner = new QueryRunner();
+        return runner.query(connection, sql, new BeanListHandler<T>(clazz), params);
+    }
+
+    public static <T> T getBean(Connection connection, String sql, Class<T> clazz) throws SQLException {
+        QueryRunner runner = new QueryRunner();
+        return runner.query(connection, sql, new BeanHandler<>(clazz));
+    }
+
+    public static <T> T getBean(Connection connection, String sql, Class<T> clazz, Object... params) throws SQLException {
+        QueryRunner runner = new QueryRunner();
+        return runner.query(connection, sql, new BeanHandler<>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))), params);
+    }
+
+    public static Map<String, Object> getDatabaseStructure(Connection connection, String databaseName) throws SQLException, IOException {
+        String sql = FileUtil.getStringByClasspath("sql/database.sql");
+        QueryRunner runner = new QueryRunner();
+        return runner.query(connection, sql, new MapHandler(), databaseName);
+    }
+
+    public static List<Map<String, Object>> getTableStructure(Connection connection, String databaseName) throws SQLException, IOException {
+        String sql = FileUtil.getStringByClasspath("sql/table.sql");
+        QueryRunner runner = new QueryRunner();
+        return runner.query(connection, sql, new MapListHandler(), databaseName);
     }
 
     public static Connection getConnection(String url, String username, String password) {

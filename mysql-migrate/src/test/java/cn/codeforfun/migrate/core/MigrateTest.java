@@ -4,6 +4,9 @@ import cn.codeforfun.migrate.core.diff.DiffResult;
 import cn.codeforfun.migrate.core.entity.Database;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 class MigrateTest {
 
     private static final Integer FROM_PORT = 3306;
@@ -19,10 +22,10 @@ class MigrateTest {
     private static final String TO_TABLE = "test_db";
 
     @Test
-    void diff() {
+    void diff() throws IOException, SQLException {
         Database from = new Database(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
         Database to = new Database(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
-        DiffResult diffResult = Migrate.diff(from, to);
+        DiffResult diffResult = new Migrate().from(from).to(to).diff();
         String sql = diffResult.getSQL();
         System.out.println(sql);
     }
