@@ -34,4 +34,4 @@ from information_schema.SCHEMATA s
          left join information_schema.COLLATION_CHARACTER_SET_APPLICABILITY ch on t.TABLE_COLLATION = ch.COLLATION_NAME
          LEFT JOIN information_schema.COLUMNS c ON c.TABLE_NAME = t.TABLE_NAME
          left join information_schema.KEY_COLUMN_USAGE k on k.TABLE_NAME = t.TABLE_NAME
-where s.SCHEMA_NAME = #{database_name};
+where s.SCHEMA_NAME = ?

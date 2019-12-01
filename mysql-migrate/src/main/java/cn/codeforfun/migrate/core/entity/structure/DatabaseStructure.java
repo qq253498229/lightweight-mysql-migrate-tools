@@ -37,7 +37,7 @@ public class DatabaseStructure {
         this.database = database;
         this.connection = DbUtil.getConnection(database.getUrl(), database.getUsername(), database.getPassword());
         configDatabaseStructure();
-        this.tables = Table.configure(connection);
+        this.tables = Table.configTableStructure(connection);
     }
 
     private void configDatabaseStructure() {

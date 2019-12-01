@@ -35,7 +35,7 @@ public class Table implements Serializable {
     private List<Index> indices;
     private List<ForeignKey> foreignKeys;
 
-    public static List<Table> configure(Connection connection) {
+    public static List<Table> configTableStructure(Connection connection) {
         List<String> tableNameList = DbUtil.executeSql(connection, "show tables");
         if (ObjectUtils.isEmpty(tableNameList)) {
             return new ArrayList<>();
