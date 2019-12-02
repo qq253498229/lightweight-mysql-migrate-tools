@@ -1,6 +1,7 @@
 package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,8 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class ColumnStructure implements Serializable {
+@EqualsAndHashCode
+public class Column implements Serializable {
     private static final long serialVersionUID = 6872882688118902246L;
 
     @DbUtilProperty("TABLE_SCHEMA")
@@ -50,5 +52,6 @@ public class ColumnStructure implements Serializable {
     private String comment;
     @DbUtilProperty("GENERATION_EXPRESSION")
     private String generationExpression;
+
 
 }

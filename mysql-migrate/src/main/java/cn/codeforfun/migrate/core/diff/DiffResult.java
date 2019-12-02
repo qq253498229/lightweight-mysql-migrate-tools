@@ -1,6 +1,6 @@
 package cn.codeforfun.migrate.core.diff;
 
-import cn.codeforfun.migrate.core.entity.structure.DatabaseStructure;
+import cn.codeforfun.migrate.core.entity.structure.Database;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,21 +16,24 @@ import java.util.List;
 @Slf4j
 public class DiffResult {
 
-    private DatabaseStructure from;
-    private DatabaseStructure to;
+    private Database from;
+    private Database to;
 
-    private List<Difference> createDifferenceList = new ArrayList<>();
-    private List<Difference> deleteDifferenceList = new ArrayList<>();
-    private List<Difference> updateDifferenceList = new ArrayList<>();
+    private List<Difference> create = new ArrayList<>();
+    private List<Difference> delete = new ArrayList<>();
+    private List<Difference> update = new ArrayList<>();
 
 
-    public String getSQL() {
+    public String getSql() {
+        //todo
         return null;
     }
 
-    public DiffResult compare(DatabaseStructure from, DatabaseStructure to) {
-        //todo
-        return new DiffResult();
+    public DiffResult compare(Database from, Database to) {
+        create.addAll(Difference.resolveCreate(from, to));
+        delete.addAll(Difference.resolveDelete(from, to));
+        update.addAll(Difference.resolveUpdate(from, to));
+        return this;
     }
 
 

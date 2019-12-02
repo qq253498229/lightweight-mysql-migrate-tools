@@ -1,6 +1,6 @@
 package cn.codeforfun.migrate.core;
 
-import cn.codeforfun.migrate.core.entity.Database;
+import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
 import org.apache.commons.dbutils.QueryRunner;
@@ -23,8 +23,8 @@ public class SqlTest {
     @Test
     public void test() throws IOException, SQLException {
         String sql = FileUtil.getStringByClasspath("sql/database_structure.sql");
-        Database database = new Database(FROM_HOST, FROM_PORT, FROM_DATABASE, FROM_USERNAME, FROM_PASSWORD);
-        Connection connection = DbUtil.getConnection(database.getUrl(), database.getUsername(), database.getPassword());
+        DatabaseInfo info = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_DATABASE, FROM_USERNAME, FROM_PASSWORD);
+        Connection connection = DbUtil.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
         QueryRunner qr = new QueryRunner();
         List<Map<String, Object>> list = qr.query(connection, sql, new MapListHandler(), "test_db");
 

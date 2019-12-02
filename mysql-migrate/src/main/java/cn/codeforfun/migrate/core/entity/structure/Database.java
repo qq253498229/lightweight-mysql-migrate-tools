@@ -1,6 +1,6 @@
 package cn.codeforfun.migrate.core.entity.structure;
 
-import cn.codeforfun.migrate.core.entity.Database;
+import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
@@ -21,8 +21,8 @@ import java.util.List;
 @Setter
 @Slf4j
 @NoArgsConstructor
-public class DatabaseStructure {
-    private Database database;
+public class Database {
+    private DatabaseInfo info;
     private Connection connection;
 
     @DbUtilProperty("SCHEMA_NAME")
@@ -32,19 +32,19 @@ public class DatabaseStructure {
     @DbUtilProperty("DEFAULT_COLLATION_NAME")
     private String collate;
 
-    private List<TableStructure> tables;
+    private List<Table> tables;
 
-    public DatabaseStructure init(Database database) throws IOException, SQLException {
-        this.database = database;
-        this.connection = DbUtil.getConnection(database.getUrl(), database.getUsername(), database.getPassword());
+    public Database init(DatabaseInfo info) throws IOException, SQLException {
+        this.info = info;
+        this.connection = DbUtil.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
         return configure();
     }
 
-    private DatabaseStructure configure() throws IOException, SQLException {
+    private Database configure() throws IOException, SQLException {
         String sql = FileUtil.getStringByClasspath("sql/database.sql");
-        DatabaseStructure bean = DbUtil.getBean(this.connection, sql, DatabaseStructure.class, this.database.getName());
-        bean.setTables(TableStructure.configure(this.connection, this.database.getName()));
-        bean.setDatabase(this.database);
+        Database bean = DbUtil.getBean(this.connection, sql, Database.class, this.info.getName());
+        bean.setTables(Table.configure(this.connection, this.info.getName()));
+        bean.setInfo(this.info);
         bean.setConnection(this.connection);
         return bean;
     }

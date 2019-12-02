@@ -16,7 +16,7 @@ import java.util.TimeZone;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Database implements Serializable {
+public class DatabaseInfo implements Serializable {
     private static final long serialVersionUID = -4275505729761182481L;
     private String host;
     private Integer port;
@@ -32,7 +32,7 @@ public class Database implements Serializable {
      * @param username 数据库用户名
      * @param password 数据库密码
      */
-    public Database(String host, Integer port, String name, String username, String password) {
+    public DatabaseInfo(String host, Integer port, String name, String username, String password) {
         this.host = host;
         this.port = port;
         this.name = name;

@@ -1,9 +1,9 @@
 package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 
@@ -12,8 +12,8 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-@Slf4j
-public class KeyStructure implements Serializable {
+@EqualsAndHashCode
+public class Key implements Serializable {
     private static final long serialVersionUID = 1097940296556989104L;
 
     @DbUtilProperty("CONSTRAINT_SCHEMA")

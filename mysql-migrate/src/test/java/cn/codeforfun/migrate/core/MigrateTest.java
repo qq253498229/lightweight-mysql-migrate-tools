@@ -1,7 +1,7 @@
 package cn.codeforfun.migrate.core;
 
 import cn.codeforfun.migrate.core.diff.DiffResult;
-import cn.codeforfun.migrate.core.entity.Database;
+import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,10 +23,10 @@ class MigrateTest {
 
     @Test
     void diff() throws IOException, SQLException {
-        Database from = new Database(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
-        Database to = new Database(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
+        DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
+        DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
         DiffResult diffResult = new Migrate().from(from).to(to).diff();
-        String sql = diffResult.getSQL();
+        String sql = diffResult.getSql();
         System.out.println(sql);
     }
 }
