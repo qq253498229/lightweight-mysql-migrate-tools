@@ -10,15 +10,11 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
-import org.apache.commons.dbutils.handlers.MapHandler;
-import org.apache.commons.dbutils.handlers.MapListHandler;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangbin
@@ -29,34 +25,22 @@ public class DbUtil {
 
     public static <T> List<T> getBeanList(Connection connection, String sql, Class<T> clazz) throws SQLException {
         QueryRunner runner = new QueryRunner();
-        return runner.query(connection, sql, new BeanListHandler<T>(clazz));
+        return runner.query(connection, sql, new BeanListHandler<T>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))));
     }
 
     public static <T> List<T> getBeanList(Connection connection, String sql, Class<T> clazz, Object... params) throws SQLException {
         QueryRunner runner = new QueryRunner();
-        return runner.query(connection, sql, new BeanListHandler<T>(clazz), params);
+        return runner.query(connection, sql, new BeanListHandler<T>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))), params);
     }
 
     public static <T> T getBean(Connection connection, String sql, Class<T> clazz) throws SQLException {
         QueryRunner runner = new QueryRunner();
-        return runner.query(connection, sql, new BeanHandler<>(clazz));
+        return runner.query(connection, sql, new BeanHandler<>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))));
     }
 
     public static <T> T getBean(Connection connection, String sql, Class<T> clazz, Object... params) throws SQLException {
         QueryRunner runner = new QueryRunner();
         return runner.query(connection, sql, new BeanHandler<>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))), params);
-    }
-
-    public static Map<String, Object> getDatabaseStructure(Connection connection, String databaseName) throws SQLException, IOException {
-        String sql = FileUtil.getStringByClasspath("sql/database.sql");
-        QueryRunner runner = new QueryRunner();
-        return runner.query(connection, sql, new MapHandler(), databaseName);
-    }
-
-    public static List<Map<String, Object>> getTableStructure(Connection connection, String databaseName) throws SQLException, IOException {
-        String sql = FileUtil.getStringByClasspath("sql/table.sql");
-        QueryRunner runner = new QueryRunner();
-        return runner.query(connection, sql, new MapListHandler(), databaseName);
     }
 
     public static Connection getConnection(String url, String username, String password) {

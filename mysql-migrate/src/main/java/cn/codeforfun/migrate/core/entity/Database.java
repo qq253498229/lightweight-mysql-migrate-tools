@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
+import java.util.TimeZone;
 
 /**
  * @author wangbin
@@ -42,6 +44,10 @@ public class Database implements Serializable {
     public String getUrl() {
         String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + name;
         url += "?useUnicode=true&characterEncoding=utf8&createDatabaseIfNotExist=true";
+        String timeZone = TimeZone.getDefault().getID();
+        if (!ObjectUtils.isEmpty(timeZone)) {
+            url += "&serverTimezone=" + timeZone;
+        }
         return url;
     }
 }
