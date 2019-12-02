@@ -21,16 +21,14 @@ import java.util.List;
  */
 @Slf4j
 public class DbUtil {
-    public static final String DATABASE_STRUCTURE_SQL_NAME = "sql/database.sql";
-
     public static <T> List<T> getBeanList(Connection connection, String sql, Class<T> clazz) throws SQLException {
         QueryRunner runner = new QueryRunner();
-        return runner.query(connection, sql, new BeanListHandler<T>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))));
+        return runner.query(connection, sql, new BeanListHandler<>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))));
     }
 
     public static <T> List<T> getBeanList(Connection connection, String sql, Class<T> clazz, Object... params) throws SQLException {
         QueryRunner runner = new QueryRunner();
-        return runner.query(connection, sql, new BeanListHandler<T>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))), params);
+        return runner.query(connection, sql, new BeanListHandler<>(clazz, new BasicRowProcessor(new BeanProcessor(MigrateBeanTools.customColumn(clazz)))), params);
     }
 
     public static <T> T getBean(Connection connection, String sql, Class<T> clazz) throws SQLException {
