@@ -22,7 +22,7 @@ public class SqlTest {
 
     @Test
     public void test() throws IOException, SQLException {
-        String sql = FileUtil.getStringByClasspath("sql/database_structure.sql");
+        String sql = FileUtil.getStringByClasspath("sql/test.sql");
         DatabaseInfo info = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_DATABASE, FROM_USERNAME, FROM_PASSWORD);
         Connection connection = DbUtil.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
         QueryRunner qr = new QueryRunner();
