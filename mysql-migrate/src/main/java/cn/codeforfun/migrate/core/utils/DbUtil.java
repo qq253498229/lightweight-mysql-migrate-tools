@@ -43,7 +43,7 @@ public class DbUtil {
         try {
             connection = DriverManager.getConnection(url, username, password);
         } catch (Exception e) {
-            log.error("数据库连接失败,url:{},user:{},password:{}", url, username, password);
+            log.error("数据库连接失败,url:{},user:{}", url, username);
             throw new DatabaseConnectException("数据库连接失败");
         }
         return connection;

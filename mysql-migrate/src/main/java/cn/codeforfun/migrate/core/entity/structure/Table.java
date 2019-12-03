@@ -90,7 +90,7 @@ public class Table extends Difference implements Serializable {
                     && !ObjectUtils.isEmpty(key.getReferencedTable())
                     && !ObjectUtils.isEmpty(key.getReferencedColumn())
             ) {
-                sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;");
+                sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;\n");
             }
         }
         return sb.toString();

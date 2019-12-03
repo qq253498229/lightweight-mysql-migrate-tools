@@ -35,11 +35,17 @@ public class DiffResult {
     }
 
     public String getSql() {
+        if (ObjectUtils.isEmpty(this.delete) && ObjectUtils.isEmpty(this.create) && ObjectUtils.isEmpty(this.update)) {
+            log.debug("数据库结构没有变化。");
+            return null;
+        }
+        log.debug("开始生成sql...");
         StringBuilder sb = new StringBuilder();
         resolveDeleteSql(sb);
         resolveCreateSql(sb);
         String sql = sb.toString();
-        log.debug("生成sql:{}", sql);
+        log.debug("sql生成结果:");
+        log.debug(sql);
         return sql;
     }
 
@@ -54,13 +60,15 @@ public class DiffResult {
     }
 
     private void resolveDeleteSql(StringBuilder sb) {
+        // 先删除外键
         for (Difference difference : this.delete) {
             if (difference instanceof Table) {
                 Table table = (Table) difference;
                 String deleteSql = table.getDeleteForeignKeySql();
-                sb.append(deleteSql).append("\n");
+                sb.append(deleteSql);
             }
         }
+        // 再删除表
         for (Difference difference : this.delete) {
             if (difference instanceof Table) {
                 Table table = (Table) difference;
