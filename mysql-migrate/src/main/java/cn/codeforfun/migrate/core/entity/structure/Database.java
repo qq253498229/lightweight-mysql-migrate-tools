@@ -41,7 +41,7 @@ public class Database {
     }
 
     private Database configure() throws IOException, SQLException {
-        String sql = FileUtil.getStringByClasspath("sql/database.sql");
+        String sql = FileUtil.getStringByClasspath("sql/detail/database.sql");
         Database bean = DbUtil.getBean(this.connection, sql, Database.class, this.info.getName());
         bean.setTables(Table.configure(this.connection, this.info.getName()));
         bean.setInfo(this.info);

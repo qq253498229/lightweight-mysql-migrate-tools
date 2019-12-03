@@ -4,9 +4,11 @@ import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -49,15 +51,37 @@ public class Table extends Difference implements Serializable {
     private List<Column> columns;
     private List<Key> keys;
 
+    @JsonIgnore
+    public String getCreateSql() throws IOException {
+        String sql = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
+        sql = sql.replace("${tableName}", this.name);
+        sql = sql.replace("${engine}", " ENGINE = " + this.engine);
+        sql = sql.replace("${charset}", " DEFAULT CHARSET = " + this.charset);
+        sql = sql.replace("${collate}", " COLLATE = " + this.collate);
+        sql = sql.replace("${comment}", ObjectUtils.isEmpty(this.comment) ? "" : " COMMENT = '" + this.comment + "'");
+        StringBuilder sb = new StringBuilder();
+        for (Column column : this.columns) {
+            String columnSql = column.getSql();
+            sb.append(columnSql);
+        }
+        for (Key key : this.keys) {
+            String keySql = key.getSql();
+            sb.append(keySql);
+        }
+        String columnSql = sb.substring(0, sb.length() - 1);
+        sql = sql.replace("${columnSql}", columnSql);
+        return sql;
+    }
+
     public static List<Table> configure(Connection connection, String databaseName) throws IOException, SQLException {
         List<Table> list1 = DbUtil.getBeanList(connection,
-                FileUtil.getStringByClasspath("sql/table.sql"),
+                FileUtil.getStringByClasspath("sql/detail/table.sql"),
                 Table.class, databaseName);
         List<Column> list2 = DbUtil.getBeanList(connection,
-                FileUtil.getStringByClasspath("sql/column.sql"),
+                FileUtil.getStringByClasspath("sql/detail/column.sql"),
                 Column.class, databaseName);
         List<Key> list3 = DbUtil.getBeanList(connection,
-                FileUtil.getStringByClasspath("sql/key.sql"),
+                FileUtil.getStringByClasspath("sql/detail/key.sql"),
                 Key.class, databaseName);
         return list1.stream().peek(o -> {
             o.setColumns(list2.stream().filter(s -> o.getName().equals(s.getTable())).collect(Collectors.toList()));

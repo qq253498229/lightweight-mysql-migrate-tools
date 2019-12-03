@@ -4,6 +4,7 @@ import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 
@@ -15,6 +16,9 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class Column implements Serializable {
     private static final long serialVersionUID = 6872882688118902246L;
+    public static final String FLAG_NOT_NULL = "NO";
+    public static final String FLAG_DEFAULT_NULL = "YES";
+    public static final String FLAG_AUTO_INCREMENT = "auto_increment";
 
     @DbUtilProperty("TABLE_SCHEMA")
     private String schema;
@@ -54,4 +58,27 @@ public class Column implements Serializable {
     private String generationExpression;
 
 
+    public String getSql() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("`").append(this.name).append("`").append(" ");
+        sb.append(this.columnType).append(" ");
+        if (!ObjectUtils.isEmpty(this.collation)) {
+            sb.append("COLLATE ").append(this.collation).append(" ");
+        }
+        if (FLAG_NOT_NULL.equals(this.nullable)) {
+            sb.append("NOT NULL ");
+        } else if (FLAG_DEFAULT_NULL.equals(this.nullable)) {
+            sb.append("DEFAULT NULL ");
+        }
+        if (!ObjectUtils.isEmpty(this.defaultValue)) {
+            sb.append("DEFAULT ").append(this.defaultValue).append(" ");
+        }
+        if (FLAG_AUTO_INCREMENT.equals(this.extra)) {
+            sb.append("AUTO_INCREMENT ");
+        }
+        if (!ObjectUtils.isEmpty(this.comment)) {
+            sb.append("COMMENT '").append(this.comment).append("' ");
+        }
+        return sb.append(",").toString();
+    }
 }

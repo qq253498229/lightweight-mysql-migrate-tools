@@ -15,6 +15,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class Key implements Serializable {
     private static final long serialVersionUID = 1097940296556989104L;
+    public static final String FLAG_PRIMARY = "PRIMARY";
 
     @DbUtilProperty("CONSTRAINT_SCHEMA")
     private String schema;
@@ -35,4 +36,12 @@ public class Key implements Serializable {
     @DbUtilProperty("REFERENCED_COLUMN_NAME")
     private String referencedColumn;
 
+    public String getSql() {
+        //获取key sql todo
+        StringBuilder sb = new StringBuilder();
+        if (FLAG_PRIMARY.equals(this.name)) {
+            sb.append("PRIMARY KEY (`").append(this.columnName).append("`),");
+        }
+        return sb.toString();
+    }
 }

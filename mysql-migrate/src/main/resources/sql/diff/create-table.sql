@@ -1,0 +1,1 @@
+CREATE TABLE `${tableName}` ( ${columnSql} )${engine}${charset}${collate}${comment};
