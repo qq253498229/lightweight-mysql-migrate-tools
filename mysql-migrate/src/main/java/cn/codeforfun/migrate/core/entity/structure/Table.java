@@ -10,13 +10,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
 
 /**
  * 表定义
@@ -50,6 +51,7 @@ public class Table extends Difference implements Serializable {
 
     private List<Column> columns;
     private List<Key> keys;
+
     public static final String SQL = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
 
     @JsonIgnore
@@ -74,7 +76,27 @@ public class Table extends Difference implements Serializable {
         return sql;
     }
 
-    public static List<Table> configure(Connection connection, String databaseName) throws IOException, SQLException {
+    @JsonIgnore
+    public String getDeleteSql() {
+        return "DROP TABLE `" + this.name + "`;";
+    }
+
+    @JsonIgnore
+    public String getDeleteForeignKeySql() {
+        StringBuilder sb = new StringBuilder();
+        for (Key key : this.keys) {
+            if (!FLAG_PRIMARY.equals(key.getName())
+                    && !ObjectUtils.isEmpty(key.getReferencedSchema())
+                    && !ObjectUtils.isEmpty(key.getReferencedTable())
+                    && !ObjectUtils.isEmpty(key.getReferencedColumn())
+            ) {
+                sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;");
+            }
+        }
+        return sb.toString();
+    }
+
+    public static List<Table> configure(Connection connection, String databaseName) throws SQLException {
         List<Table> list1 = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/table.sql"),
                 Table.class, databaseName);
@@ -89,5 +111,6 @@ public class Table extends Difference implements Serializable {
             o.setKeys(list3.stream().filter(s -> o.getName().equals(s.getTableName())).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
+
 
 }

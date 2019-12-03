@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ObjectUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class DiffResult {
     private Database from;
     private Database to;
 
-    private List<Difference> create = new ArrayList<>();
     private List<Difference> delete = new ArrayList<>();
+    private List<Difference> create = new ArrayList<>();
     private List<Difference> update = new ArrayList<>();
 
     public DiffResult(Database from, Database to) {
@@ -35,6 +36,7 @@ public class DiffResult {
 
     public String getSql() {
         StringBuilder sb = new StringBuilder();
+        resolveDeleteSql(sb);
         resolveCreateSql(sb);
         String sql = sb.toString();
         log.debug("生成sql:{}", sql);
@@ -51,16 +53,42 @@ public class DiffResult {
         }
     }
 
+    private void resolveDeleteSql(StringBuilder sb) {
+        for (Difference difference : this.delete) {
+            if (difference instanceof Table) {
+                Table table = (Table) difference;
+                String deleteSql = table.getDeleteForeignKeySql();
+                sb.append(deleteSql).append("\n");
+            }
+        }
+        for (Difference difference : this.delete) {
+            if (difference instanceof Table) {
+                Table table = (Table) difference;
+                String deleteSql = table.getDeleteSql();
+                sb.append(deleteSql).append("\n");
+            }
+        }
+    }
+
     public DiffResult compare() {
-        create.addAll(Difference.resolveCreate(this.from, this.to));
         delete.addAll(Difference.resolveDelete(this.from, this.to));
+        create.addAll(Difference.resolveCreate(this.from, this.to));
         update.addAll(Difference.resolveUpdate(this.from, this.to));
         return this;
     }
 
-
     public void update() throws SQLException {
+        if (ObjectUtils.isEmpty(this.create)
+                && ObjectUtils.isEmpty(this.update)
+                && ObjectUtils.isEmpty(this.delete)) {
+            return;
+        }
         String sql = getSql();
-        DbUtil.execute(this.to.getConnection(), sql);
+        String[] split = sql.split("\n");
+        for (String s : split) {
+            if (!ObjectUtils.isEmpty(s)) {
+                DbUtil.execute(this.to.getConnection(), s);
+            }
+        }
     }
 }
