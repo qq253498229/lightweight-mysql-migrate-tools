@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +25,13 @@ public class DiffResult {
     private List<Difference> update = new ArrayList<>();
 
 
-    public String getSql() throws IOException {
+    public String getSql() {
         StringBuilder sb = new StringBuilder();
         resolveCreateSql(sb);
         return sb.toString();
     }
 
-    private void resolveCreateSql(StringBuilder sb) throws IOException {
+    private void resolveCreateSql(StringBuilder sb) {
         for (Difference difference : this.create) {
             if (difference instanceof Table) {
                 Table table = (Table) difference;

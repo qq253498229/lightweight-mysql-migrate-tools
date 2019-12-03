@@ -50,10 +50,11 @@ public class Table extends Difference implements Serializable {
 
     private List<Column> columns;
     private List<Key> keys;
+    public static final String SQL = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
 
     @JsonIgnore
-    public String getCreateSql() throws IOException {
-        String sql = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
+    public String getCreateSql() {
+        String sql = SQL;
         sql = sql.replace("${tableName}", this.name);
         sql = sql.replace("${engine}", " ENGINE = " + this.engine);
         sql = sql.replace("${charset}", " DEFAULT CHARSET = " + this.charset);

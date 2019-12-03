@@ -4,6 +4,7 @@ import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 
@@ -37,10 +38,23 @@ public class Key implements Serializable {
     private String referencedColumn;
 
     public String getSql() {
-        //获取key sql todo
+        //获取key sql
         StringBuilder sb = new StringBuilder();
         if (FLAG_PRIMARY.equals(this.name)) {
+            // 主键
             sb.append("PRIMARY KEY (`").append(this.columnName).append("`),");
+        } else if (ObjectUtils.isEmpty(this.referencedSchema)
+                && ObjectUtils.isEmpty(this.referencedTable)
+                && ObjectUtils.isEmpty(this.referencedColumn)) {
+            // 唯一索引
+            sb.append("UNIQUE KEY `").append(this.name).append("` (`").append(this.columnName).append("`),");
+        } else {
+            // 外键
+            sb.append("KEY `").append(this.name).append("` (`").append(this.columnName).append("`),");
+            sb.append("CONSTRAINT `").append(this.name).append("` ")
+                    .append("FOREIGN KEY (`").append(this.columnName).append("`) ")
+                    .append("REFERENCES `").append(this.referencedTable).append("` ")
+                    .append("(`").append(this.referencedColumn).append("`),");
         }
         return sb.toString();
     }

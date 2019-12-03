@@ -31,10 +31,6 @@
 
         <!--数据库-->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
@@ -60,7 +56,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.29</version>
         </dependency>
-
         <!--/common-->
         <dependency>
             <groupId>junit</groupId>

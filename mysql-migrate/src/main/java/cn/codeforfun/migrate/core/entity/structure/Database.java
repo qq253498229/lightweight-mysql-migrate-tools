@@ -33,6 +33,7 @@ public class Database {
     private String collate;
 
     private List<Table> tables;
+    public static final String SQL = FileUtil.getStringByClasspath("sql/detail/database.sql");
 
     public Database init(DatabaseInfo info) throws IOException, SQLException {
         this.info = info;
@@ -41,8 +42,7 @@ public class Database {
     }
 
     private Database configure() throws IOException, SQLException {
-        String sql = FileUtil.getStringByClasspath("sql/detail/database.sql");
-        Database bean = DbUtil.getBean(this.connection, sql, Database.class, this.info.getName());
+        Database bean = DbUtil.getBean(this.connection, SQL, Database.class, this.info.getName());
         bean.setTables(Table.configure(this.connection, this.info.getName()));
         bean.setInfo(this.info);
         bean.setConnection(this.connection);

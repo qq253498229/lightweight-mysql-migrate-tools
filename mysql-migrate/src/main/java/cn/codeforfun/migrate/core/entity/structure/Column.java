@@ -79,6 +79,7 @@ public class Column implements Serializable {
         if (!ObjectUtils.isEmpty(this.comment)) {
             sb.append("COMMENT '").append(this.comment).append("' ");
         }
-        return sb.append(",").toString();
+        sb.append(",");
+        return sb.toString();
     }
 }
