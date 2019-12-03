@@ -42,10 +42,6 @@ public class Migrate {
     }
 
     public DiffResult diff() throws IOException, SQLException {
-        return getDiffResult();
-    }
-
-    private DiffResult getDiffResult() throws IOException, SQLException {
         if (sourceInfo == null) {
             log.error("sourceDatabase 为空");
             throw new NullPointerException("sourceDatabase 不能为空");
