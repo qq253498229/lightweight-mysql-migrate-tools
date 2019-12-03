@@ -60,8 +60,7 @@ public class Column implements Difference, Serializable {
     private String generationExpression;
 
     public String getDeleteSql() {
-        // todo
-        return null;
+        return "ALTER TABLE `" + this.table + "` DROP COLUMN `" + this.name + "`;\n";
     }
 
     public String getCreateSql() {
@@ -90,8 +89,10 @@ public class Column implements Difference, Serializable {
     }
 
     public String getUpdateSql() {
-        // todo
-        return null;
+        String createSql = "ALTER TABLE `" + this.table + "` MODIFY ";
+        createSql += getCreateSql();
+        createSql = createSql.substring(0, createSql.length() - 1) + ";";
+        return createSql;
     }
 
 }

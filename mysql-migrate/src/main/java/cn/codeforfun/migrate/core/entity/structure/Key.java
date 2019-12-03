@@ -53,6 +53,7 @@ public class Key implements Difference, Serializable {
             // 外键
             sb.append("ALTER TABLE `").append(this.tableName).append("` DROP FOREIGN KEY `").append(this.name).append("`;");
         }
+        sb.append("\n");
         return sb.toString();
     }
 
