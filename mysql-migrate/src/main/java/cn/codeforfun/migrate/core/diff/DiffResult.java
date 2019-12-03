@@ -1,5 +1,6 @@
 package cn.codeforfun.migrate.core.diff;
 
+import cn.codeforfun.migrate.core.entity.structure.Column;
 import cn.codeforfun.migrate.core.entity.structure.Database;
 import cn.codeforfun.migrate.core.entity.structure.Table;
 import cn.codeforfun.migrate.core.utils.DbUtil;
@@ -43,6 +44,7 @@ public class DiffResult {
         StringBuilder sb = new StringBuilder();
         resolveDeleteSql(sb);
         resolveCreateSql(sb);
+        resolveUpdateSql(sb);
         String sql = sb.toString();
         log.debug("sql生成结果:");
         log.debug(sql);
@@ -74,6 +76,16 @@ public class DiffResult {
                 Table table = (Table) difference;
                 String deleteSql = table.getDeleteSql();
                 sb.append(deleteSql).append("\n");
+            }
+        }
+    }
+
+    private void resolveUpdateSql(StringBuilder sb) {
+        for (Difference difference : this.update) {
+            if (difference instanceof Column) {
+                Column column = (Column) difference;
+                String updateSql = column.getUpdateSql();
+                sb.append(updateSql).append("\n");
             }
         }
     }

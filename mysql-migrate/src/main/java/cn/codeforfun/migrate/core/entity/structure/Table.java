@@ -27,7 +27,7 @@ import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
 @Getter
 @Setter
 @Slf4j
-public class Table extends Difference implements Serializable {
+public class Table implements Serializable, Difference {
     private static final long serialVersionUID = 411108952654575238L;
 
     @DbUtilProperty("TABLE_SCHEMA")
@@ -64,11 +64,11 @@ public class Table extends Difference implements Serializable {
         sql = sql.replace("${comment}", ObjectUtils.isEmpty(this.comment) ? "" : " COMMENT = '" + this.comment + "'");
         StringBuilder sb = new StringBuilder();
         for (Column column : this.columns) {
-            String columnSql = column.getSql();
+            String columnSql = column.getCreateSql();
             sb.append(columnSql);
         }
         for (Key key : this.keys) {
-            String keySql = key.getSql();
+            String keySql = key.getCreateSql();
             sb.append(keySql);
         }
         String columnSql = sb.substring(0, sb.length() - 1);

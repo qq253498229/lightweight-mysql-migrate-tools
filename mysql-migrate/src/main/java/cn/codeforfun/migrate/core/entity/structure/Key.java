@@ -1,5 +1,6 @@
 package cn.codeforfun.migrate.core.entity.structure;
 
+import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,8 +15,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Key implements Serializable {
-    private static final long serialVersionUID = 1097940296556989104L;
+public class Key implements Difference, Serializable {
+    private static final long serialVersionUID = 5489127924529636485L;
+
     public static final String FLAG_PRIMARY = "PRIMARY";
 
     @DbUtilProperty("CONSTRAINT_SCHEMA")
@@ -37,7 +39,7 @@ public class Key implements Serializable {
     @DbUtilProperty("REFERENCED_COLUMN_NAME")
     private String referencedColumn;
 
-    public String getSql() {
+    public String getCreateSql() {
         //获取key sql
         StringBuilder sb = new StringBuilder();
         if (FLAG_PRIMARY.equals(this.name)) {
@@ -57,5 +59,10 @@ public class Key implements Serializable {
                     .append("(`").append(this.referencedColumn).append("`),");
         }
         return sb.toString();
+    }
+
+    public String getUpdateSql() {
+        //todo
+        return null;
     }
 }

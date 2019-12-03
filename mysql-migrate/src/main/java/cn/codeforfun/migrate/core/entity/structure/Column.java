@@ -1,5 +1,6 @@
 package cn.codeforfun.migrate.core.entity.structure;
 
+import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,8 +15,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Column implements Serializable {
-    private static final long serialVersionUID = 6872882688118902246L;
+public class Column implements Difference, Serializable {
+    private static final long serialVersionUID = -5078043863310019475L;
+
     public static final String FLAG_NOT_NULL = "NO";
     public static final String FLAG_DEFAULT_NULL = "YES";
     public static final String FLAG_AUTO_INCREMENT = "auto_increment";
@@ -58,7 +60,7 @@ public class Column implements Serializable {
     private String generationExpression;
 
 
-    public String getSql() {
+    public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("`").append(this.name).append("`").append(" ");
         sb.append(this.columnType).append(" ");
@@ -81,5 +83,10 @@ public class Column implements Serializable {
         }
         sb.append(",");
         return sb.toString();
+    }
+
+    public String getUpdateSql() {
+        // todo
+        return null;
     }
 }
