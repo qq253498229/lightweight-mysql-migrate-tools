@@ -59,6 +59,10 @@ public class Column implements Difference, Serializable {
     @DbUtilProperty("GENERATION_EXPRESSION")
     private String generationExpression;
 
+    public String getDeleteSql() {
+        // todo
+        return null;
+    }
 
     public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
@@ -89,4 +93,5 @@ public class Column implements Difference, Serializable {
         // todo
         return null;
     }
+
 }

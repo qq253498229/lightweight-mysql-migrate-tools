@@ -4,7 +4,6 @@ import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +53,24 @@ public class Table implements Serializable, Difference {
 
     public static final String SQL = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
 
-    @JsonIgnore
+    public String getDeleteForeignKeySql() {
+        StringBuilder sb = new StringBuilder();
+        for (Key key : this.keys) {
+            if (!FLAG_PRIMARY.equals(key.getName())
+                    && !ObjectUtils.isEmpty(key.getReferencedSchema())
+                    && !ObjectUtils.isEmpty(key.getReferencedTable())
+                    && !ObjectUtils.isEmpty(key.getReferencedColumn())
+            ) {
+                sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String getDeleteSql() {
+        return "DROP TABLE `" + this.name + "`;";
+    }
+
     public String getCreateSql() {
         String sql = SQL;
         sql = sql.replace("${tableName}", this.name);
@@ -76,26 +92,6 @@ public class Table implements Serializable, Difference {
         return sql;
     }
 
-    @JsonIgnore
-    public String getDeleteSql() {
-        return "DROP TABLE `" + this.name + "`;";
-    }
-
-    @JsonIgnore
-    public String getDeleteForeignKeySql() {
-        StringBuilder sb = new StringBuilder();
-        for (Key key : this.keys) {
-            if (!FLAG_PRIMARY.equals(key.getName())
-                    && !ObjectUtils.isEmpty(key.getReferencedSchema())
-                    && !ObjectUtils.isEmpty(key.getReferencedTable())
-                    && !ObjectUtils.isEmpty(key.getReferencedColumn())
-            ) {
-                sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;\n");
-            }
-        }
-        return sb.toString();
-    }
-
     public static List<Table> configure(Connection connection, String databaseName) throws SQLException {
         List<Table> list1 = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/table.sql"),
@@ -111,6 +107,5 @@ public class Table implements Serializable, Difference {
             o.setKeys(list3.stream().filter(s -> o.getName().equals(s.getTableName())).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
-
 
 }

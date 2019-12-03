@@ -2,6 +2,7 @@ package cn.codeforfun.migrate.core.diff;
 
 import cn.codeforfun.migrate.core.entity.structure.Column;
 import cn.codeforfun.migrate.core.entity.structure.Database;
+import cn.codeforfun.migrate.core.entity.structure.Key;
 import cn.codeforfun.migrate.core.entity.structure.Table;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import org.springframework.util.ObjectUtils;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangbin
@@ -35,6 +37,106 @@ public class DiffResult {
         this.to = to;
     }
 
+    public DiffResult compare() {
+        List<Table> fromTableList = this.from.getTables();
+        List<Table> toTableList = this.to.getTables();
+        List<Column> fromColumnList = this.from.getColumnList();
+        List<Column> toColumnList = this.to.getColumnList();
+        List<Key> fromKeyList = this.from.getKeyList();
+        List<Key> toKeyList = this.to.getKeyList();
+
+        // 删除
+        List<String> fromTableNameList = fromTableList.stream().map(Table::getName).collect(Collectors.toList());
+        List<Table> deleteTableList = toTableList.stream().filter(s -> !fromTableNameList.contains(s.getName())).collect(Collectors.toList());
+        this.delete.addAll(deleteTableList);
+        List<String> fromKeyNameList = fromKeyList.stream().map(Key::getName).collect(Collectors.toList());
+        List<Key> deleteKeyList = toKeyList.stream().filter(s -> !fromKeyNameList.contains(s.getName())).collect(Collectors.toList());
+        this.delete.addAll(deleteKeyList);
+        List<String> fromColumnNameList = fromColumnList.stream().map(Column::getName).collect(Collectors.toList());
+        List<Column> deleteColumnList = toColumnList.stream().filter(s -> !fromColumnNameList.contains(s.getName())).collect(Collectors.toList());
+        this.delete.addAll(deleteColumnList);
+
+        // 新建
+        List<String> toTableNameList = toTableList.stream().map(Table::getName).collect(Collectors.toList());
+        List<Table> createTableList = fromTableList.stream().filter(s -> !toTableNameList.contains(s.getName())).collect(Collectors.toList());
+        this.create.addAll(createTableList);
+        List<String> toKeyNameList = toKeyList.stream().map(Key::getName).collect(Collectors.toList());
+        List<Key> createKeyList = fromKeyList.stream().filter(s -> !toKeyNameList.contains(s.getName())).collect(Collectors.toList());
+        this.create.addAll(createKeyList);
+        List<String> toColumnNameList = toColumnList.stream().map(Column::getName).collect(Collectors.toList());
+        List<Column> createColumnList = fromColumnList.stream().filter(s -> !toColumnNameList.contains(s.getName())).collect(Collectors.toList());
+        this.create.addAll(createColumnList);
+
+        // 更新
+        for (Column fromColumn : fromColumnList) {
+            for (Column toColumn : toColumnList) {
+                if (fromColumn.getName().equals(toColumn.getName()) && !fromColumn.equals(toColumn)) {
+                    this.update.add(fromColumn);
+                }
+            }
+        }
+        return this;
+    }
+
+    private void resolveDeleteSql(StringBuilder sb) {
+        for (Difference difference : this.delete) {
+            // 先删除外键
+            // 再删除表
+            if (difference instanceof Table) {
+                Table delete = (Table) difference;
+                String deleteForeignKeySql = delete.getDeleteForeignKeySql();
+                sb.append(deleteForeignKeySql);
+                String deleteSql = delete.getDeleteSql();
+                sb.append(deleteSql).append("\n");
+            }
+            // 删除key
+            if (difference instanceof Key) {
+                Key delete = (Key) difference;
+                String deleteSql = delete.getDeleteSql();
+                sb.append(deleteSql);
+            }
+            // 删除字段
+            if (difference instanceof Column) {
+                Column delete = (Column) difference;
+                String deleteSql = delete.getDeleteSql();
+                sb.append(deleteSql);
+            }
+        }
+    }
+
+    private void resolveCreateSql(StringBuilder sb) {
+        for (Difference difference : this.create) {
+            // 创建表
+            if (difference instanceof Table) {
+                Table table = (Table) difference;
+                String createSql = table.getCreateSql();
+                sb.append(createSql).append("\n");
+            }
+            // 创建key
+            if (difference instanceof Key) {
+                Key delete = (Key) difference;
+                String createSql = delete.getCreateSql();
+                sb.append(createSql);
+            }
+            // 创建字段
+            if (difference instanceof Column) {
+                Column delete = (Column) difference;
+                String createSql = delete.getCreateSql();
+                sb.append(createSql);
+            }
+        }
+    }
+
+    private void resolveUpdateSql(StringBuilder sb) {
+        for (Difference difference : this.update) {
+            if (difference instanceof Column) {
+                Column column = (Column) difference;
+                String updateSql = column.getUpdateSql();
+                sb.append(updateSql).append("\n");
+            }
+        }
+    }
+
     public String getSql() {
         if (ObjectUtils.isEmpty(this.delete) && ObjectUtils.isEmpty(this.create) && ObjectUtils.isEmpty(this.update)) {
             log.debug("数据库结构没有变化。");
@@ -51,52 +153,6 @@ public class DiffResult {
         return sql;
     }
 
-    private void resolveCreateSql(StringBuilder sb) {
-        for (Difference difference : this.create) {
-            if (difference instanceof Table) {
-                Table table = (Table) difference;
-                String createSql = table.getCreateSql();
-                sb.append(createSql).append("\n");
-            }
-        }
-    }
-
-    private void resolveDeleteSql(StringBuilder sb) {
-        // 先删除外键
-        for (Difference difference : this.delete) {
-            if (difference instanceof Table) {
-                Table table = (Table) difference;
-                String deleteSql = table.getDeleteForeignKeySql();
-                sb.append(deleteSql);
-            }
-        }
-        // 再删除表
-        for (Difference difference : this.delete) {
-            if (difference instanceof Table) {
-                Table table = (Table) difference;
-                String deleteSql = table.getDeleteSql();
-                sb.append(deleteSql).append("\n");
-            }
-        }
-    }
-
-    private void resolveUpdateSql(StringBuilder sb) {
-        for (Difference difference : this.update) {
-            if (difference instanceof Column) {
-                Column column = (Column) difference;
-                String updateSql = column.getUpdateSql();
-                sb.append(updateSql).append("\n");
-            }
-        }
-    }
-
-    public DiffResult compare() {
-        delete.addAll(Difference.resolveDelete(this.from, this.to));
-        create.addAll(Difference.resolveCreate(this.from, this.to));
-        update.addAll(Difference.resolveUpdate(this.from, this.to));
-        return this;
-    }
-
     public void update() throws SQLException {
         if (ObjectUtils.isEmpty(this.create)
                 && ObjectUtils.isEmpty(this.update)
@@ -111,4 +167,5 @@ public class DiffResult {
             }
         }
     }
+
 }

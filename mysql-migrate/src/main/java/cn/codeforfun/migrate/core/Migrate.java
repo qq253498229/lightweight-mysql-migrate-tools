@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -41,12 +40,11 @@ public class Migrate {
         return this;
     }
 
-    public DiffResult diff() throws IOException, SQLException {
+    public DiffResult diff() throws SQLException {
         if (sourceInfo == null) {
             log.error("sourceDatabase 为空");
             throw new NullPointerException("sourceDatabase 不能为空");
         }
-
         if (targetInfo == null) {
             log.error("targetDatabase 为空");
             throw new NullPointerException("targetDatabase 不能为空");

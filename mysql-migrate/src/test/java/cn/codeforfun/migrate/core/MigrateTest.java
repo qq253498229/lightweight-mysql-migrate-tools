@@ -5,7 +5,6 @@ import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 @Slf4j
@@ -24,7 +23,7 @@ public class MigrateTest {
     private static final String TO_TABLE = "test_db";
 
     @Test
-    public void diff() throws IOException, SQLException {
+    public void diff() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
         DiffResult diffResult = new Migrate().from(from).to(to).diff();
@@ -32,7 +31,7 @@ public class MigrateTest {
     }
 
     @Test
-    public void update() throws IOException, SQLException {
+    public void update() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
         DiffResult diffResult = new Migrate().from(from).to(to).diff();

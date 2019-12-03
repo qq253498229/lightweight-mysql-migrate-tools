@@ -39,6 +39,11 @@ public class Key implements Difference, Serializable {
     @DbUtilProperty("REFERENCED_COLUMN_NAME")
     private String referencedColumn;
 
+    public String getDeleteSql() {
+        //todo
+        return null;
+    }
+
     public String getCreateSql() {
         //获取key sql
         StringBuilder sb = new StringBuilder();
@@ -61,8 +66,4 @@ public class Key implements Difference, Serializable {
         return sb.toString();
     }
 
-    public String getUpdateSql() {
-        //todo
-        return null;
-    }
 }
