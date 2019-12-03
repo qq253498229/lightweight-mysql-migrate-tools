@@ -40,8 +40,20 @@ public class Key implements Difference, Serializable {
     private String referencedColumn;
 
     public String getDeleteSql() {
-        //todo
-        return null;
+        StringBuilder sb = new StringBuilder();
+        if (FLAG_PRIMARY.equals(this.name)) {
+            // 主键
+            sb.append("ALTER TABLE `").append(this.tableName).append("` DROP PRIMARY KEY;");
+        } else if (ObjectUtils.isEmpty(this.referencedSchema)
+                && ObjectUtils.isEmpty(this.referencedTable)
+                && ObjectUtils.isEmpty(this.referencedColumn)) {
+            // 唯一索引
+            sb.append("ALTER TABLE `").append(this.tableName).append("` DROP KEY `").append(this.name).append("`;");
+        } else {
+            // 外键
+            sb.append("ALTER TABLE `").append(this.tableName).append("` DROP FOREIGN KEY `").append(this.name).append("`;");
+        }
+        return sb.toString();
     }
 
     public String getCreateSql() {
