@@ -58,7 +58,7 @@ public class Migrate {
         log.debug("开始对比数据库");
         Database source = new Database().init(this.sourceInfo);
         Database target = new Database().init(this.targetInfo);
-        return new DiffResult().compare(source, target);
+        return new DiffResult(source, target).compare();
     }
 
 }

@@ -2,11 +2,13 @@ package cn.codeforfun.migrate.core;
 
 import cn.codeforfun.migrate.core.diff.DiffResult;
 import cn.codeforfun.migrate.core.entity.DatabaseInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
+@Slf4j
 public class MigrateTest {
 
     private static final Integer FROM_PORT = 3306;
@@ -26,7 +28,15 @@ public class MigrateTest {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
         DiffResult diffResult = new Migrate().from(from).to(to).diff();
-        String sql = diffResult.getSql();
-        System.out.println(sql);
+        diffResult.getSql();
     }
+
+    @Test
+    public void update() throws IOException, SQLException {
+        DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
+        DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
+        DiffResult diffResult = new Migrate().from(from).to(to).diff();
+        diffResult.update();
+    }
+
 }
