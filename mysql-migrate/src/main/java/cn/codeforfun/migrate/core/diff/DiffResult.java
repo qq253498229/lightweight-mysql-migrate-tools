@@ -40,63 +40,81 @@ public class DiffResult {
     public DiffResult compare() {
         List<Table> fromTableList = this.from.getTables();
         List<Table> toTableList = this.to.getTables();
-        List<Column> fromColumnList = this.from.getColumnList();
-        List<Column> toColumnList = this.to.getColumnList();
-        List<Key> fromKeyList = this.from.getKeyList();
-        List<Key> toKeyList = this.to.getKeyList();
-
-        // 删除
         List<String> fromTableNameList = fromTableList.stream().map(Table::getName).collect(Collectors.toList());
+        List<String> toTableNameList = toTableList.stream().map(Table::getName).collect(Collectors.toList());
+        // 删除表
         List<Table> deleteTableList = toTableList.stream().filter(s -> !fromTableNameList.contains(s.getName())).collect(Collectors.toList());
         this.delete.addAll(deleteTableList);
-        List<String> fromKeyNameList = fromKeyList.stream().map(Key::getName).collect(Collectors.toList());
-        List<Key> deleteKeyList = toKeyList.stream().filter(s -> !fromKeyNameList.contains(s.getName())).collect(Collectors.toList());
-        this.delete.addAll(deleteKeyList);
-        List<String> fromColumnNameList = fromColumnList.stream().map(Column::getName).collect(Collectors.toList());
-        List<Column> deleteColumnList = toColumnList.stream().filter(s -> !fromColumnNameList.contains(s.getName())).collect(Collectors.toList());
-        this.delete.addAll(deleteColumnList);
-
-        // 新建
-        List<String> toTableNameList = toTableList.stream().map(Table::getName).collect(Collectors.toList());
+        // 新建表
         List<Table> createTableList = fromTableList.stream().filter(s -> !toTableNameList.contains(s.getName())).collect(Collectors.toList());
         this.create.addAll(createTableList);
+        // 需要更新的表
+        List<Table> fromUpdateTableList = fromTableList.stream().filter(s -> toTableNameList.contains(s.getName())).collect(Collectors.toList());
+        List<Table> toUpdateTableList = toTableList.stream().filter(s -> fromTableNameList.contains(s.getName())).collect(Collectors.toList());
+
+        // 更新key
+        List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
+        List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
+        List<String> fromKeyNameList = fromKeyList.stream().map(Key::getName).collect(Collectors.toList());
         List<String> toKeyNameList = toKeyList.stream().map(Key::getName).collect(Collectors.toList());
+        // 删除key
+        List<Key> deleteKeyList = toKeyList.stream().filter(s -> !fromKeyNameList.contains(s.getName())).collect(Collectors.toList());
+        this.delete.addAll(deleteKeyList);
+        // 新建key
         List<Key> createKeyList = fromKeyList.stream().filter(s -> !toKeyNameList.contains(s.getName())).collect(Collectors.toList());
         this.create.addAll(createKeyList);
-        List<String> toColumnNameList = toColumnList.stream().map(Column::getName).collect(Collectors.toList());
-        List<Column> createColumnList = fromColumnList.stream().filter(s -> !toColumnNameList.contains(s.getName())).collect(Collectors.toList());
-        this.create.addAll(createColumnList);
-
-        // 更新
-        for (Column fromColumn : fromColumnList) {
-            for (Column toColumn : toColumnList) {
-                if (fromColumn.getName().equals(toColumn.getName()) && !fromColumn.equals(toColumn)) {
-                    this.update.add(fromColumn);
+        // 更新key
+        List<Key> updateKeyList = new ArrayList<>();
+        for (Key fromKey : fromKeyList) {
+            for (Key toKey : toKeyList) {
+                if (fromKey.getName().equals(toKey.getName()) && !fromKey.equals(toKey)) {
+                    updateKeyList.add(fromKey);
                 }
             }
         }
+        this.update.addAll(updateKeyList);
+
+        // 更新字段
+        List<Column> fromColumnList = fromUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
+        List<Column> toColumnList = toUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
+        List<String> fromColumnNameList = fromColumnList.stream().map(Column::getName).collect(Collectors.toList());
+        List<String> toColumnNameList = toColumnList.stream().map(Column::getName).collect(Collectors.toList());
+        // 删除字段
+        List<Column> deleteColumnList = toColumnList.stream().filter(s -> !fromColumnNameList.contains(s.getName())).collect(Collectors.toList());
+        this.delete.addAll(deleteColumnList);
+        // 新建字段
+        List<Column> createColumnList = fromColumnList.stream().filter(s -> !toColumnNameList.contains(s.getName())).collect(Collectors.toList());
+        this.create.addAll(createColumnList);
+        // 更新字段
+        List<Column> updateColumnList = new ArrayList<>();
+        for (Column fromColumn : fromColumnList) {
+            for (Column toColumn : toColumnList) {
+                if (fromColumn.getName().equals(toColumn.getName()) && !fromColumn.equals(toColumn)) {
+                    updateColumnList.add(fromColumn);
+                }
+            }
+        }
+        this.update.addAll(updateColumnList);
         return this;
     }
 
     private void resolveDeleteSql(StringBuilder sb) {
         for (Difference difference : this.delete) {
-            // 先删除外键
-            // 再删除表
             if (difference instanceof Table) {
+                // 先删除外键
                 Table delete = (Table) difference;
                 String deleteForeignKeySql = delete.getDeleteForeignKeySql();
                 sb.append(deleteForeignKeySql);
+                // 再删除表
                 String deleteSql = delete.getDeleteSql();
                 sb.append(deleteSql).append("\n");
-            }
-            // 删除key
-            if (difference instanceof Key) {
+            } else if (difference instanceof Key) {
+                // 删除key
                 Key delete = (Key) difference;
                 String deleteSql = delete.getDeleteSql();
                 sb.append(deleteSql);
-            }
-            // 删除字段
-            if (difference instanceof Column) {
+            } else if (difference instanceof Column) {
+                // 删除字段
                 Column delete = (Column) difference;
                 String deleteSql = delete.getDeleteSql();
                 sb.append(deleteSql);
@@ -106,20 +124,18 @@ public class DiffResult {
 
     private void resolveCreateSql(StringBuilder sb) {
         for (Difference difference : this.create) {
-            // 创建表
             if (difference instanceof Table) {
+                // 创建表
                 Table table = (Table) difference;
                 String createSql = table.getCreateSql();
                 sb.append(createSql).append("\n");
-            }
-            // 创建key
-            if (difference instanceof Key) {
+            } else if (difference instanceof Key) {
+                // 创建key
                 Key delete = (Key) difference;
                 String createSql = delete.getCreateSql();
                 sb.append(createSql);
-            }
-            // 创建字段
-            if (difference instanceof Column) {
+            } else if (difference instanceof Column) {
+                // 创建字段
                 Column delete = (Column) difference;
                 String createSql = delete.getCreateSql();
                 sb.append(createSql);
@@ -129,7 +145,15 @@ public class DiffResult {
 
     private void resolveUpdateSql(StringBuilder sb) {
         for (Difference difference : this.update) {
-            if (difference instanceof Column) {
+            if (difference instanceof Key) {
+                // 创建key
+                Key key = (Key) difference;
+                String deleteSql = key.getDeleteSql();
+                sb.append(deleteSql);
+                String createSql = key.getCreateSql();
+                sb.append(createSql);
+            } else if (difference instanceof Column) {
+                // 更新字段
                 Column column = (Column) difference;
                 String updateSql = column.getUpdateSql();
                 sb.append(updateSql).append("\n");
