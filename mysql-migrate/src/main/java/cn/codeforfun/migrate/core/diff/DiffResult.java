@@ -52,7 +52,7 @@ public class DiffResult {
         List<Table> fromUpdateTableList = fromTableList.stream().filter(s -> toTableNameList.contains(s.getName())).collect(Collectors.toList());
         List<Table> toUpdateTableList = toTableList.stream().filter(s -> fromTableNameList.contains(s.getName())).collect(Collectors.toList());
 
-        // 更新key
+        // key
         List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
         List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
         List<String> fromKeyNameList = fromKeyList.stream().map(Key::getName).collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class DiffResult {
         }
         this.update.addAll(updateKeyList);
 
-        // 更新字段
+        // 字段
         List<Column> fromColumnList = fromUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
         List<Column> toColumnList = toUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
         List<String> fromColumnNameList = fromColumnList.stream().map(Column::getName).collect(Collectors.toList());
