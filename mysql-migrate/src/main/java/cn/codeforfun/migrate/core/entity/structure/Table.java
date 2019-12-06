@@ -84,7 +84,7 @@ public class Table implements Serializable, Difference {
             sb.append(columnSql);
         }
         for (Key key : this.keys) {
-            String keySql = key.getCreateSql();
+            String keySql = key.getCreateTableSql();
             sb.append(keySql);
         }
         String columnSql = sb.substring(0, sb.length() - 1);

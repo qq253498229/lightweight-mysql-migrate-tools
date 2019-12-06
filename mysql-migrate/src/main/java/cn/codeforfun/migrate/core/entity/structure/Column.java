@@ -2,19 +2,18 @@ package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author wangbin
  */
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Column implements Difference, Serializable {
     private static final long serialVersionUID = -5078043863310019475L;
 
@@ -93,6 +92,39 @@ public class Column implements Difference, Serializable {
         createSql += getCreateSql();
         createSql = createSql.substring(0, createSql.length() - 1) + ";";
         return createSql;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Column)) {
+            return false;
+        }
+        Column column = (Column) o;
+        return Objects.equals(getSchema(), column.getSchema()) &&
+                Objects.equals(getTable(), column.getTable()) &&
+                Objects.equals(getName(), column.getName()) &&
+                Objects.equals(getPosition(), column.getPosition()) &&
+                Objects.equals(getDefaultValue(), column.getDefaultValue()) &&
+                Objects.equals(getNullable(), column.getNullable()) &&
+                Objects.equals(getType(), column.getType()) &&
+                Objects.equals(getMaxLength(), column.getMaxLength()) &&
+                Objects.equals(getNumericPrecision(), column.getNumericPrecision()) &&
+                Objects.equals(getNumericScale(), column.getNumericScale()) &&
+                Objects.equals(getDatetimePrecision(), column.getDatetimePrecision()) &&
+                Objects.equals(getCharacter(), column.getCharacter()) &&
+                Objects.equals(getCollation(), column.getCollation()) &&
+                Objects.equals(getColumnType(), column.getColumnType()) &&
+                Objects.equals(getExtra(), column.getExtra()) &&
+                Objects.equals(getComment(), column.getComment()) &&
+                Objects.equals(getGenerationExpression(), column.getGenerationExpression());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSchema(), getTable(), getName(), getPosition(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
     }
 
 }
