@@ -56,8 +56,9 @@ public class DiffResult {
         resolveCreateSql(sb);
         resolveUpdateSql(sb);
         String sql = sb.toString();
-        log.debug("sql生成结果:");
-        log.debug(sql);
+        for (String s : sql.split("\n")) {
+            log.debug("sql生成结果: {}", s);
+        }
         this.diffSql = sql;
         return sql;
     }
@@ -76,17 +77,17 @@ public class DiffResult {
                 // 删除key
                 Key delete = (Key) difference;
                 String deleteSql = delete.getDeleteSql();
-                sb.append(deleteSql);
+                sb.append(deleteSql).append("\n");
             } else if (difference instanceof Column) {
                 // 删除字段
                 Column delete = (Column) difference;
                 String deleteSql = delete.getDeleteSql();
-                sb.append(deleteSql);
+                sb.append(deleteSql).append("\n");
             } else if (difference instanceof View) {
                 // 删除view
                 View delete = (View) difference;
                 String deleteSql = delete.getDeleteSql();
-                sb.append(deleteSql);
+                sb.append(deleteSql).append("\n");
             }
         }
     }
@@ -102,17 +103,17 @@ public class DiffResult {
                 // 创建key
                 Key create = (Key) difference;
                 String createSql = create.getCreateSql();
-                sb.append(createSql);
+                sb.append(createSql).append("\n");
             } else if (difference instanceof Column) {
                 // 创建字段
                 Column create = (Column) difference;
                 String createSql = create.getCreateSql();
-                sb.append(createSql);
+                sb.append(createSql).append("\n");
             } else if (difference instanceof View) {
                 // 创建view
                 View create = (View) difference;
                 String createSql = create.getCreateSql();
-                sb.append(createSql);
+                sb.append(createSql).append("\n");
             }
         }
     }
@@ -123,9 +124,9 @@ public class DiffResult {
                 // 创建key
                 Key key = (Key) difference;
                 String deleteSql = key.getDeleteSql();
-                sb.append(deleteSql);
+                sb.append(deleteSql).append("\n");
                 String createSql = key.getCreateSql();
-                sb.append(createSql);
+                sb.append(createSql).append("\n");
             } else if (difference instanceof Column) {
                 // 更新字段
                 Column column = (Column) difference;
@@ -134,7 +135,7 @@ public class DiffResult {
             } else if (difference instanceof View) {
                 View view = (View) difference;
                 String updateSql = view.getUpdateSql();
-                sb.append(updateSql);
+                sb.append(updateSql).append("\n");
             }
         }
     }

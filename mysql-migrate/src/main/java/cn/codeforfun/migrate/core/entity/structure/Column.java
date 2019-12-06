@@ -60,7 +60,7 @@ public class Column implements Difference, Serializable {
 
     @Override
     public String getDeleteSql() {
-        return "ALTER TABLE `" + this.table + "` DROP COLUMN `" + this.name + "`;\n";
+        return "ALTER TABLE `" + this.table + "` DROP COLUMN `" + this.name + "`;";
     }
 
     /**

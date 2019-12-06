@@ -55,7 +55,6 @@ public class Key implements Difference, Serializable {
             // 外键
             sb.append("ALTER TABLE `").append(this.tableName).append("` DROP FOREIGN KEY `").append(this.name).append("`;");
         }
-        sb.append("\n");
         return sb.toString();
     }
 
@@ -86,21 +85,20 @@ public class Key implements Difference, Serializable {
         StringBuilder sb = new StringBuilder();
         if (FLAG_PRIMARY.equals(this.name)) {
             // 主键
-            sb.append("ALTER TABLE ").append(this.tableName).append(" ADD PRIMARY KEY (`").append(this.columnName).append("`);");
+            sb.append("ALTER TABLE `").append(this.tableName).append("` ADD PRIMARY KEY (`").append(this.columnName).append("`);");
         } else if (ObjectUtils.isEmpty(this.referencedSchema)
                 && ObjectUtils.isEmpty(this.referencedTable)
                 && ObjectUtils.isEmpty(this.referencedColumn)) {
             // 唯一索引
-            sb.append("ALTER TABLE ").append(this.tableName).append(" ADD UNIQUE KEY `").append(this.name).append("` (`").append(this.columnName).append("`);");
+            sb.append("ALTER TABLE `").append(this.tableName).append("` ADD UNIQUE KEY `").append(this.name).append("` (`").append(this.columnName).append("`);");
         } else {
             // 外键
-            sb.append("ALTER TABLE ").append(this.tableName).append(" ADD KEY `").append(this.name).append("` (`").append(this.columnName).append("`);\n");
-            sb.append("ALTER TABLE ").append(this.tableName).append(" ADD CONSTRAINT `").append(this.name).append("` ")
+            sb.append("ALTER TABLE `").append(this.tableName).append("` ADD KEY `").append(this.name).append("` (`").append(this.columnName).append("`);\n");
+            sb.append("ALTER TABLE `").append(this.tableName).append("` ADD CONSTRAINT `").append(this.name).append("` ")
                     .append("FOREIGN KEY (`").append(this.columnName).append("`) ")
                     .append("REFERENCES `").append(this.referencedTable).append("` ")
                     .append("(`").append(this.referencedColumn).append("`);");
         }
-        sb.append("\n");
         return sb.toString();
     }
 
