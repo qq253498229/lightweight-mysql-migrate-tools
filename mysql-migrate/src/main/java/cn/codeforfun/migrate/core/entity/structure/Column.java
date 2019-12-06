@@ -60,7 +60,7 @@ public class Column implements Difference, Serializable {
         return "ALTER TABLE `" + this.table + "` DROP COLUMN `" + this.name + "`;\n";
     }
 
-    public String getCreateSql() {
+    public String getCreateTableSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("`").append(this.name).append("`").append(" ");
         sb.append(this.columnType).append(" ");
@@ -85,9 +85,16 @@ public class Column implements Difference, Serializable {
         return sb.toString();
     }
 
+    public String getCreateSql() {
+        String createSql = "ALTER TABLE `" + this.table + "` ADD ";
+        createSql += getCreateTableSql();
+        createSql = createSql.substring(0, createSql.length() - 1) + ";";
+        return createSql;
+    }
+
     public String getUpdateSql() {
         String createSql = "ALTER TABLE `" + this.table + "` MODIFY ";
-        createSql += getCreateSql();
+        createSql += getCreateTableSql();
         createSql = createSql.substring(0, createSql.length() - 1) + ";";
         return createSql;
     }

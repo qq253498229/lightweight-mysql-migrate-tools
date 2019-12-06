@@ -80,7 +80,7 @@ public class Table implements Serializable, Difference {
         sql = sql.replace("${comment}", ObjectUtils.isEmpty(this.comment) ? "" : " COMMENT = '" + this.comment + "'");
         StringBuilder sb = new StringBuilder();
         for (Column column : this.columns) {
-            String columnSql = column.getCreateSql();
+            String columnSql = column.getCreateTableSql();
             sb.append(columnSql);
         }
         for (Key key : this.keys) {
