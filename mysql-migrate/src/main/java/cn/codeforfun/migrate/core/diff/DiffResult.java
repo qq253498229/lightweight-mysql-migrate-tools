@@ -1,19 +1,18 @@
 package cn.codeforfun.migrate.core.diff;
 
 import cn.codeforfun.migrate.core.entity.structure.*;
-import cn.codeforfun.migrate.core.utils.DbUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
+ * 结构差异实体
+ *
  * @author wangbin
  */
 @Getter
@@ -24,7 +23,10 @@ public class DiffResult {
 
     private Database from;
     private Database to;
-
+    /**
+     * 结构差异SQL
+     */
+    private String diffSql;
     private List<Difference> delete = new ArrayList<>();
     private List<Difference> create = new ArrayList<>();
     private List<Difference> update = new ArrayList<>();
@@ -34,88 +36,33 @@ public class DiffResult {
         this.to = to;
     }
 
-    public DiffResult compare() {
-        List<Table> fromTableList = this.from.getTables();
-        List<Table> toTableList = this.to.getTables();
-        List<String> fromTableNameList = fromTableList.stream().map(Table::getName).collect(Collectors.toList());
-        List<String> toTableNameList = toTableList.stream().map(Table::getName).collect(Collectors.toList());
-        // 删除表
-        List<Table> deleteTableList = toTableList.stream().filter(s -> !fromTableNameList.contains(s.getName())).collect(Collectors.toList());
-        this.delete.addAll(deleteTableList);
-        // 新建表
-        List<Table> createTableList = fromTableList.stream().filter(s -> !toTableNameList.contains(s.getName())).collect(Collectors.toList());
-        this.create.addAll(createTableList);
-        // 需要更新的表
-        List<Table> fromUpdateTableList = fromTableList.stream().filter(s -> toTableNameList.contains(s.getName())).collect(Collectors.toList());
-        List<Table> toUpdateTableList = toTableList.stream().filter(s -> fromTableNameList.contains(s.getName())).collect(Collectors.toList());
-
-        // key
-        List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
-        List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
-        List<String> fromKeyNameList = fromKeyList.stream().map(Key::getName).collect(Collectors.toList());
-        List<String> toKeyNameList = toKeyList.stream().map(Key::getName).collect(Collectors.toList());
-        // 删除key
-        List<Key> deleteKeyList = toKeyList.stream().filter(s -> !fromKeyNameList.contains(s.getName())).collect(Collectors.toList());
-        this.delete.addAll(deleteKeyList);
-        // 新建key
-        List<Key> createKeyList = fromKeyList.stream().filter(s -> !toKeyNameList.contains(s.getName())).collect(Collectors.toList());
-        this.create.addAll(createKeyList);
-        // 更新key
-        List<Key> updateKeyList = new ArrayList<>();
-        for (Key fromKey : fromKeyList) {
-            for (Key toKey : toKeyList) {
-                if (fromKey.getSchema().equals(toKey.getSchema())
-                        && fromKey.getName().equals(toKey.getName())
-                        && fromKey.getTableName().equals(toKey.getTableName())
-                        && !fromKey.equals(toKey)) {
-                    updateKeyList.add(fromKey);
-                }
-            }
+    /**
+     * 获取差异SQL
+     *
+     * @return sql
+     */
+    public String getSql() {
+        if (!ObjectUtils.isEmpty(this.diffSql)) {
+            return this.diffSql;
         }
-        this.update.addAll(updateKeyList);
-
-        // 字段
-        List<Column> fromColumnList = fromUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
-        List<Column> toColumnList = toUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
-        List<String> fromColumnNameList = fromColumnList.stream().map(Column::getName).collect(Collectors.toList());
-        List<String> toColumnNameList = toColumnList.stream().map(Column::getName).collect(Collectors.toList());
-        // 删除字段
-        List<Column> deleteColumnList = toColumnList.stream().filter(s -> !fromColumnNameList.contains(s.getName())).collect(Collectors.toList());
-        this.delete.addAll(deleteColumnList);
-        // 新建字段
-        List<Column> createColumnList = fromColumnList.stream().filter(s -> !toColumnNameList.contains(s.getName())).collect(Collectors.toList());
-        this.create.addAll(createColumnList);
-        // 更新字段
-        List<Column> updateColumnList = toColumnList.stream().map(s -> fromColumnList.stream().filter(j ->
-                s.getName().equals(j.getName())
-                        && s.getSchema().equals(j.getSchema())
-                        && s.getTable().equals(j.getTable())
-                        && !s.equals(j)
-        ).collect(Collectors.toList())).flatMap(List::stream).collect(Collectors.toList());
-        this.update.addAll(updateColumnList);
-
-        // view
-        List<View> fromViewList = this.from.getViews();
-        List<View> toViewList = this.to.getViews();
-        // 删除view
-        List<String> fromViewNameList = fromViewList.stream().map(View::getName).collect(Collectors.toList());
-        List<View> deleteViewList = toViewList.stream().filter(s -> !fromViewNameList.contains(s.getName())).collect(Collectors.toList());
-        this.delete.addAll(deleteViewList);
-        // 新建view
-        List<String> toViewNameList = toViewList.stream().map(View::getName).collect(Collectors.toList());
-        List<View> createViewList = fromViewList.stream().filter(s -> !toViewNameList.contains(s.getName())).collect(Collectors.toList());
-        this.create.addAll(createViewList);
-        // 更新view
-        List<View> updateViewList = toViewList.stream().map(s -> fromViewList.stream().filter(j ->
-                s.getName().equals(j.getName())
-                        && s.getSchema().equals(j.getSchema())
-                        && !s.equals(j)).collect(Collectors.toList())
-        ).flatMap(List::stream).collect(Collectors.toList());
-        this.update.addAll(updateViewList);
-        return this;
+        if (ObjectUtils.isEmpty(this.delete)
+                && ObjectUtils.isEmpty(this.create)
+                && ObjectUtils.isEmpty(this.update)) {
+            return null;
+        }
+        log.debug("开始生成sql...");
+        StringBuilder sb = new StringBuilder();
+        resolveDeleteSql(sb);
+        resolveCreateSql(sb);
+        resolveUpdateSql(sb);
+        String sql = sb.toString();
+        log.debug("sql生成结果:");
+        log.debug(sql);
+        this.diffSql = sql;
+        return sql;
     }
 
-    private void resolveDeleteSql(StringBuilder sb) {
+    public void resolveDeleteSql(StringBuilder sb) {
         for (Difference difference : this.delete) {
             if (difference instanceof Table) {
                 // 先删除外键
@@ -144,7 +91,7 @@ public class DiffResult {
         }
     }
 
-    private void resolveCreateSql(StringBuilder sb) {
+    public void resolveCreateSql(StringBuilder sb) {
         for (Difference difference : this.create) {
             if (difference instanceof Table) {
                 // 创建表
@@ -170,7 +117,7 @@ public class DiffResult {
         }
     }
 
-    private void resolveUpdateSql(StringBuilder sb) {
+    public void resolveUpdateSql(StringBuilder sb) {
         for (Difference difference : this.update) {
             if (difference instanceof Key) {
                 // 创建key
@@ -188,37 +135,6 @@ public class DiffResult {
                 View view = (View) difference;
                 String updateSql = view.getUpdateSql();
                 sb.append(updateSql);
-            }
-        }
-    }
-
-    public String getSql() {
-        if (ObjectUtils.isEmpty(this.delete) && ObjectUtils.isEmpty(this.create) && ObjectUtils.isEmpty(this.update)) {
-            log.debug("数据库结构没有变化。");
-            return null;
-        }
-        log.debug("开始生成sql...");
-        StringBuilder sb = new StringBuilder();
-        resolveDeleteSql(sb);
-        resolveCreateSql(sb);
-        resolveUpdateSql(sb);
-        String sql = sb.toString();
-        log.debug("sql生成结果:");
-        log.debug(sql);
-        return sql;
-    }
-
-    public void update() throws SQLException {
-        if (ObjectUtils.isEmpty(this.create)
-                && ObjectUtils.isEmpty(this.update)
-                && ObjectUtils.isEmpty(this.delete)) {
-            return;
-        }
-        String sql = getSql();
-        String[] split = sql.split("\n");
-        for (String s : split) {
-            if (!ObjectUtils.isEmpty(s)) {
-                DbUtil.execute(this.to.getConnection(), s);
             }
         }
     }

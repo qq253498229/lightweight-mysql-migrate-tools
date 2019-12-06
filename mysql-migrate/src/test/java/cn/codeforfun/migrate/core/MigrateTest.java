@@ -28,8 +28,10 @@ public class MigrateTest {
     public void diff() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
-        DiffResult diffResult = new Migrate().from(from).to(to).diff();
-        diffResult.getSql();
+        Migrate migrate = new Migrate().from(from).to(to);
+        DiffResult diffResult = migrate.diff();
+        String sql = diffResult.getSql();
+        System.out.println(sql);
     }
 
     @Test
@@ -37,8 +39,8 @@ public class MigrateTest {
     public void update() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_TABLE, FROM_USERNAME, FROM_PASSWORD);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
-        DiffResult diffResult = new Migrate().from(from).to(to).diff();
-        diffResult.update();
+        Migrate migrate = new Migrate().from(from).to(to);
+        migrate.update();
     }
 
 }

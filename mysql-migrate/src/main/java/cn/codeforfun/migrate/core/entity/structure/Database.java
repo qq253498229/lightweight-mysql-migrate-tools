@@ -4,7 +4,6 @@ import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 数据库结构定义
+ *
  * @author wangbin
  */
 @Getter
@@ -37,26 +37,25 @@ public class Database {
     private List<View> views;
     public static final String SQL = FileUtil.getStringByClasspath("sql/detail/database.sql");
 
-    @JsonIgnore
-    public List<Key> getKeyList() {
-        List<Key> result = new ArrayList<>();
-        this.getTables().forEach(s -> result.addAll(s.getKeys()));
-        return result;
-    }
-
-    @JsonIgnore
-    public List<Column> getColumnList() {
-        List<Column> result = new ArrayList<>();
-        this.getTables().forEach(s -> result.addAll(s.getColumns()));
-        return result;
-    }
-
+    /**
+     * 初始化数据库结构
+     *
+     * @param info 数据库基本信息
+     * @return 数据库结构
+     * @throws SQLException SQL异常
+     */
     public Database init(DatabaseInfo info) throws SQLException {
         this.info = info;
         this.connection = DbUtil.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
         return configure();
     }
 
+    /**
+     * 配置数据库结构
+     *
+     * @return 数据库结构
+     * @throws SQLException SQL异常
+     */
     private Database configure() throws SQLException {
         Database bean = DbUtil.getBean(this.connection, SQL, Database.class, this.info.getName());
         bean.setTables(Table.configure(this.connection, this.info.getName()));

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
 
 /**
- * 表定义
+ * 表结构定义
  *
  * @author wangbin
  */
@@ -67,10 +67,17 @@ public class Table implements Serializable, Difference {
         return sb.toString();
     }
 
+    @Override
+    public String getUpdateSql() {
+        return null;
+    }
+
+    @Override
     public String getDeleteSql() {
         return "DROP TABLE `" + this.name + "`;";
     }
 
+    @Override
     public String getCreateSql() {
         String sql = SQL;
         sql = sql.replace("${tableName}", this.name);

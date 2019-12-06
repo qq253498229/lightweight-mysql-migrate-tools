@@ -1,6 +1,8 @@
 package cn.codeforfun.migrate.core.exception;
 
 /**
+ * 数据库连接异常
+ *
  * @author wangbin
  */
 public class DatabaseConnectException extends RuntimeException {

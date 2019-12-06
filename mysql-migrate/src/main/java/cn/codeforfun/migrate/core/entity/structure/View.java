@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * View结构定义
+ *
  * @author wangbin
  */
 @Getter
@@ -48,10 +50,12 @@ public class View implements Serializable, Difference {
                 View.class, databaseName);
     }
 
+    @Override
     public String getCreateSql() {
         return getString("CREATE ");
     }
 
+    @Override
     public String getUpdateSql() {
         return getString("ALTER ");
     }
@@ -67,6 +71,7 @@ public class View implements Serializable, Difference {
         return sb.toString();
     }
 
+    @Override
     public String getDeleteSql() {
         return "drop view `" + this.name + "`;";
     }

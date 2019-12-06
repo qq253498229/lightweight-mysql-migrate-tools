@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * Key结构定义
+ *
  * @author wangbin
  */
 @Getter
@@ -38,6 +40,7 @@ public class Key implements Difference, Serializable {
     @DbUtilProperty("REFERENCED_COLUMN_NAME")
     private String referencedColumn;
 
+    @Override
     public String getDeleteSql() {
         StringBuilder sb = new StringBuilder();
         if (FLAG_PRIMARY.equals(this.name)) {
@@ -78,6 +81,7 @@ public class Key implements Difference, Serializable {
         return sb.toString();
     }
 
+    @Override
     public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
         if (FLAG_PRIMARY.equals(this.name)) {
@@ -98,6 +102,11 @@ public class Key implements Difference, Serializable {
         }
         sb.append("\n");
         return sb.toString();
+    }
+
+    @Override
+    public String getUpdateSql() {
+        return null;
     }
 
     @Override

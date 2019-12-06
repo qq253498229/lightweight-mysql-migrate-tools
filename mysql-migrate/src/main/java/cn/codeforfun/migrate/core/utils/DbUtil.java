@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
+ * DbUtil工具类
+ *
  * @author wangbin
  */
 @Slf4j

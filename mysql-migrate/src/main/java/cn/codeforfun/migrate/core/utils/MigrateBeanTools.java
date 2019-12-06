@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * DbUtil字段映射工具类
+ *
  * @author wangbin
  */
 public class MigrateBeanTools {

@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 文件工具类
+ *
  * @author org.springframework.util.ClassUtils
  * @author wangbin
  */

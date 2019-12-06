@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * 字段结构定义
+ *
  * @author wangbin
  */
 @Getter
@@ -56,10 +58,16 @@ public class Column implements Difference, Serializable {
     @DbUtilProperty("GENERATION_EXPRESSION")
     private String generationExpression;
 
+    @Override
     public String getDeleteSql() {
         return "ALTER TABLE `" + this.table + "` DROP COLUMN `" + this.name + "`;\n";
     }
 
+    /**
+     * 创建表的时候用到的sql
+     *
+     * @return sql
+     */
     public String getCreateTableSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("`").append(this.name).append("`").append(" ");
@@ -85,6 +93,7 @@ public class Column implements Difference, Serializable {
         return sb.toString();
     }
 
+    @Override
     public String getCreateSql() {
         String createSql = "ALTER TABLE `" + this.table + "` ADD ";
         createSql += getCreateTableSql();
@@ -92,6 +101,7 @@ public class Column implements Difference, Serializable {
         return createSql;
     }
 
+    @Override
     public String getUpdateSql() {
         String createSql = "ALTER TABLE `" + this.table + "` MODIFY ";
         createSql += getCreateTableSql();
