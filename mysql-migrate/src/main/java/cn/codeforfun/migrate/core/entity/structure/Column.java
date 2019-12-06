@@ -27,8 +27,6 @@ public class Column implements Difference, Serializable {
     private String table;
     @DbUtilProperty("COLUMN_NAME")
     private String name;
-    @DbUtilProperty("ORDINAL_POSITION")
-    private Long position;
     @DbUtilProperty("COLUMN_DEFAULT")
     private String defaultValue;
     @DbUtilProperty("IS_NULLABLE")
@@ -106,7 +104,6 @@ public class Column implements Difference, Serializable {
         return Objects.equals(getSchema(), column.getSchema()) &&
                 Objects.equals(getTable(), column.getTable()) &&
                 Objects.equals(getName(), column.getName()) &&
-                Objects.equals(getPosition(), column.getPosition()) &&
                 Objects.equals(getDefaultValue(), column.getDefaultValue()) &&
                 Objects.equals(getNullable(), column.getNullable()) &&
                 Objects.equals(getType(), column.getType()) &&
@@ -124,7 +121,7 @@ public class Column implements Difference, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSchema(), getTable(), getName(), getPosition(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
+        return Objects.hash(getSchema(), getTable(), getName(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
     }
 
 }
