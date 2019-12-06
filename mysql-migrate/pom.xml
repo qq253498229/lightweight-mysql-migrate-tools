@@ -11,8 +11,9 @@
     <groupId>cn.codeforfun</groupId>
     <artifactId>mysql-migrate</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MySQL::Migrate</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>MySQL Migrate</description>
+    <url>https://github.com/qq253498229/mysql-migrate-tool</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -179,16 +180,19 @@
 
     <licenses>
         <license>
-            <name>Apache License, Version 2.0</name>
+            <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
     <scm>
-        <url>https://github.com/qq253498229/mysql-migrate-tool.git</url>
+        <connection>scm:git:https://github.com/qq253498229/mysql-migrate-tool.git</connection>
+        <developerConnection>scm:git:git@github.com:qq253498229/mysql-migrate-tool.git</developerConnection>
+        <url>https://github.com/qq253498229/mysql-migrate-tool/tree/master</url>
     </scm>
+
     <developers>
         <developer>
-            <id>wangbin</id>
             <name>wangbin</name>
             <email>253498229@qq.com</email>
             <url>https://gitee.com/consolelog</url>
