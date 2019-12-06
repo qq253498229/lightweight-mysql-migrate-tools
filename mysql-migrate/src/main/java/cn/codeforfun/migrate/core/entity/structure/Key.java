@@ -94,7 +94,7 @@ public class Key implements Difference, Serializable {
             sb.append("ALTER TABLE ").append(this.tableName).append(" ADD CONSTRAINT `").append(this.name).append("` ")
                     .append("FOREIGN KEY (`").append(this.columnName).append("`) ")
                     .append("REFERENCES `").append(this.referencedTable).append("` ")
-                    .append("(`").append(this.referencedColumn).append("`),");
+                    .append("(`").append(this.referencedColumn).append("`);");
         }
         sb.append("\n");
         return sb.toString();

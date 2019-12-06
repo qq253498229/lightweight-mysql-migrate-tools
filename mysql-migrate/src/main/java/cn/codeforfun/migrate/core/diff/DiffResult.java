@@ -67,7 +67,10 @@ public class DiffResult {
         List<Key> updateKeyList = new ArrayList<>();
         for (Key fromKey : fromKeyList) {
             for (Key toKey : toKeyList) {
-                if (fromKey.getName().equals(toKey.getName()) && !fromKey.equals(toKey)) {
+                if (fromKey.getSchema().equals(toKey.getSchema())
+                        && fromKey.getName().equals(toKey.getName())
+                        && fromKey.getTableName().equals(toKey.getTableName())
+                        && !fromKey.equals(toKey)) {
                     updateKeyList.add(fromKey);
                 }
             }
@@ -89,7 +92,10 @@ public class DiffResult {
         List<Column> updateColumnList = new ArrayList<>();
         for (Column fromColumn : fromColumnList) {
             for (Column toColumn : toColumnList) {
-                if (fromColumn.getName().equals(toColumn.getName()) && !fromColumn.equals(toColumn)) {
+                if (fromColumn.getName().equals(toColumn.getName())
+                        && fromColumn.getSchema().equals(toColumn.getSchema())
+                        && fromColumn.getTable().equals(toColumn.getTable())
+                        && !fromColumn.equals(toColumn)) {
                     updateColumnList.add(fromColumn);
                 }
             }
