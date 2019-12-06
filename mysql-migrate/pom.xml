@@ -19,16 +19,12 @@
     </properties>
 
     <dependencies>
+        <!--Web-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-
+        <!--/Web-->
         <!--数据库-->
         <dependency>
             <groupId>mysql</groupId>
@@ -54,14 +50,18 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
         <!--/common-->
+        <!--Test-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <!--/Test-->
     </dependencies>
 
     <profiles>
@@ -84,16 +84,16 @@
             </pluginRepositories>
         </profile>
         <profile>
-            <id>pactera</id>
+            <id>internal</id>
             <repositories>
                 <repository>
-                    <id>pactera</id>
+                    <id>internal</id>
                     <url>http://192.168.112.62:8081/repository/maven-public/</url>
                 </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
-                    <id>pactera</id>
+                    <id>internal</id>
                     <url>http://192.168.112.62:8081/repository/maven-public/</url>
                 </pluginRepository>
             </pluginRepositories>
