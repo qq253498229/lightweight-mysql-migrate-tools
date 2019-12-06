@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author wangbin
@@ -35,4 +36,52 @@ public class View implements Serializable, Difference {
     private String checkOption;
     @DbUtilProperty("IS_UPDATABLE")
     private String updatable;
+
+    public String getCreateSql() {
+        return getString("CREATE ");
+    }
+
+    public String getUpdateSql() {
+        return getString("ALTER ");
+    }
+
+    private String getString(String type) {
+        StringBuilder sb = new StringBuilder();
+        String[] split = this.definer.split("@");
+        sb.append(type);
+        sb.append("DEFINER =`").append(split[0]).append("`@`").append(split[1]).append("` ");
+        sb.append("SQL SECURITY ").append(this.securityType).append(" ");
+        sb.append("VIEW `").append(this.name).append("` AS ");
+        sb.append(this.source);
+        return sb.toString();
+    }
+
+    public String getDeleteSql() {
+        return "drop view `" + this.name + "`;";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof View)) {
+            return false;
+        }
+        View view = (View) o;
+        return Objects.equals(getSchema(), view.getSchema()) &&
+                Objects.equals(getName(), view.getName()) &&
+                Objects.equals(getSource(), view.getSource()) &&
+                Objects.equals(getDefiner(), view.getDefiner()) &&
+                Objects.equals(getSecurityType(), view.getSecurityType()) &&
+                Objects.equals(getCharacter(), view.getCharacter()) &&
+                Objects.equals(getCollation(), view.getCollation()) &&
+                Objects.equals(getCheckOption(), view.getCheckOption()) &&
+                Objects.equals(getUpdatable(), view.getUpdatable());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSchema(), getName(), getSource(), getDefiner(), getSecurityType(), getCharacter(), getCollation(), getCheckOption(), getUpdatable());
+    }
 }
