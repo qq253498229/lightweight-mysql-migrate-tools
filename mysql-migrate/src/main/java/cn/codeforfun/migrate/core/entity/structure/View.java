@@ -2,11 +2,16 @@ package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
+import cn.codeforfun.migrate.core.utils.DbUtil;
+import cn.codeforfun.migrate.core.utils.FileUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,6 +41,12 @@ public class View implements Serializable, Difference {
     private String checkOption;
     @DbUtilProperty("IS_UPDATABLE")
     private String updatable;
+
+    public static List<View> configure(Connection connection, String databaseName) throws SQLException {
+        return DbUtil.getBeanList(connection,
+                FileUtil.getStringByClasspath("sql/detail/view.sql"),
+                View.class, databaseName);
+    }
 
     public String getCreateSql() {
         return getString("CREATE ");

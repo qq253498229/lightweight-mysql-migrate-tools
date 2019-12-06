@@ -1,9 +1,6 @@
 package cn.codeforfun.migrate.core.diff;
 
-import cn.codeforfun.migrate.core.entity.structure.Column;
-import cn.codeforfun.migrate.core.entity.structure.Database;
-import cn.codeforfun.migrate.core.entity.structure.Key;
-import cn.codeforfun.migrate.core.entity.structure.Table;
+import cn.codeforfun.migrate.core.entity.structure.*;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -89,18 +86,32 @@ public class DiffResult {
         List<Column> createColumnList = fromColumnList.stream().filter(s -> !toColumnNameList.contains(s.getName())).collect(Collectors.toList());
         this.create.addAll(createColumnList);
         // 更新字段
-        List<Column> updateColumnList = new ArrayList<>();
-        for (Column fromColumn : fromColumnList) {
-            for (Column toColumn : toColumnList) {
-                if (fromColumn.getName().equals(toColumn.getName())
-                        && fromColumn.getSchema().equals(toColumn.getSchema())
-                        && fromColumn.getTable().equals(toColumn.getTable())
-                        && !fromColumn.equals(toColumn)) {
-                    updateColumnList.add(fromColumn);
-                }
-            }
-        }
+        List<Column> updateColumnList = toColumnList.stream().map(s -> fromColumnList.stream().filter(j ->
+                s.getName().equals(j.getName())
+                        && s.getSchema().equals(j.getSchema())
+                        && s.getTable().equals(j.getTable())
+                        && !s.equals(j)
+        ).collect(Collectors.toList())).flatMap(List::stream).collect(Collectors.toList());
         this.update.addAll(updateColumnList);
+
+        // view
+        List<View> fromViewList = this.from.getViews();
+        List<View> toViewList = this.to.getViews();
+        // 删除view
+        List<String> fromViewNameList = fromViewList.stream().map(View::getName).collect(Collectors.toList());
+        List<View> deleteViewList = toViewList.stream().filter(s -> !fromViewNameList.contains(s.getName())).collect(Collectors.toList());
+        this.delete.addAll(deleteViewList);
+        // 新建view
+        List<String> toViewNameList = toViewList.stream().map(View::getName).collect(Collectors.toList());
+        List<View> createViewList = fromViewList.stream().filter(s -> !toViewNameList.contains(s.getName())).collect(Collectors.toList());
+        this.create.addAll(createViewList);
+        // 更新view
+        List<View> updateViewList = toViewList.stream().map(s -> fromViewList.stream().filter(j ->
+                s.getName().equals(j.getName())
+                        && s.getSchema().equals(j.getSchema())
+                        && !s.equals(j)).collect(Collectors.toList())
+        ).flatMap(List::stream).collect(Collectors.toList());
+        this.update.addAll(updateViewList);
         return this;
     }
 
@@ -124,6 +135,11 @@ public class DiffResult {
                 Column delete = (Column) difference;
                 String deleteSql = delete.getDeleteSql();
                 sb.append(deleteSql);
+            } else if (difference instanceof View) {
+                // 删除view
+                View delete = (View) difference;
+                String deleteSql = delete.getDeleteSql();
+                sb.append(deleteSql);
             }
         }
     }
@@ -132,18 +148,23 @@ public class DiffResult {
         for (Difference difference : this.create) {
             if (difference instanceof Table) {
                 // 创建表
-                Table table = (Table) difference;
-                String createSql = table.getCreateSql();
+                Table create = (Table) difference;
+                String createSql = create.getCreateSql();
                 sb.append(createSql).append("\n");
             } else if (difference instanceof Key) {
                 // 创建key
-                Key delete = (Key) difference;
-                String createSql = delete.getCreateSql();
+                Key create = (Key) difference;
+                String createSql = create.getCreateSql();
                 sb.append(createSql);
             } else if (difference instanceof Column) {
                 // 创建字段
-                Column delete = (Column) difference;
-                String createSql = delete.getCreateSql();
+                Column create = (Column) difference;
+                String createSql = create.getCreateSql();
+                sb.append(createSql);
+            } else if (difference instanceof View) {
+                // 创建view
+                View create = (View) difference;
+                String createSql = create.getCreateSql();
                 sb.append(createSql);
             }
         }
@@ -163,6 +184,10 @@ public class DiffResult {
                 Column column = (Column) difference;
                 String updateSql = column.getUpdateSql();
                 sb.append(updateSql).append("\n");
+            } else if (difference instanceof View) {
+                View view = (View) difference;
+                String updateSql = view.getUpdateSql();
+                sb.append(updateSql);
             }
         }
     }
