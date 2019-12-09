@@ -4,7 +4,7 @@
 
 * [*] Table
 * [*] View
-* [*] Function
+* [ ] Function
 * [ ] Procedure
 * [ ] Trigger
 
