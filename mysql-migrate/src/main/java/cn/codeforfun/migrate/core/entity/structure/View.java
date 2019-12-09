@@ -24,6 +24,7 @@ import java.util.Objects;
 @Slf4j
 public class View implements Serializable, Difference {
     private static final long serialVersionUID = 1007279552599004329L;
+
     @DbUtilProperty("TABLE_SCHEMA")
     private String schema;
     @DbUtilProperty("TABLE_NAME")

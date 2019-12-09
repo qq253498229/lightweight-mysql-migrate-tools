@@ -93,6 +93,14 @@ public class Migrate {
         // view
         List<View> fromViewList = this.diff.getFrom().getViews();
         List<View> toViewList = this.diff.getTo().getViews();
+        List<String> fromViewNameList = fromViewList.stream().map(View::getName).collect(Collectors.toList());
+        List<String> toViewNameList = toViewList.stream().map(View::getName).collect(Collectors.toList());
+        // function
+        List<Function> fromFunctionList = this.diff.getFrom().getFunctions();
+        List<Function> toFunctionList = this.diff.getTo().getFunctions();
+        List<String> fromFunctionNameList = fromFunctionList.stream().map(Function::getName).collect(Collectors.toList());
+        List<String> toFunctionNameList = toFunctionList.stream().map(Function::getName).collect(Collectors.toList());
+
 
         // 删除key
         List<Key> deleteKeyList = toKeyList.stream().filter(s -> !fromKeyNameList.contains(s.getName())).collect(Collectors.toList());
@@ -104,12 +112,13 @@ public class Migrate {
         List<Table> deleteTableList = toTableList.stream().filter(s -> !fromTableNameList.contains(s.getName())).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteTableList);
         // 删除view
-        List<String> fromViewNameList = fromViewList.stream().map(View::getName).collect(Collectors.toList());
         List<View> deleteViewList = toViewList.stream().filter(s -> !fromViewNameList.contains(s.getName())).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteViewList);
+        // 删除Function
+        List<Function> deleteFunctionList = toFunctionList.stream().filter(s -> !fromFunctionNameList.contains(s.getName())).collect(Collectors.toList());
+        this.diff.getDelete().addAll(deleteFunctionList);
 
         // 新建view
-        List<String> toViewNameList = toViewList.stream().map(View::getName).collect(Collectors.toList());
         List<View> createViewList = fromViewList.stream().filter(s -> !toViewNameList.contains(s.getName())).collect(Collectors.toList());
         this.diff.getCreate().addAll(createViewList);
         // 新建表
@@ -121,6 +130,9 @@ public class Migrate {
         // 新建key
         List<Key> createKeyList = fromKeyList.stream().filter(s -> !toKeyNameList.contains(s.getName())).collect(Collectors.toList());
         this.diff.getCreate().addAll(createKeyList);
+        // 新建Function
+        List<Function> createFunctionList = fromFunctionList.stream().filter(s -> !toFunctionNameList.contains(s.getName())).collect(Collectors.toList());
+        this.diff.getCreate().addAll(createFunctionList);
 
         // 更新字段
         List<Column> updateColumnList = toColumnList.stream().map(s -> fromColumnList.stream().filter(j ->
@@ -150,6 +162,13 @@ public class Migrate {
                         && !s.equals(j)).collect(Collectors.toList())
         ).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateViewList);
+        // 更新function
+        List<Function> updateFunctionList = toFunctionList.stream().map(s -> fromFunctionList.stream().filter(j ->
+                s.getName().equals(j.getName())
+                        && s.getSchema().equals(j.getSchema())
+                        && s.equals(j)).collect(Collectors.toList())
+        ).flatMap(List::stream).collect(Collectors.toList());
+        this.diff.getUpdate().addAll(updateFunctionList);
     }
 
     /**

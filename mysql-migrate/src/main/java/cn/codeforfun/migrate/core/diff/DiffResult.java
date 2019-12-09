@@ -88,6 +88,11 @@ public class DiffResult {
                 View delete = (View) difference;
                 String deleteSql = delete.getDeleteSql();
                 sb.append(deleteSql).append("\n");
+            } else if (difference instanceof Function) {
+                // 删除function
+                Function delete = (Function) difference;
+                String deleteSql = delete.getDeleteSql();
+                sb.append(deleteSql).append("\n");
             }
         }
     }
@@ -114,6 +119,11 @@ public class DiffResult {
                 View create = (View) difference;
                 String createSql = create.getCreateSql();
                 sb.append(createSql).append("\n");
+            } else if (difference instanceof Function) {
+                // 创建Function
+                Function create = (Function) difference;
+                String createSql = create.getCreateSql();
+                sb.append(createSql).append("\n");
             }
         }
     }
@@ -122,19 +132,25 @@ public class DiffResult {
         for (Difference difference : this.update) {
             if (difference instanceof Key) {
                 // 创建key
-                Key key = (Key) difference;
-                String deleteSql = key.getDeleteSql();
+                Key update = (Key) difference;
+                String deleteSql = update.getDeleteSql();
                 sb.append(deleteSql).append("\n");
-                String createSql = key.getCreateSql();
+                String createSql = update.getCreateSql();
                 sb.append(createSql).append("\n");
             } else if (difference instanceof Column) {
                 // 更新字段
-                Column column = (Column) difference;
-                String updateSql = column.getUpdateSql();
+                Column update = (Column) difference;
+                String updateSql = update.getUpdateSql();
                 sb.append(updateSql).append("\n");
             } else if (difference instanceof View) {
-                View view = (View) difference;
-                String updateSql = view.getUpdateSql();
+                // 更新view
+                View update = (View) difference;
+                String updateSql = update.getUpdateSql();
+                sb.append(updateSql).append("\n");
+            } else if (difference instanceof Function) {
+                // 更新function
+                Function update = (Function) difference;
+                String updateSql = update.getUpdateSql();
                 sb.append(updateSql).append("\n");
             }
         }
