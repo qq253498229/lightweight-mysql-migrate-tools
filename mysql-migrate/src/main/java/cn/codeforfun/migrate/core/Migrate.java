@@ -166,7 +166,7 @@ public class Migrate {
         List<Function> updateFunctionList = toFunctionList.stream().map(s -> fromFunctionList.stream().filter(j ->
                 s.getName().equals(j.getName())
                         && s.getSchema().equals(j.getSchema())
-                        && s.equals(j)).collect(Collectors.toList())
+                        && !s.equals(j)).collect(Collectors.toList())
         ).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateFunctionList);
     }
