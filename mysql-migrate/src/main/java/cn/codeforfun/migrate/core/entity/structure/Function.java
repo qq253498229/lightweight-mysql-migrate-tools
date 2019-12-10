@@ -75,7 +75,7 @@ public class Function implements Serializable, Difference {
         if (!ObjectUtils.isEmpty(param.getCharacter()) && !ObjectUtils.isEmpty(param.getCollation())) {
             sb.append(" CHARSET ").append(param.getCharacter()).append(" COLLATE ").append(param.getCollation());
         }
-        sb.append(" ").append(this.source);
+        sb.append(" ").append(this.source.replace("\n", ""));
         return sb.toString();
     }
 
