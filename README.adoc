@@ -47,3 +47,13 @@
 ----
 include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
+
+== 源码地址
+
+https://gitee.com/consolelog/demo-mysql-migrate.git[Gitee源码]
+
+https://consolelog.gitee.io/demo-mysql-migrate/[GiteePages]
+
+https://github.com/qq253498229/mysql-migrate-tool.git[Github源码]
+
+https://qq253498229.github.io/mysql-migrate-tool/[GithubPages]
