@@ -31,9 +31,9 @@ public class MigrateTest {
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
         Migrate migrate = new Migrate().from(from).to(to);
         DiffResult diffResult = migrate.diff();
-        List<String> sql = diffResult.getSqlList();
-        for (String s : sql) {
-            System.out.println(s);
+        List<String> sqlList = diffResult.getSqlList();
+        for (String sql : sqlList) {
+            System.out.println(sql);
         }
     }
 
