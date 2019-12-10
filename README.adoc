@@ -1,6 +1,11 @@
 = MySQL迁移工具
+:toc: left
+:version: 0.0.3
+:sourcedir: mysql-migrate/src
+:javadir: {sourcedir}/main/java
+:testdir: {sourcedir}/test/java
 
-== 支持迁移的模块
+== 模块
 
 * [*] Table
 * [*] View
@@ -20,23 +25,25 @@
 ** 修复添加字段导致生成SQL出错的BUG 大胃王 2019/12/7 上午5:30
 ** 修复先创建key后创建字段导致字段不存在的Bug 大胃王 2019/12/7 上午6:42
 
-[source]
-----
-<dependency>
-  <groupId>cn.codeforfun</groupId>
-  <artifactId>mysql-migrate</artifactId>
-  <version>0.0.2</version>
-</dependency>
-----
-
 * 0.0.1
 ** 初始化仓库
 
-[source]
+== 使用方法
+
+引入jar包
+
+[source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
   <groupId>cn.codeforfun</groupId>
   <artifactId>mysql-migrate</artifactId>
-  <version>0.0.1</version>
+  <version>{version}</version>
 </dependency>
+----
+
+测试类
+
+[source,java]
+----
+include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
