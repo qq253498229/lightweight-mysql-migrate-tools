@@ -32,7 +32,9 @@ public class MigrateTest {
         Migrate migrate = new Migrate().from(from).to(to);
         DiffResult diffResult = migrate.diff();
         List<String> sql = diffResult.getSqlList();
-        System.out.println(sql);
+        for (String s : sql) {
+            System.out.println(s);
+        }
     }
 
     @Test

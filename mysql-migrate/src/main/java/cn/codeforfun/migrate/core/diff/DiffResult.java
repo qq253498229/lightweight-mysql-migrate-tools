@@ -48,7 +48,7 @@ public class DiffResult {
         if (ObjectUtils.isEmpty(this.delete)
                 && ObjectUtils.isEmpty(this.create)
                 && ObjectUtils.isEmpty(this.update)) {
-            return null;
+            return new ArrayList<>();
         }
         log.debug("开始生成sql...");
         resolveDeleteSql();
