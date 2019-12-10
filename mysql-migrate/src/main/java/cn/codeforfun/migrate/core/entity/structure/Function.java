@@ -75,13 +75,13 @@ public class Function implements Serializable, Difference {
         if (!ObjectUtils.isEmpty(param.getCharacter()) && !ObjectUtils.isEmpty(param.getCollation())) {
             sb.append(" CHARSET ").append(param.getCharacter()).append(" COLLATE ").append(param.getCollation());
         }
-        sb.append(" ").append(this.source.replace("\n", ""));
+        sb.append(" ").append(this.source).append(";");
         return sb.toString();
     }
 
     @Override
     public String getUpdateSql() {
-        return getDeleteSql() + "\n" + getCreateSql();
+        return null;
     }
 
     @Override

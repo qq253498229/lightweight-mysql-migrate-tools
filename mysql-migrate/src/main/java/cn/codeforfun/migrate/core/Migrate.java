@@ -215,12 +215,9 @@ public class Migrate {
             return;
         }
         log.debug("开始同步数据库");
-        String sql = this.diff.getSql();
-        String[] split = sql.split("\n");
-        for (String s : split) {
-            if (!ObjectUtils.isEmpty(s)) {
-                DbUtil.execute(this.diff.getTo().getConnection(), s);
-            }
+        List<String> sqlList = this.diff.getSqlList();
+        for (String sql : sqlList) {
+            DbUtil.execute(this.diff.getTo().getConnection(), sql);
         }
         log.debug("数据库同步完成");
     }

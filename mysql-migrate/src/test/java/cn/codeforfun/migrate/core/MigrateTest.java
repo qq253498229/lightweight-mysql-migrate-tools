@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Slf4j
 public class MigrateTest {
@@ -30,7 +31,7 @@ public class MigrateTest {
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_TABLE, TO_USERNAME, TO_PASSWORD);
         Migrate migrate = new Migrate().from(from).to(to);
         DiffResult diffResult = migrate.diff();
-        String sql = diffResult.getSql();
+        List<String> sql = diffResult.getSqlList();
         System.out.println(sql);
     }
 

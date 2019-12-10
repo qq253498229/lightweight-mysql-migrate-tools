@@ -61,7 +61,7 @@ public class Table implements Serializable, Difference {
                     && !ObjectUtils.isEmpty(key.getReferencedTable())
                     && !ObjectUtils.isEmpty(key.getReferencedColumn())
             ) {
-                sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;\n");
+                sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;");
             }
         }
         return sb.toString();

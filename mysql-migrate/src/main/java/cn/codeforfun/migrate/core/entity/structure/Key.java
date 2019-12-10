@@ -93,7 +93,7 @@ public class Key implements Difference, Serializable {
             sb.append("ALTER TABLE `").append(this.tableName).append("` ADD UNIQUE KEY `").append(this.name).append("` (`").append(this.columnName).append("`);");
         } else {
             // 外键
-            sb.append("ALTER TABLE `").append(this.tableName).append("` ADD KEY `").append(this.name).append("` (`").append(this.columnName).append("`);\n");
+            sb.append("ALTER TABLE `").append(this.tableName).append("` ADD KEY `").append(this.name).append("` (`").append(this.columnName).append("`);");
             sb.append("ALTER TABLE `").append(this.tableName).append("` ADD CONSTRAINT `").append(this.name).append("` ")
                     .append("FOREIGN KEY (`").append(this.columnName).append("`) ")
                     .append("REFERENCES `").append(this.referencedTable).append("` ")
