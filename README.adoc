@@ -56,16 +56,16 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 
 == 源码地址
 
-https://gitee.com/consolelog/demo-mysql-migrate.git[Gitee源码]
+https://gitee.com/consolelog/lightweight-mysql-migrate-tools.git[Gitee源码]
 
-https://consolelog.gitee.io/demo-mysql-migrate/[GiteePages]
+https://consolelog.gitee.io/lightweight-mysql-migrate-tools/[GiteePages]
 
-https://github.com/qq253498229/mysql-migrate-tool.git[Github源码]
+https://github.com/qq253498229/lightweight-mysql-migrate-tools.git[Github源码]
 
-https://qq253498229.github.io/mysql-migrate-tool/[GithubPages]
+https://qq253498229.github.io/lightweight-mysql-migrate-tools/[GithubPages]
 
 == 反馈和贡献
 
-https://gitee.com/consolelog/demo-mysql-migrate/issues[GiteeIssues]
+https://gitee.com/consolelog/lightweight-mysql-migrate-tools/issues[GiteeIssues]
 
-https://github.com/qq253498229/mysql-migrate-tool/issues[GithubIssues]
+https://github.com/qq253498229/lightweight-mysql-migrate-tools/issues[GithubIssues]

@@ -12,7 +12,7 @@
     <artifactId>mysql-migrate</artifactId>
     <version>1.0.0</version>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>MySQL Migrate Tools</description>
+    <description>lightweight-mysql-migrate-tools</description>
     <url>https://github.com/qq253498229/mysql-migrate-tool</url>
 
     <properties>
