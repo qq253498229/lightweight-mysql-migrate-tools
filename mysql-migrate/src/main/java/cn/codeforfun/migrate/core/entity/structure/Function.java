@@ -56,7 +56,6 @@ public class Function implements Serializable, Difference {
 
     @Override
     public String getCreateSql() {
-        //fixme
         StringBuilder sb = new StringBuilder();
         String[] split = this.definer.split("@");
         sb.append("CREATE DEFINER = `").append(split[0]).append("`@`").append(split[1]).append("`");
