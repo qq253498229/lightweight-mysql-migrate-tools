@@ -31,25 +31,25 @@ public class Function implements Serializable, Difference {
     private String name;
     private String source;
 
-    private List<FunctionParam> functionParams = new ArrayList<>();
+    private List<Routine> routines = new ArrayList<>();
 
     public static List<Function> configure(Connection connection, String databaseName) throws SQLException {
-        List<FunctionParam> beanList = DbUtil.getBeanList(connection,
+        List<Routine> beanList = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/function.sql"),
-                FunctionParam.class, databaseName);
+                Routine.class, databaseName);
         Map<String, Function> functions = new HashMap<>(0);
-        for (FunctionParam param : beanList) {
-            Function function = functions.get(param.getName());
+        for (Routine routine : beanList) {
+            Function function = functions.get(routine.getName());
             if (function == null) {
                 function = new Function();
             }
-            function.getFunctionParams().add(param);
-            function.setDefiner(param.getDefiner());
-            function.setSecurityType(param.getSecurityType());
-            function.setSchema(param.getSchema());
-            function.setName(param.getName());
-            function.setSource(param.getSource());
-            functions.put(param.getName(), function);
+            function.getRoutines().add(routine);
+            function.setDefiner(routine.getDefiner());
+            function.setSecurityType(routine.getSecurityType());
+            function.setSchema(routine.getSchema());
+            function.setName(routine.getName());
+            function.setSource(routine.getSource());
+            functions.put(routine.getName(), function);
         }
         return new ArrayList<>(functions.values());
     }
@@ -61,15 +61,15 @@ public class Function implements Serializable, Difference {
         sb.append("CREATE DEFINER = `").append(split[0]).append("`@`").append(split[1]).append("`");
         sb.append(" FUNCTION `").append(this.name).append("`");
         sb.append("(");
-        List<FunctionParam> inputTypeList = this.getFunctionParams().stream().filter(s -> "IN".equals(s.getParamMode())).collect(Collectors.toList());
-        List<FunctionParam> resultTypeList = this.getFunctionParams().stream().filter(s -> null == s.getParamMode()).collect(Collectors.toList());
-        for (FunctionParam param : inputTypeList) {
+        List<Routine> inputTypeList = this.getRoutines().stream().filter(s -> "IN".equals(s.getParamMode())).collect(Collectors.toList());
+        List<Routine> resultTypeList = this.getRoutines().stream().filter(s -> null == s.getParamMode()).collect(Collectors.toList());
+        for (Routine param : inputTypeList) {
             sb.append(param.getParamName()).append(" ").append(param.getResultType()).append(",");
         }
         sb = new StringBuilder(sb.substring(0, sb.length() - 1));
         sb.append(")");
         sb.append(" RETURNS ");
-        FunctionParam param = resultTypeList.get(0);
+        Routine param = resultTypeList.get(0);
         sb.append(param.getResultType());
         if (!ObjectUtils.isEmpty(param.getCharacter()) && !ObjectUtils.isEmpty(param.getCollation())) {
             sb.append(" CHARSET ").append(param.getCharacter()).append(" COLLATE ").append(param.getCollation());
@@ -102,7 +102,7 @@ public class Function implements Serializable, Difference {
                 Objects.equals(getSchema(), function.getSchema()) &&
                 Objects.equals(getName(), function.getName()) &&
                 Objects.equals(getSource(), function.getSource()) &&
-                Objects.equals(getFunctionParams(), function.getFunctionParams());
+                Objects.equals(getRoutines(), function.getRoutines());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Function implements Serializable, Difference {
                 getSchema(),
                 getName(),
                 getSource(),
-                getFunctionParams());
+                getRoutines());
     }
 
 }

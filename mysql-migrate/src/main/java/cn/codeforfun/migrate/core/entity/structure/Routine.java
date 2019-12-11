@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-public class FunctionParam {
+public class Routine {
 
     @DbUtilProperty("SECURITY_TYPE")
     private String securityType;
@@ -50,10 +50,10 @@ public class FunctionParam {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FunctionParam)) {
+        if (!(o instanceof Routine)) {
             return false;
         }
-        FunctionParam that = (FunctionParam) o;
+        Routine that = (Routine) o;
         return Objects.equals(getSecurityType(), that.getSecurityType()) &&
                 Objects.equals(getDefiner(), that.getDefiner()) &&
                 Objects.equals(getSchema(), that.getSchema()) &&
