@@ -1,6 +1,6 @@
 = MySQL迁移工具
 :toc: left
-:version: 0.0.3
+:version: 0.0.4
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
