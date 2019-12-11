@@ -86,6 +86,31 @@ public class Migrate {
         compareTable(fromTableList, toTableList, fromTableNameList, toTableNameList);
         compareView();
         compareFunction();
+        compareTrigger();
+    }
+
+    /**
+     * 对比trigger
+     */
+    private void compareTrigger() {
+        // trigger
+        List<Trigger> fromTriggerList = this.diff.getFrom().getTriggers();
+        List<Trigger> toTriggerList = this.diff.getTo().getTriggers();
+        List<String> fromTriggerNameList = fromTriggerList.stream().map(Trigger::getName).collect(Collectors.toList());
+        List<String> toTriggerNameList = toTriggerList.stream().map(Trigger::getName).collect(Collectors.toList());
+        // 删除trigger
+        List<Trigger> deleteTriggerList = toTriggerList.stream().filter(s -> !fromTriggerNameList.contains(s.getName())).collect(Collectors.toList());
+        this.diff.getDelete().addAll(deleteTriggerList);
+        // 新建trigger
+        List<Trigger> createTriggerList = fromTriggerList.stream().filter(s -> !toTriggerNameList.contains(s.getName())).collect(Collectors.toList());
+        this.diff.getCreate().addAll(createTriggerList);
+        // 更新trigger
+        List<Trigger> updateTriggerList = toTriggerList.stream().map(s -> fromTriggerList.stream().filter(j ->
+                s.getName().equals(j.getName())
+                        && s.getSchema().equals(j.getSchema())
+                        && !s.equals(j)).collect(Collectors.toList())
+        ).flatMap(List::stream).collect(Collectors.toList());
+        this.diff.getUpdate().addAll(updateTriggerList);
     }
 
     /**

@@ -89,6 +89,11 @@ public class DiffResult {
                 Function delete = (Function) difference;
                 String deleteSql = delete.getDeleteSql();
                 this.sqlList.add(deleteSql);
+            } else if (difference instanceof Trigger) {
+                // 删除trigger
+                Trigger delete = (Trigger) difference;
+                String deleteSql = delete.getDeleteSql();
+                this.sqlList.add(deleteSql);
             }
         }
     }
@@ -120,6 +125,11 @@ public class DiffResult {
                 Function create = (Function) difference;
                 String createSql = create.getCreateSql();
                 this.sqlList.add(createSql);
+            } else if (difference instanceof Trigger) {
+                // 创建Trigger
+                Trigger create = (Trigger) difference;
+                String createSql = create.getCreateSql();
+                this.sqlList.add(createSql);
             }
         }
     }
@@ -146,6 +156,13 @@ public class DiffResult {
             } else if (difference instanceof Function) {
                 // 更新function
                 Function update = (Function) difference;
+                String deleteSql = update.getDeleteSql();
+                this.sqlList.add(deleteSql);
+                String createSql = update.getCreateSql();
+                this.sqlList.add(createSql);
+            } else if (difference instanceof Trigger) {
+                // 更新Trigger
+                Trigger update = (Trigger) difference;
                 String deleteSql = update.getDeleteSql();
                 this.sqlList.add(deleteSql);
                 String createSql = update.getCreateSql();

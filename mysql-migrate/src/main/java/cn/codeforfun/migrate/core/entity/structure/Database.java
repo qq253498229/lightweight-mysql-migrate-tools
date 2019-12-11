@@ -36,6 +36,7 @@ public class Database {
     private List<Table> tables;
     private List<View> views;
     private List<Function> functions;
+    private List<Trigger> triggers;
 
     public static final String SQL = FileUtil.getStringByClasspath("sql/detail/database.sql");
 
@@ -63,6 +64,7 @@ public class Database {
         bean.setTables(Table.configure(this.connection, this.info.getName()));
         bean.setViews(View.configure(this.connection, this.info.getName()));
         bean.setFunctions(Function.configure(this.connection, this.info.getName()));
+        bean.setTriggers(Trigger.configure(this.connection, this.info.getName()));
         bean.setInfo(this.info);
         bean.setConnection(this.connection);
         return bean;
