@@ -1,4 +1,4 @@
-select TABLE_CATALOG,
+SELECT TABLE_CATALOG,
        TABLE_SCHEMA,
        TABLE_NAME,
        COLUMN_NAME,
@@ -19,5 +19,5 @@ select TABLE_CATALOG,
        PRIVILEGES,
        COLUMN_COMMENT,
        GENERATION_EXPRESSION
-from information_schema.COLUMNS
-where TABLE_SCHEMA = ?
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = ?

@@ -1,4 +1,4 @@
-select TABLE_CATALOG,
+SELECT TABLE_CATALOG,
        TABLE_SCHEMA,
        TABLE_NAME,
        VIEW_DEFINITION,
@@ -8,5 +8,5 @@ select TABLE_CATALOG,
        SECURITY_TYPE,
        CHARACTER_SET_CLIENT,
        COLLATION_CONNECTION
-from information_schema.VIEWS
-where TABLE_SCHEMA = ?
+FROM information_schema.VIEWS
+WHERE TABLE_SCHEMA = ?
