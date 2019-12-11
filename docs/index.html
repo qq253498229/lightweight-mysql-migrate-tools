@@ -442,9 +442,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_模块">模块</a></li>
-<li><a href="#_更新日志">更新日志</a></li>
+<li><a href="#_支持模块">支持模块</a></li>
 <li><a href="#_使用方法">使用方法</a></li>
+<li><a href="#_更新日志">更新日志</a></li>
 <li><a href="#_源码地址">源码地址</a></li>
 <li><a href="#_反馈和贡献">反馈和贡献</a></li>
 </ul>
@@ -452,7 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_模块">模块</h2>
+<h2 id="_支持模块">支持模块</h2>
 <div class="sectionbody">
 <div class="ulist checklist">
 <ul class="checklist">
@@ -466,71 +466,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>&#10003; Function</p>
 </li>
 <li>
-<p>&#10063; Procedure</p>
+<p>&#10003; Procedure</p>
 </li>
 <li>
 <p>&#10003; Trigger</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_更新日志">更新日志</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>0.0.4</p>
-<div class="ulist">
-<ul>
-<li>
-<p>添加trigger 大胃王 2019/12/11, 3:23 下午</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>0.0.3</p>
-<div class="ulist">
-<ul>
-<li>
-<p>添加function同步功能</p>
-</li>
-<li>
-<p>fix-生成的sql为null的错误 王斌 2019/12/10, 9:45 上午</p>
-</li>
-<li>
-<p>fix-sql不换行导致的执行错误 王斌 2019/12/10, 10:06 上午</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>0.0.2</p>
-<div class="ulist">
-<ul>
-<li>
-<p>修复字段顺序不匹配导致的结构差异化BUG 大胃王 2019/12/7 上午5:20</p>
-</li>
-<li>
-<p>修复添加字段导致生成SQL出错的BUG 大胃王 2019/12/7 上午5:30</p>
-</li>
-<li>
-<p>修复先创建key后创建字段导致字段不存在的Bug 大胃王 2019/12/7 上午6:42</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>0.0.1</p>
-<div class="ulist">
-<ul>
-<li>
-<p>初始化仓库</p>
-</li>
-</ul>
-</div>
 </li>
 </ul>
 </div>
@@ -547,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;cn.codeforfun&lt;/groupId&gt;
   &lt;artifactId&gt;mysql-migrate&lt;/artifactId&gt;
-  &lt;version&gt;0.0.4&lt;/version&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -610,6 +549,77 @@ public class MigrateTest {
 </div>
 </div>
 <div class="sect1">
+<h2 id="_更新日志">更新日志</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>1.0.0</p>
+<div class="ulist">
+<ul>
+<li>
+<p>添加procedure 大胃王 2019/12/11, 5:48 下午</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>0.0.4</p>
+<div class="ulist">
+<ul>
+<li>
+<p>添加trigger 大胃王 2019/12/11, 3:23 下午</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>0.0.3</p>
+<div class="ulist">
+<ul>
+<li>
+<p>添加function同步功能</p>
+</li>
+<li>
+<p>fix-生成的sql为null的错误 王斌 2019/12/10, 9:45 上午</p>
+</li>
+<li>
+<p>fix-sql不换行导致的执行错误 王斌 2019/12/10, 10:06 上午</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>0.0.2</p>
+<div class="ulist">
+<ul>
+<li>
+<p>修复字段顺序不匹配导致的结构差异化BUG 大胃王 2019/12/7 上午5:20</p>
+</li>
+<li>
+<p>修复添加字段导致生成SQL出错的BUG 大胃王 2019/12/7 上午5:30</p>
+</li>
+<li>
+<p>修复先创建key后创建字段导致字段不存在的Bug 大胃王 2019/12/7 上午6:42</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>0.0.1</p>
+<div class="ulist">
+<ul>
+<li>
+<p>初始化仓库</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_源码地址">源码地址</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -640,7 +650,7 @@ public class MigrateTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-11 15:55:33 +0800
+Last updated 2019-12-11 17:59:05 +0800
 </div>
 </div>
 </body>
