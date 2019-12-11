@@ -10,7 +10,7 @@
     </parent>
     <groupId>cn.codeforfun</groupId>
     <artifactId>mysql-migrate</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>MySQL Migrate Tools</description>
     <url>https://github.com/qq253498229/mysql-migrate-tool</url>

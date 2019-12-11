@@ -11,9 +11,12 @@
 * [*] View
 * [*] Function
 * [ ] Procedure
-* [ ] Trigger
+* [*] Trigger
 
 == 更新日志
+
+* 0.0.4
+** 添加trigger 大胃王 2019/12/11, 3:23 下午
 
 * 0.0.3
 ** 添加function同步功能
