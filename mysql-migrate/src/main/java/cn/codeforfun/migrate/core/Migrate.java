@@ -86,6 +86,7 @@ public class Migrate {
         compareTable(fromTableList, toTableList, fromTableNameList, toTableNameList);
         compareView();
         compareFunction();
+        compareProcedure();
         compareTrigger();
     }
 
@@ -111,6 +112,30 @@ public class Migrate {
                         && !s.equals(j)).collect(Collectors.toList())
         ).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateTriggerList);
+    }
+
+    /**
+     * 对比procedure
+     */
+    private void compareProcedure() {
+        // Procedure
+        List<Procedure> fromProcedureList = this.diff.getFrom().getProcedures();
+        List<Procedure> toProcedureList = this.diff.getTo().getProcedures();
+        List<String> fromProcedureNameList = fromProcedureList.stream().map(Procedure::getName).collect(Collectors.toList());
+        List<String> toProcedureNameList = toProcedureList.stream().map(Procedure::getName).collect(Collectors.toList());
+        // 删除Procedure
+        List<Procedure> deleteProcedureList = toProcedureList.stream().filter(s -> !fromProcedureNameList.contains(s.getName())).collect(Collectors.toList());
+        this.diff.getDelete().addAll(deleteProcedureList);
+        // 新建Procedure
+        List<Procedure> createProcedureList = fromProcedureList.stream().filter(s -> !toProcedureNameList.contains(s.getName())).collect(Collectors.toList());
+        this.diff.getCreate().addAll(createProcedureList);
+        // 更新Procedure
+        List<Procedure> updateProcedureList = toProcedureList.stream().map(s -> fromProcedureList.stream().filter(j ->
+                s.getName().equals(j.getName())
+                        && s.getSchema().equals(j.getSchema())
+                        && !s.equals(j)).collect(Collectors.toList())
+        ).flatMap(List::stream).collect(Collectors.toList());
+        this.diff.getUpdate().addAll(updateProcedureList);
     }
 
     /**
