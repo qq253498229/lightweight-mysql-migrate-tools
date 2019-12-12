@@ -4,6 +4,7 @@ import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -51,11 +52,13 @@ public class View implements Serializable, Difference {
                 View.class, databaseName);
     }
 
+    @JsonIgnore
     @Override
     public String getCreateSql() {
         return getString("CREATE ");
     }
 
+    @JsonIgnore
     @Override
     public String getUpdateSql() {
         return getString("ALTER ");
@@ -72,6 +75,7 @@ public class View implements Serializable, Difference {
         return sb.toString();
     }
 
+    @JsonIgnore
     @Override
     public String getDeleteSql() {
         return "drop view `" + this.name + "`;";

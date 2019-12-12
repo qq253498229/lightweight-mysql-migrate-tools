@@ -4,6 +4,7 @@ import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Database {
     private DatabaseInfo info;
+    @JsonIgnore
     private Connection connection;
 
     @DbUtilProperty("SCHEMA_NAME")

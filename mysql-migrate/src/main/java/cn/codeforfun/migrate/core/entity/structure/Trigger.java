@@ -4,6 +4,7 @@ import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,7 @@ public class Trigger implements Serializable, Difference {
                 Trigger.class, databaseName);
     }
 
+    @JsonIgnore
     @Override
     public String getCreateSql() {
         String[] split = this.definer.split("@");
@@ -57,11 +59,13 @@ public class Trigger implements Serializable, Difference {
                 "FOR EACH " + this.actionOrientation + " " + this.source + ";";
     }
 
+    @JsonIgnore
     @Override
     public String getUpdateSql() {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public String getDeleteSql() {
         return "DROP TRIGGER `" + this.name + "`;";

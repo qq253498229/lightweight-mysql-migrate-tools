@@ -3,6 +3,7 @@ package cn.codeforfun.migrate.core.entity.structure;
 import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,7 @@ public class Function implements Serializable, Difference {
         return new ArrayList<>(functions.values());
     }
 
+    @JsonIgnore
     @Override
     public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
@@ -78,11 +80,13 @@ public class Function implements Serializable, Difference {
         return sb.toString();
     }
 
+    @JsonIgnore
     @Override
     public String getUpdateSql() {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public String getDeleteSql() {
         return "DROP FUNCTION `" + this.name + "`;";

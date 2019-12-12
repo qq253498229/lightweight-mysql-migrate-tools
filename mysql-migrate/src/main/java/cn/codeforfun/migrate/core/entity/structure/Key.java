@@ -2,6 +2,7 @@ package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.ObjectUtils;
@@ -40,6 +41,7 @@ public class Key implements Difference, Serializable {
     @DbUtilProperty("REFERENCED_COLUMN_NAME")
     private String referencedColumn;
 
+    @JsonIgnore
     @Override
     public String getDeleteSql() {
         StringBuilder sb = new StringBuilder();
@@ -58,6 +60,7 @@ public class Key implements Difference, Serializable {
         return sb.toString();
     }
 
+    @JsonIgnore
     public String getCreateTableSql() {
         //获取key sql
         StringBuilder sb = new StringBuilder();
@@ -80,6 +83,7 @@ public class Key implements Difference, Serializable {
         return sb.toString();
     }
 
+    @JsonIgnore
     @Override
     public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
@@ -102,6 +106,7 @@ public class Key implements Difference, Serializable {
         return sb.toString();
     }
 
+    @JsonIgnore
     @Override
     public String getUpdateSql() {
         return null;

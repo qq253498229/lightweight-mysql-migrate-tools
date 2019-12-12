@@ -1,5 +1,6 @@
 package cn.codeforfun.migrate.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,7 @@ public class DatabaseInfo implements Serializable {
     /**
      * 数据库密码
      */
+    @JsonIgnore
     private String password;
     /**
      * 数据库连接地址

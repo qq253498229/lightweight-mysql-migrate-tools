@@ -4,6 +4,7 @@ import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +67,7 @@ public class Table implements Serializable, Difference {
         return false;
     }
 
+    @JsonIgnore
     public String getDeleteForeignKeySql() {
         StringBuilder sb = new StringBuilder();
         for (Key key : this.keys) {
@@ -80,16 +82,19 @@ public class Table implements Serializable, Difference {
         return sb.toString();
     }
 
+    @JsonIgnore
     @Override
     public String getUpdateSql() {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public String getDeleteSql() {
         return "DROP TABLE `" + this.name + "`;";
     }
 
+    @JsonIgnore
     @Override
     public String getCreateSql() {
         String sql = SQL;

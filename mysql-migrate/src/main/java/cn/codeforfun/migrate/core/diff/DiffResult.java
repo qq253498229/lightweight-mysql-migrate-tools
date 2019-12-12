@@ -1,6 +1,7 @@
 package cn.codeforfun.migrate.core.diff;
 
 import cn.codeforfun.migrate.core.entity.structure.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,6 +43,7 @@ public class DiffResult {
      *
      * @return sql
      */
+    @JsonIgnore
     public List<String> getSqlList() {
         if (!ObjectUtils.isEmpty(this.sqlList)) {
             return this.sqlList;

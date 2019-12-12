@@ -2,6 +2,7 @@ package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.ObjectUtils;
@@ -58,6 +59,7 @@ public class Column implements Difference, Serializable {
     @DbUtilProperty("GENERATION_EXPRESSION")
     private String generationExpression;
 
+    @JsonIgnore
     @Override
     public String getDeleteSql() {
         return "ALTER TABLE `" + this.table + "` DROP COLUMN `" + this.name + "`;";
@@ -68,6 +70,7 @@ public class Column implements Difference, Serializable {
      *
      * @return sql
      */
+    @JsonIgnore
     public String getCreateTableSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("`").append(this.name).append("`").append(" ");
@@ -93,6 +96,7 @@ public class Column implements Difference, Serializable {
         return sb.toString();
     }
 
+    @JsonIgnore
     @Override
     public String getCreateSql() {
         String createSql = "ALTER TABLE `" + this.table + "` ADD ";
@@ -101,6 +105,7 @@ public class Column implements Difference, Serializable {
         return createSql;
     }
 
+    @JsonIgnore
     @Override
     public String getUpdateSql() {
         String createSql = "ALTER TABLE `" + this.table + "` MODIFY ";
