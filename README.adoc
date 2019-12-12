@@ -1,6 +1,6 @@
 = MySQL迁移工具
 :toc: left
-:version: 1.0.0
+:version: 1.0.1
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
@@ -34,6 +34,8 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
 
 == 更新日志
+* 1.0.1
+** fix-没有外键时候生成sql为空的bug 大胃王 2019/12/12, 3:55 下午
 
 * 1.0.0
 ** 添加procedure 大胃王 2019/12/11, 5:48 下午
