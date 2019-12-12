@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,7 +20,6 @@ import java.util.List;
  */
 @Getter
 @Setter
-@Slf4j
 @NoArgsConstructor
 public class Database {
     private DatabaseInfo info;

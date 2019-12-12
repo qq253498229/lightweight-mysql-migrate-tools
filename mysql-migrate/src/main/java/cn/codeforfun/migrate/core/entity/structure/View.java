@@ -7,7 +7,6 @@ import cn.codeforfun.migrate.core.utils.FileUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -22,7 +21,6 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-@Slf4j
 public class View implements Serializable, Difference {
     private static final long serialVersionUID = 1007279552599004329L;
 

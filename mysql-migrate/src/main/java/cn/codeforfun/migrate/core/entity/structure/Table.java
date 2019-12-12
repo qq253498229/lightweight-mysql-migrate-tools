@@ -7,7 +7,6 @@ import cn.codeforfun.migrate.core.utils.FileUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
@@ -26,7 +25,6 @@ import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
  */
 @Getter
 @Setter
-@Slf4j
 public class Table implements Serializable, Difference {
     private static final long serialVersionUID = 411108952654575238L;
 
