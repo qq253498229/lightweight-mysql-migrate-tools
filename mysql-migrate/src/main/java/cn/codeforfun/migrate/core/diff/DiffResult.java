@@ -62,10 +62,12 @@ public class DiffResult {
     public void resolveDeleteSql() {
         for (Difference difference : this.delete) {
             if (difference instanceof Table) {
-                // 先删除外键
                 Table delete = (Table) difference;
-                String deleteForeignKeySql = delete.getDeleteForeignKeySql();
-                this.sqlList.add(deleteForeignKeySql);
+                if (delete.hasForeignKey()) {
+                    // 先判断有没有外键，如果有就先删除外键
+                    String deleteForeignKeySql = delete.getDeleteForeignKeySql();
+                    this.sqlList.add(deleteForeignKeySql);
+                }
                 // 再删除表
                 String deleteSql = delete.getDeleteSql();
                 this.sqlList.add(deleteSql);

@@ -53,6 +53,19 @@ public class Table implements Serializable, Difference {
 
     public static final String SQL = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
 
+    public boolean hasForeignKey() {
+        for (Key key : this.keys) {
+            if (!FLAG_PRIMARY.equals(key.getName())
+                    && !ObjectUtils.isEmpty(key.getReferencedSchema())
+                    && !ObjectUtils.isEmpty(key.getReferencedTable())
+                    && !ObjectUtils.isEmpty(key.getReferencedColumn())
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getDeleteForeignKeySql() {
         StringBuilder sb = new StringBuilder();
         for (Key key : this.keys) {
