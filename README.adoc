@@ -34,6 +34,11 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
 
 == 更新日志
+
+* 1.1.0
+** add-忽略DiffResult转换json时无需转换的字段 大胃王 2019/12/12, 4:34 下午
+** fix-没有外键时候生成sql为空的bug 大胃王 2019/12/12, 3:55 下午
+
 * 1.0.1
 ** fix-没有外键时候生成sql为空的bug 大胃王 2019/12/12, 3:55 下午
 
