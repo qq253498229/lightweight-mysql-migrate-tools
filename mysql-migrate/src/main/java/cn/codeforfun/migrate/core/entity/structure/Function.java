@@ -101,7 +101,6 @@ public class Function implements Serializable, Difference {
         Function function = (Function) o;
         return Objects.equals(getSecurityType(), function.getSecurityType()) &&
                 Objects.equals(getDefiner(), function.getDefiner()) &&
-                Objects.equals(getSchema(), function.getSchema()) &&
                 Objects.equals(getName(), function.getName()) &&
                 Objects.equals(getSource(), function.getSource()) &&
                 Objects.equals(getRoutines(), function.getRoutines());
@@ -111,7 +110,6 @@ public class Function implements Serializable, Difference {
     public int hashCode() {
         return Objects.hash(getSecurityType(),
                 getDefiner(),
-                getSchema(),
                 getName(),
                 getSource(),
                 getRoutines());

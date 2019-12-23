@@ -56,7 +56,6 @@ public class Routine {
         Routine that = (Routine) o;
         return Objects.equals(getSecurityType(), that.getSecurityType()) &&
                 Objects.equals(getDefiner(), that.getDefiner()) &&
-                Objects.equals(getSchema(), that.getSchema()) &&
                 Objects.equals(getName(), that.getName()) &&
                 Objects.equals(getSource(), that.getSource()) &&
                 Objects.equals(getParamMode(), that.getParamMode()) &&
@@ -76,7 +75,6 @@ public class Routine {
         return Objects.hash(
                 getSecurityType(),
                 getDefiner(),
-                getSchema(),
                 getName(),
                 getSource(),
                 getParamMode(),

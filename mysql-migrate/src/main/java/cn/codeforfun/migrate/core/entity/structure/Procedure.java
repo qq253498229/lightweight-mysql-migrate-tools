@@ -97,7 +97,6 @@ public class Procedure implements Serializable, Difference {
         Procedure procedure = (Procedure) o;
         return Objects.equals(getSecurityType(), procedure.getSecurityType()) &&
                 Objects.equals(getDefiner(), procedure.getDefiner()) &&
-                Objects.equals(getSchema(), procedure.getSchema()) &&
                 Objects.equals(getName(), procedure.getName()) &&
                 Objects.equals(getSource(), procedure.getSource()) &&
                 Objects.equals(getRoutines(), procedure.getRoutines());
@@ -107,7 +106,6 @@ public class Procedure implements Serializable, Difference {
     public int hashCode() {
         return Objects.hash(getSecurityType(),
                 getDefiner(),
-                getSchema(),
                 getName(),
                 getSource(),
                 getRoutines());

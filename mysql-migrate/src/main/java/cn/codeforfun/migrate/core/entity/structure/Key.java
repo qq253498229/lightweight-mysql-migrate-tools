@@ -121,8 +121,7 @@ public class Key implements Difference, Serializable {
             return false;
         }
         Key key = (Key) o;
-        return Objects.equals(getSchema(), key.getSchema()) &&
-                Objects.equals(getName(), key.getName()) &&
+        return Objects.equals(getName(), key.getName()) &&
                 Objects.equals(getTableName(), key.getTableName()) &&
                 Objects.equals(getColumnName(), key.getColumnName()) &&
                 Objects.equals(getOrdinalPosition(), key.getOrdinalPosition()) &&
@@ -134,6 +133,6 @@ public class Key implements Difference, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSchema(), getName(), getTableName(), getColumnName(), getOrdinalPosition(), getPositionInUniqueConstraint(), getReferencedSchema(), getReferencedTable(), getReferencedColumn());
+        return Objects.hash(getName(), getTableName(), getColumnName(), getOrdinalPosition(), getPositionInUniqueConstraint(), getReferencedSchema(), getReferencedTable(), getReferencedColumn());
     }
 }

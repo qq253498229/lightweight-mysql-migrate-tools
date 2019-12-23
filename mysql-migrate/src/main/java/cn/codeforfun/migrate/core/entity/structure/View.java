@@ -88,8 +88,7 @@ public class View implements Serializable, Difference {
             return false;
         }
         View view = (View) o;
-        return Objects.equals(getSchema(), view.getSchema()) &&
-                Objects.equals(getName(), view.getName()) &&
+        return Objects.equals(getName(), view.getName()) &&
                 Objects.equals(getSource(), view.getSource()) &&
                 Objects.equals(getDefiner(), view.getDefiner()) &&
                 Objects.equals(getSecurityType(), view.getSecurityType()) &&
@@ -101,6 +100,6 @@ public class View implements Serializable, Difference {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSchema(), getName(), getSource(), getDefiner(), getSecurityType(), getCharacter(), getCollation(), getCheckOption(), getUpdatable());
+        return Objects.hash(getName(), getSource(), getDefiner(), getSecurityType(), getCharacter(), getCollation(), getCheckOption(), getUpdatable());
     }
 }

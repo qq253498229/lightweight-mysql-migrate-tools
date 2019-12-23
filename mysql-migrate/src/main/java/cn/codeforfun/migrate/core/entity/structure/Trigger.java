@@ -78,8 +78,7 @@ public class Trigger implements Serializable, Difference {
             return false;
         }
         Trigger trigger = (Trigger) o;
-        return Objects.equals(getSchema(), trigger.getSchema()) &&
-                Objects.equals(getName(), trigger.getName()) &&
+        return Objects.equals(getName(), trigger.getName()) &&
                 Objects.equals(getDefiner(), trigger.getDefiner()) &&
                 Objects.equals(getActionTiming(), trigger.getActionTiming()) &&
                 Objects.equals(getEventManipulation(), trigger.getEventManipulation()) &&
@@ -91,8 +90,7 @@ public class Trigger implements Serializable, Difference {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSchema(),
-                getName(),
+        return Objects.hash(getName(),
                 getDefiner(),
                 getActionTiming(),
                 getEventManipulation(),

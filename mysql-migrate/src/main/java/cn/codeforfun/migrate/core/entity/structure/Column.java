@@ -123,8 +123,7 @@ public class Column implements Difference, Serializable {
             return false;
         }
         Column column = (Column) o;
-        return Objects.equals(getSchema(), column.getSchema()) &&
-                Objects.equals(getTable(), column.getTable()) &&
+        return Objects.equals(getTable(), column.getTable()) &&
                 Objects.equals(getName(), column.getName()) &&
                 Objects.equals(getDefaultValue(), column.getDefaultValue()) &&
                 Objects.equals(getNullable(), column.getNullable()) &&
@@ -143,7 +142,7 @@ public class Column implements Difference, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSchema(), getTable(), getName(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
+        return Objects.hash(getTable(), getName(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
     }
 
 }
