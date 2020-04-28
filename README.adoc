@@ -1,6 +1,6 @@
 = MySQL迁移工具
 :toc: left
-:version: 1.1.2
+:version: 1.1.3
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
@@ -34,6 +34,9 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
 
 == 更新日志
+
+* 1.1.3
+** fix-对比结构时忽略库名 大胃王 2020/04/28, 15:26 下午
 
 * 1.1.2
 ** fix-对比结构时忽略库名 大胃王 2019/12/23, 10:47 上午
