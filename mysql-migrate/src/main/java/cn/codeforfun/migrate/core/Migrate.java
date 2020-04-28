@@ -108,7 +108,6 @@ public class Migrate {
         // 更新trigger
         List<Trigger> updateTriggerList = toTriggerList.stream().map(s -> fromTriggerList.stream().filter(j ->
                 s.getName().equals(j.getName())
-                        && s.getSchema().equals(j.getSchema())
                         && !s.equals(j)).collect(Collectors.toList())
         ).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateTriggerList);
@@ -132,7 +131,6 @@ public class Migrate {
         // 更新Procedure
         List<Procedure> updateProcedureList = toProcedureList.stream().map(s -> fromProcedureList.stream().filter(j ->
                 s.getName().equals(j.getName())
-                        && s.getSchema().equals(j.getSchema())
                         && !s.equals(j)).collect(Collectors.toList())
         ).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateProcedureList);
@@ -156,7 +154,6 @@ public class Migrate {
         // 更新function
         List<Function> updateFunctionList = toFunctionList.stream().map(s -> fromFunctionList.stream().filter(j ->
                 s.getName().equals(j.getName())
-                        && s.getSchema().equals(j.getSchema())
                         && !s.equals(j)).collect(Collectors.toList())
         ).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateFunctionList);
@@ -180,7 +177,6 @@ public class Migrate {
         // 更新view
         List<View> updateViewList = toViewList.stream().map(s -> fromViewList.stream().filter(j ->
                 s.getName().equals(j.getName())
-                        && s.getSchema().equals(j.getSchema())
                         && !s.equals(j)).collect(Collectors.toList())
         ).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateViewList);
@@ -207,7 +203,6 @@ public class Migrate {
         // 更新字段
         List<Column> updateColumnList = toColumnList.stream().map(s -> fromColumnList.stream().filter(j ->
                 s.getName().equals(j.getName())
-                        && s.getSchema().equals(j.getSchema())
                         && s.getTable().equals(j.getTable())
                         && !s.equals(j)
         ).collect(Collectors.toList())).flatMap(List::stream).collect(Collectors.toList());
@@ -236,8 +231,7 @@ public class Migrate {
         List<Key> updateKeyList = new ArrayList<>();
         for (Key fromKey : fromKeyList) {
             for (Key toKey : toKeyList) {
-                if (fromKey.getSchema().equals(toKey.getSchema())
-                        && fromKey.getName().equals(toKey.getName())
+                if (fromKey.getName().equals(toKey.getName())
                         && fromKey.getTableName().equals(toKey.getTableName())
                         && !fromKey.equals(toKey)) {
                     updateKeyList.add(fromKey);
