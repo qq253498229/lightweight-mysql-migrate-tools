@@ -57,7 +57,8 @@ public class DiffResult {
         resolveDeleteSql();
         resolveCreateSql();
         resolveUpdateSql();
-        log.debug("sql生成结果: {}", sqlList);
+        log.debug("生成sql完成");
+        log.trace("sql生成结果: {}", sqlList);
         return sqlList;
     }
 
