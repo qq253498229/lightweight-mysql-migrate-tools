@@ -70,7 +70,7 @@ public class Procedure implements Serializable, Difference {
         }
         sb = new StringBuilder(sb.substring(0, sb.length() - 1));
         sb.append(")\n");
-        sb.append(this.source).append(";");
+        sb.append("\n").append(this.source).append(";");
         return sb.toString();
     }
 
