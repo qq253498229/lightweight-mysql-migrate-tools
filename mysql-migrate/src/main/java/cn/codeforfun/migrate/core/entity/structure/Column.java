@@ -123,7 +123,8 @@ public class Column implements Difference, Serializable {
         Column column = (Column) o;
         return Objects.equals(getTable(), column.getTable()) &&
                 Objects.equals(getName(), column.getName()) &&
-                Objects.equals(getDefaultValue(), column.getDefaultValue()) &&
+                ((ObjectUtils.isEmpty(getDefaultValue()) && ObjectUtils.isEmpty(column.getDefaultValue()))
+                        || Objects.equals(getDefaultValue(), column.getDefaultValue())) &&
                 Objects.equals(getNullable(), column.getNullable()) &&
                 Objects.equals(getType(), column.getType()) &&
                 Objects.equals(getMaxLength(), column.getMaxLength()) &&
