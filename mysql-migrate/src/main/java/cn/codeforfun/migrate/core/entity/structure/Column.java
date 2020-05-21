@@ -84,7 +84,7 @@ public class Column implements Difference, Serializable {
             sb.append("DEFAULT NULL ");
         }
         if (!ObjectUtils.isEmpty(this.defaultValue)) {
-            sb.append("DEFAULT ").append(this.defaultValue).append(" ");
+            sb.append("DEFAULT '").append(this.defaultValue).append("' ");
         }
         sb.append(this.extra).append(" ");
         if (!ObjectUtils.isEmpty(this.comment)) {
