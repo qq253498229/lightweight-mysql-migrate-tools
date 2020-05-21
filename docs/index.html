@@ -486,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;cn.codeforfun&lt;/groupId&gt;
   &lt;artifactId&gt;mysql-migrate&lt;/artifactId&gt;
-  &lt;version&gt;1.1.4&lt;/version&gt;
+  &lt;version&gt;1.1.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -509,17 +509,17 @@ import java.util.List;
 @Slf4j
 public class MigrateTest {
 
-    private static final Integer FROM_PORT = 3306;
-    private static final String FROM_HOST = "localhost";
+    private static final Integer FROM_PORT = 32522;
+    private static final String FROM_HOST = "192.168.112.80";
     private static final String FROM_USERNAME = "root";
-    private static final String FROM_PASSWORD = "root";
-    private static final String FROM_DB = "test_db";
+    private static final String FROM_PASSWORD = "Admin@2020";
+    private static final String FROM_DB = "system_admin";
 
-    private static final Integer TO_PORT = 3307;
+    private static final Integer TO_PORT = 3306;
     private static final String TO_HOST = "localhost";
     private static final String TO_USERNAME = "root";
     private static final String TO_PASSWORD = "root";
-    private static final String TO_DB = "test_db_1";
+    private static final String TO_DB = "system_admin";
 
     @Test
     @Ignore
@@ -553,6 +553,31 @@ public class MigrateTest {
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>1.1.5</p>
+<div class="ulist">
+<ul>
+<li>
+<p>修复-字段默认值空和空字符串不相同的BUG 大胃王 2020/05/21 23:26 下午</p>
+</li>
+<li>
+<p>修复-字段默认值为系统关键字时的错误 大胃王 2020/05/21 23:15 下午</p>
+</li>
+<li>
+<p>忽略视图的字符集区别 大胃王 2020/05/21 23:10 下午</p>
+</li>
+<li>
+<p>对比字段无法识别"on update CURRENT_TIMESTAMP" 大胃王 2020/05/21 10:30 下午</p>
+</li>
+<li>
+<p>修复unique_index对比错误 大胃王 今天 10:24 下午</p>
+</li>
+<li>
+<p>数据库连接错误时，返回信息不完整 大胃王 2020/5/11, 3:43 下午</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.1.4</p>
 <div class="ulist">
@@ -713,7 +738,7 @@ public class MigrateTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-05-09 11:07:25 +0800
+Last updated 2020-05-21 23:55:42 +0800
 </div>
 </div>
 </body>
