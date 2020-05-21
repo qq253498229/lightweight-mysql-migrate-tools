@@ -92,8 +92,6 @@ public class View implements Serializable, Difference {
                 Objects.equals(getSource(), view.getSource()) &&
                 Objects.equals(getDefiner(), view.getDefiner()) &&
                 Objects.equals(getSecurityType(), view.getSecurityType()) &&
-                Objects.equals(getCharacter(), view.getCharacter()) &&
-                Objects.equals(getCollation(), view.getCollation()) &&
                 Objects.equals(getCheckOption(), view.getCheckOption()) &&
                 Objects.equals(getUpdatable(), view.getUpdatable());
     }
