@@ -509,17 +509,17 @@ import java.util.List;
 @Slf4j
 public class MigrateTest {
 
-    private static final Integer FROM_PORT = 32522;
-    private static final String FROM_HOST = "192.168.112.80";
+    private static final Integer FROM_PORT = 3306;
+    private static final String FROM_HOST = "localhost";
     private static final String FROM_USERNAME = "root";
-    private static final String FROM_PASSWORD = "Admin@2020";
-    private static final String FROM_DB = "system_admin";
+    private static final String FROM_PASSWORD = "root";
+    private static final String FROM_DB = "test_db";
 
-    private static final Integer TO_PORT = 3306;
+    private static final Integer TO_PORT = 3307;
     private static final String TO_HOST = "localhost";
     private static final String TO_USERNAME = "root";
     private static final String TO_PASSWORD = "root";
-    private static final String TO_DB = "system_admin";
+    private static final String TO_DB = "test_db_1";
 
     @Test
     @Ignore
