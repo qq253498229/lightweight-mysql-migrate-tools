@@ -231,7 +231,14 @@ public class Migrate {
         List<Key> updateKeyList = new ArrayList<>();
         for (Key fromKey : fromKeyList) {
             for (Key toKey : toKeyList) {
-                if (fromKey.getName().equals(toKey.getName())
+                if ("unique_index".equals(fromKey.getName()) && "unique_index".equals(toKey.getName())
+                        && fromKey.getTableName().equals(toKey.getTableName())
+                        && fromKey.getColumnName().equals(toKey.getColumnName())
+                        && !fromKey.equals(toKey)
+                ) {
+                    updateKeyList.add(fromKey);
+                } else if (!"unique_index".equals(fromKey.getName()) && !"unique_index".equals(toKey.getName())
+                        && fromKey.getName().equals(toKey.getName())
                         && fromKey.getTableName().equals(toKey.getTableName())
                         && !fromKey.equals(toKey)) {
                     updateKeyList.add(fromKey);

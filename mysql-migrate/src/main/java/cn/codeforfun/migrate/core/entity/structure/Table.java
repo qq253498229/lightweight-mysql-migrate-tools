@@ -7,6 +7,7 @@ import cn.codeforfun.migrate.core.utils.FileUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
@@ -105,6 +106,16 @@ public class Table implements Serializable, Difference {
         for (Column column : this.columns) {
             String columnSql = column.getCreateTableSql();
             sb.append(columnSql);
+        }
+        List<Key> uniqueIndexList = this.keys.stream().filter(s -> "unique_index".equals(s.getName())).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(uniqueIndexList)) {
+            sb.append(" CONSTRAINT unique_index UNIQUE (");
+            for (Key key : uniqueIndexList) {
+                sb.append("`").append(key.getColumnName()).append("`, ");
+            }
+            sb.delete(sb.length() - 2, sb.length());
+            sb.append("),");
+            this.keys.removeAll(uniqueIndexList);
         }
         for (Key key : this.keys) {
             String keySql = key.getCreateTableSql();
