@@ -99,11 +99,10 @@ public class Function implements Serializable, Difference {
             return false;
         }
         Function function = (Function) o;
-        return Objects.equals(getSecurityType(), function.getSecurityType()) &&
-                Objects.equals(getDefiner(), function.getDefiner()) &&
+        return
                 Objects.equals(getName(), function.getName()) &&
-                Objects.equals(getSource(), function.getSource()) &&
-                Objects.equals(getRoutines(), function.getRoutines());
+                        Objects.equals(getSource(), function.getSource()) &&
+                        Objects.equals(getRoutines(), function.getRoutines());
     }
 
     @Override
