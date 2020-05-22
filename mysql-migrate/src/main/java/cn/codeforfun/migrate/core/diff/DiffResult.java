@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -119,7 +118,7 @@ public class DiffResult {
                 // 创建key
                 Key create = (Key) difference;
                 String createSql = create.getCreateSql();
-                this.sqlList.addAll(Arrays.asList(createSql.split(" ")));
+                this.sqlList.add(createSql);
             } else if (difference instanceof Column) {
                 // 创建字段
                 Column create = (Column) difference;
