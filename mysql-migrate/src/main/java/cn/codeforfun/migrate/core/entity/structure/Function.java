@@ -67,14 +67,14 @@ public class Function implements Serializable, Difference {
             sb.append(param.getParamName()).append(" ").append(param.getResultType()).append(",");
         }
         sb = new StringBuilder(sb.substring(0, sb.length() - 1));
-        sb.append(")\n");
+        sb.append(") ");
         sb.append(" RETURNS ");
         Routine param = resultTypeList.get(0);
         sb.append(param.getResultType());
         if (!ObjectUtils.isEmpty(param.getCharacter()) && !ObjectUtils.isEmpty(param.getCollation())) {
             sb.append(" CHARSET ").append(param.getCharacter()).append(" COLLATE ").append(param.getCollation());
         }
-        sb.append("\n").append(this.source).append(";");
+        sb.append(" ").append(this.source).append(";");
         return sb.toString();
     }
 

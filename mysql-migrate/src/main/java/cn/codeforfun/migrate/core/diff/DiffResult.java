@@ -119,7 +119,7 @@ public class DiffResult {
                 // 创建key
                 Key create = (Key) difference;
                 String createSql = create.getCreateSql();
-                this.sqlList.addAll(Arrays.asList(createSql.split("\n")));
+                this.sqlList.addAll(Arrays.asList(createSql.split(" ")));
             } else if (difference instanceof Column) {
                 // 创建字段
                 Column create = (Column) difference;
