@@ -80,11 +80,11 @@ public class Column implements Difference, Serializable {
         }
         if (FLAG_NOT_NULL.equals(this.nullable)) {
             sb.append("NOT NULL ");
-        } else if (FLAG_DEFAULT_NULL.equals(this.nullable)) {
-            sb.append("DEFAULT NULL ");
         }
         if (!ObjectUtils.isEmpty(this.defaultValue)) {
             sb.append("DEFAULT '").append(this.defaultValue).append("' ");
+        } else if (FLAG_DEFAULT_NULL.equals(this.nullable)) {
+            sb.append("DEFAULT NULL ");
         }
         sb.append(this.extra).append(" ");
         if (!ObjectUtils.isEmpty(this.comment)) {
