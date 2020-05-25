@@ -50,9 +50,7 @@ public class Trigger implements Serializable, Difference {
     @JsonIgnore
     @Override
     public String getCreateSql() {
-        String[] split = this.definer.split("@");
-        return "CREATE DEFINER =`" + split[0] + "`@`" + split[1] + "` " +
-                "TRIGGER " + this.name + " " +
+        return "CREATE TRIGGER " + this.name + " " +
                 this.actionTiming + " " + this.eventManipulation + " ON `" + this.objectTable + "` " +
                 "FOR EACH " + this.actionOrientation + " " + this.source + ";";
     }
@@ -79,10 +77,8 @@ public class Trigger implements Serializable, Difference {
         }
         Trigger trigger = (Trigger) o;
         return Objects.equals(getName(), trigger.getName()) &&
-                Objects.equals(getDefiner(), trigger.getDefiner()) &&
                 Objects.equals(getActionTiming(), trigger.getActionTiming()) &&
                 Objects.equals(getEventManipulation(), trigger.getEventManipulation()) &&
-                Objects.equals(getObjectSchema(), trigger.getObjectSchema()) &&
                 Objects.equals(getObjectTable(), trigger.getObjectTable()) &&
                 Objects.equals(getActionOrientation(), trigger.getActionOrientation()) &&
                 Objects.equals(getSource(), trigger.getSource());
@@ -91,10 +87,8 @@ public class Trigger implements Serializable, Difference {
     @Override
     public int hashCode() {
         return Objects.hash(getName(),
-                getDefiner(),
                 getActionTiming(),
                 getEventManipulation(),
-                getObjectSchema(),
                 getObjectTable(),
                 getActionOrientation(),
                 getSource());

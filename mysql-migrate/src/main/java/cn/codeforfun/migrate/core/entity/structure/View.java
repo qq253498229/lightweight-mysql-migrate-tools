@@ -59,18 +59,13 @@ public class View implements Serializable, Difference {
     @JsonIgnore
     @Override
     public String getUpdateSql() {
-        return getString("ALTER ");
+        return getString("CREATE OR REPLACE ");
     }
 
     private String getString(String type) {
-        StringBuilder sb = new StringBuilder();
-        String[] split = this.definer.split("@");
-        sb.append(type);
-        sb.append("DEFINER =`").append(split[0]).append("`@`").append(split[1]).append("` ");
-        sb.append("SQL SECURITY ").append(this.securityType).append(" ");
-        sb.append("VIEW `").append(this.name).append("` AS ");
-        sb.append(this.source);
-        return sb.toString();
+        return type +
+                "VIEW `" + this.name + "` AS " +
+                this.source;
     }
 
     @JsonIgnore
@@ -96,6 +91,8 @@ public class View implements Serializable, Difference {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getSource(), getDefiner(), getSecurityType(), getCharacter(), getCollation(), getCheckOption(), getUpdatable());
+        return Objects.hash(getName(),
+                getSource(),
+                getCheckOption());
     }
 }

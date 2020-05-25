@@ -54,9 +54,7 @@ public class Routine {
             return false;
         }
         Routine that = (Routine) o;
-        return Objects.equals(getSecurityType(), that.getSecurityType()) &&
-                Objects.equals(getDefiner(), that.getDefiner()) &&
-                Objects.equals(getName(), that.getName()) &&
+        return Objects.equals(getName(), that.getName()) &&
                 Objects.equals(getSource(), that.getSource()) &&
                 Objects.equals(getParamMode(), that.getParamMode()) &&
                 Objects.equals(getParamName(), that.getParamName()) &&
@@ -65,16 +63,12 @@ public class Routine {
                 Objects.equals(getNumberLength(), that.getNumberLength()) &&
                 Objects.equals(getColumn(), that.getColumn()) &&
                 Objects.equals(getDatePrecision(), that.getDatePrecision()) &&
-                Objects.equals(getResultType(), that.getResultType()) &&
-                Objects.equals(getCharacter(), that.getCharacter()) &&
-                Objects.equals(getCollation(), that.getCollation());
+                Objects.equals(getResultType(), that.getResultType());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                getSecurityType(),
-                getDefiner(),
                 getName(),
                 getSource(),
                 getParamMode(),
@@ -84,8 +78,6 @@ public class Routine {
                 getNumberLength(),
                 getColumn(),
                 getDatePrecision(),
-                getResultType(),
-                getCharacter(),
-                getCollation());
+                getResultType());
     }
 }

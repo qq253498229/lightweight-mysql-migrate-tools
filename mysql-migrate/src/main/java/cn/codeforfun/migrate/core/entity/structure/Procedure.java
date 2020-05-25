@@ -56,9 +56,7 @@ public class Procedure implements Serializable, Difference {
     @Override
     public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
-        String[] split = this.definer.split("@");
-        sb.append("CREATE DEFINER = `").append(split[0]).append("`@`").append(split[1]).append("`");
-        sb.append(" PROCEDURE `").append(this.name).append("`");
+        sb.append("CREATE PROCEDURE `").append(this.name).append("`");
         sb.append("(");
         List<Routine> inputTypeList = this.getRoutines().stream().filter(s -> "IN".equals(s.getParamMode())).collect(Collectors.toList());
         List<Routine> resultTypeList = this.getRoutines().stream().filter(s -> "OUT".equals(s.getParamMode())).collect(Collectors.toList());
@@ -95,18 +93,14 @@ public class Procedure implements Serializable, Difference {
             return false;
         }
         Procedure procedure = (Procedure) o;
-        return Objects.equals(getSecurityType(), procedure.getSecurityType()) &&
-                Objects.equals(getDefiner(), procedure.getDefiner()) &&
-                Objects.equals(getName(), procedure.getName()) &&
+        return Objects.equals(getName(), procedure.getName()) &&
                 Objects.equals(getSource(), procedure.getSource()) &&
                 Objects.equals(getRoutines(), procedure.getRoutines());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSecurityType(),
-                getDefiner(),
-                getName(),
+        return Objects.hash(getName(),
                 getSource(),
                 getRoutines());
     }

@@ -57,9 +57,7 @@ public class Function implements Serializable, Difference {
     @Override
     public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
-        String[] split = this.definer.split("@");
-        sb.append("CREATE DEFINER = `").append(split[0]).append("`@`").append(split[1]).append("`");
-        sb.append(" FUNCTION `").append(this.name).append("`");
+        sb.append("CREATE FUNCTION `").append(this.name).append("`");
         sb.append("(");
         List<Routine> inputTypeList = this.getRoutines().stream().filter(s -> "IN".equals(s.getParamMode())).collect(Collectors.toList());
         List<Routine> resultTypeList = this.getRoutines().stream().filter(s -> null == s.getParamMode()).collect(Collectors.toList());
@@ -107,9 +105,7 @@ public class Function implements Serializable, Difference {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSecurityType(),
-                getDefiner(),
-                getName(),
+        return Objects.hash(getName(),
                 getSource(),
                 getRoutines());
     }
