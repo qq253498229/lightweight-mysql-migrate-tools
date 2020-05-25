@@ -33,7 +33,16 @@
 include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
 
+== 注意事项
+
+目前maven中央仓库推送上去，close->release之后没有效果，麻烦知道如何解决的留个言，非常感谢！
+
 == 更新日志
+
+* 1.1.9
+** 修复 routine SQL错误 大胃王 2020/05/25 12:00 上午
+** 修复 默认值'CURRENT_TIMESTAMP'错误的在两边加上了引号导致SQL识别错误 大胃王 2020/05/25 11:43 上午
+** 修复 字段默认值和非空判断混淆的BUG 大胃王 2020/05/25 11:42 上午
 
 * 1.1.8
 ** 由于maven中央仓库错误，故重新部署，实际功能和1.1.7相同
