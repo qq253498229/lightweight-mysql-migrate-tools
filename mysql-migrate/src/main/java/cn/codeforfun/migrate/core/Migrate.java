@@ -96,10 +96,10 @@ public class Migrate {
         List<Trigger> fromTriggerList = this.diff.getFrom().getTriggers();
         List<Trigger> toTriggerList = this.diff.getTo().getTriggers();
         // 删除trigger
-        List<Trigger> deleteTriggerList = toTriggerList.stream().filter(s -> fromTriggerList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Trigger> deleteTriggerList = toTriggerList.stream().filter(s -> fromTriggerList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteTriggerList);
         // 新建trigger
-        List<Trigger> createTriggerList = fromTriggerList.stream().filter(s -> toTriggerList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Trigger> createTriggerList = fromTriggerList.stream().filter(s -> toTriggerList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createTriggerList);
         // 更新trigger
         List<Trigger> updateTriggerList = toTriggerList.stream().map(s -> fromTriggerList.stream().filter(j ->
@@ -117,10 +117,10 @@ public class Migrate {
         List<Procedure> fromProcedureList = this.diff.getFrom().getProcedures();
         List<Procedure> toProcedureList = this.diff.getTo().getProcedures();
         // 删除Procedure
-        List<Procedure> deleteProcedureList = toProcedureList.stream().filter(s -> fromProcedureList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Procedure> deleteProcedureList = toProcedureList.stream().filter(s -> fromProcedureList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteProcedureList);
         // 新建Procedure
-        List<Procedure> createProcedureList = fromProcedureList.stream().filter(s -> toProcedureList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Procedure> createProcedureList = fromProcedureList.stream().filter(s -> toProcedureList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createProcedureList);
         // 更新Procedure
         List<Procedure> updateProcedureList = toProcedureList.stream().map(s -> fromProcedureList.stream().filter(j ->
@@ -138,10 +138,10 @@ public class Migrate {
         List<Function> fromFunctionList = this.diff.getFrom().getFunctions();
         List<Function> toFunctionList = this.diff.getTo().getFunctions();
         // 删除Function
-        List<Function> deleteFunctionList = toFunctionList.stream().filter(s -> fromFunctionList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Function> deleteFunctionList = toFunctionList.stream().filter(s -> fromFunctionList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteFunctionList);
         // 新建Function
-        List<Function> createFunctionList = fromFunctionList.stream().filter(s -> toFunctionList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Function> createFunctionList = fromFunctionList.stream().filter(s -> toFunctionList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createFunctionList);
         // 更新function
         List<Function> updateFunctionList = toFunctionList.stream().map(s -> fromFunctionList.stream().filter(j ->
@@ -159,10 +159,10 @@ public class Migrate {
         List<View> fromViewList = this.diff.getFrom().getViews();
         List<View> toViewList = this.diff.getTo().getViews();
         // 删除view
-        List<View> deleteViewList = toViewList.stream().filter(s -> fromViewList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<View> deleteViewList = toViewList.stream().filter(s -> fromViewList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteViewList);
         // 新建view
-        List<View> createViewList = fromViewList.stream().filter(s -> toViewList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<View> createViewList = fromViewList.stream().filter(s -> toViewList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createViewList);
         // 更新view
         List<View> updateViewList = toViewList.stream().map(s -> fromViewList.stream().filter(j ->
@@ -183,10 +183,10 @@ public class Migrate {
         List<Column> fromColumnList = fromUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
         List<Column> toColumnList = toUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
         // 删除字段
-        List<Column> deleteColumnList = toColumnList.stream().filter(s -> fromColumnList.stream().anyMatch(j -> j.getName().equals(s.getName()) && j.getTable().equals(s.getTable()))).collect(Collectors.toList());
+        List<Column> deleteColumnList = toColumnList.stream().filter(s -> fromColumnList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTable().equals(s.getTable()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteColumnList);
         // 新建字段
-        List<Column> createColumnList = fromColumnList.stream().filter(s -> toColumnList.stream().anyMatch(j -> j.getName().equals(s.getName()) && j.getTable().equals(s.getTable()))).collect(Collectors.toList());
+        List<Column> createColumnList = fromColumnList.stream().filter(s -> toColumnList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTable().equals(s.getTable()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createColumnList);
         // 更新字段
         List<Column> updateColumnList = toColumnList.stream().map(s -> fromColumnList.stream().filter(j ->
@@ -208,10 +208,10 @@ public class Migrate {
         List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
         List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
         // 删除key
-        List<Key> deleteKeyList = toKeyList.stream().filter(s -> fromKeyList.stream().anyMatch(j -> j.getName().equals(s.getName()) && j.getColumnName().equals(s.getColumnName()) && j.getTableName().equals(s.getTableName()))).collect(Collectors.toList());
+        List<Key> deleteKeyList = toKeyList.stream().filter(s -> fromKeyList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTableName().equals(s.getTableName()) && j.getColumnName().equals(s.getColumnName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteKeyList);
         // 新建key
-        List<Key> createKeyList = fromKeyList.stream().filter(s -> toKeyList.stream().anyMatch(j -> j.getName().equals(s.getName()) && j.getColumnName().equals(s.getColumnName()) && j.getTableName().equals(s.getTableName()))).collect(Collectors.toList());
+        List<Key> createKeyList = fromKeyList.stream().filter(s -> toKeyList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTableName().equals(s.getTableName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createKeyList);
         // 更新key
         List<Key> updateKeyList = new ArrayList<>();
@@ -242,10 +242,10 @@ public class Migrate {
      */
     private void compareTable(List<Table> fromTableList, List<Table> toTableList) {
         // 删除表
-        List<Table> deleteTableList = toTableList.stream().filter(s -> fromTableList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Table> deleteTableList = toTableList.stream().filter(s -> fromTableList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteTableList);
         // 新建表
-        List<Table> createTableList = fromTableList.stream().filter(s -> toTableList.stream().anyMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
+        List<Table> createTableList = fromTableList.stream().filter(s -> toTableList.stream().noneMatch(j -> j.getName().equals(s.getName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createTableList);
     }
 
