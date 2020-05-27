@@ -4,6 +4,8 @@
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
+:git-url: https://gitee.com/consolelog/lightweight-mysql-migrate-tools
+:source-link: {git-url}/tree/master/mysql-migrate
 
 == 支持模块
 
@@ -32,6 +34,18 @@
 ----
 include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
+
+== 实现原理
+
+分别查询源数据库以及目标数据库链接下的 `information_schema` 数据库中的信息，根据信息解析成对应的表、函数等结构，再对比差异，拼接成SQL。
+
+其中 ：
+
+* {source-link}/src/main/resources/sql/detail/[src/main/resources/sql/detail] 目录下包含数据库表、函数等查询SQL
+* {source-link}/src/main/java/cn/codeforfun/migrate/core/Migrate.java[Migrate.java] 为核心类
+* {source-link}/src/main/java/cn/codeforfun/migrate/core/Migrate.java[Migrate.java] 类中 https://gitee.com/consolelog/lightweight-mysql-migrate-tools/blob/master/mysql-migrate/src/main/java/cn/codeforfun/migrate/core/Migrate.java#L75[`compare()`] 方法为数据库表、函数等结构对比方法
+* {source-link}/src/main/java/cn/codeforfun/migrate/core/entity/structure/Database.java[Database.java] 类中 https://gitee.com/consolelog/lightweight-mysql-migrate-tools/blob/master/mysql-migrate/src/main/java/cn/codeforfun/migrate/core/entity/structure/Database.java#L63[`configure()`] 为数据库表、函数等解析方法
+
 
 == 更新日志
 
