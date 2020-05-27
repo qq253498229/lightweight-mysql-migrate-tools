@@ -457,19 +457,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist checklist">
 <ul class="checklist">
 <li>
-<p>&#10003; Table</p>
+<p>&#10003; 表</p>
 </li>
 <li>
-<p>&#10003; View</p>
+<p>&#10003; 视图</p>
 </li>
 <li>
-<p>&#10003; Function</p>
+<p>&#10003; 函数</p>
 </li>
 <li>
-<p>&#10003; Procedure</p>
+<p>&#10003; 存储过程</p>
 </li>
 <li>
-<p>&#10003; Trigger</p>
+<p>&#10003; 触发器</p>
 </li>
 </ul>
 </div>
@@ -486,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;cn.codeforfun&lt;/groupId&gt;
   &lt;artifactId&gt;mysql-migrate&lt;/artifactId&gt;
-  &lt;version&gt;1.1.5&lt;/version&gt;
+  &lt;version&gt;1.2.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -553,6 +553,65 @@ public class MigrateTest {
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>1.2.0</p>
+<div class="ulist">
+<ul>
+<li>
+<p>修复 对比逻辑重大错误 大胃王 2020/05/26 11:48 上午</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>1.1.9</p>
+<div class="ulist">
+<ul>
+<li>
+<p>修复 routine SQL错误 大胃王 2020/05/25 12:00 上午</p>
+</li>
+<li>
+<p>修复 默认值&#8217;CURRENT_TIMESTAMP&#8217;错误的在两边加上了引号导致SQL识别错误 大胃王 2020/05/25 11:43 上午</p>
+</li>
+<li>
+<p>修复 字段默认值和非空判断混淆的BUG 大胃王 2020/05/25 11:42 上午</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>1.1.8</p>
+<div class="ulist">
+<ul>
+<li>
+<p>由于maven中央仓库错误，故重新部署，实际功能和1.1.7相同</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>1.1.7</p>
+<div class="ulist">
+<ul>
+<li>
+<p>优化Routines对比逻辑，忽略不需要进行对比(比如创建人)的属性 大胃王 2020/05/22 17:13 下午</p>
+</li>
+<li>
+<p>SQL解析出错，创建Key时错误的拆分成多个SQL 大胃王 2020/05/22 17:03 下午</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>1.1.6</p>
+<div class="ulist">
+<ul>
+<li>
+<p>删除所有\n字符，替换为空格，防止某些数据库工具软件无法识别换行符，导致SQL执行失败 大胃王 2020/05/22 16:21 下午</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.1.5</p>
 <div class="ulist">
@@ -738,7 +797,7 @@ public class MigrateTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-05-21 23:56:00 +0800
+Last updated 2020-05-27 17:27:46 +0800
 </div>
 </div>
 </body>

@@ -1,6 +1,6 @@
 = MySQL迁移工具
 :toc: left
-:version: 1.1.7
+:version: 1.2.0
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
@@ -33,15 +33,10 @@
 include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 ----
 
-== 注意事项
-
-目前maven中央仓库推送完成后，距离实际可用有很长的等待时间，一般为2天以内。
-使用新版本如果遇到无法解析的问题，请注意一下修改时间。
-
 == 更新日志
 
 * 1.2.0
-** 修复 对比逻辑重大错误 大胃王 2020/05/26 11:48 上去
+** 修复 对比逻辑重大错误 大胃王 2020/05/26 11:48 上午
 
 * 1.1.9
 ** 修复 routine SQL错误 大胃王 2020/05/25 12:00 上午
