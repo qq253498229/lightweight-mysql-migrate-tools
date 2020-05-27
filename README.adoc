@@ -1,4 +1,4 @@
-= MySQL迁移工具
+= 轻量级MySQL迁移工具
 :toc: left
 :version: 1.2.0
 :sourcedir: mysql-migrate/src
