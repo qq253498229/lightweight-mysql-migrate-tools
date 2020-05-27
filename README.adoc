@@ -1,5 +1,6 @@
 = 轻量级MySQL迁移工具
 :toc: left
+:toclevels: 4
 :version: 1.2.0
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
@@ -8,17 +9,9 @@
 :source-link: {git-url}/tree/master/mysql-migrate
 :nofooter:
 
-== 支持模块
-
-* [*] 表
-* [*] 视图
-* [*] 函数
-* [*] 存储过程
-* [*] 触发器
-
 == 使用方法
 
-引入jar包
+=== 引入jar包
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -29,7 +22,7 @@
 </dependency>
 ----
 
-测试类
+=== 测试类
 
 [source,java]
 ----
@@ -116,16 +109,12 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 
 == 源码地址
 
-https://gitee.com/consolelog/lightweight-mysql-migrate-tools.git[Gitee源码]
-
-https://consolelog.gitee.io/lightweight-mysql-migrate-tools/[GiteePages]
-
-https://github.com/qq253498229/lightweight-mysql-migrate-tools.git[Github源码]
-
-https://qq253498229.github.io/lightweight-mysql-migrate-tools/[GithubPages]
+* https://gitee.com/consolelog/lightweight-mysql-migrate-tools.git[Gitee源码]
+* https://github.com/qq253498229/lightweight-mysql-migrate-tools.git[Github源码]
+* https://consolelog.gitee.io/lightweight-mysql-migrate-tools/[GiteePages]
+* https://qq253498229.github.io/lightweight-mysql-migrate-tools/[GithubPages]
 
 == 反馈和贡献
 
-https://gitee.com/consolelog/lightweight-mysql-migrate-tools/issues[GiteeIssues]
-
-https://github.com/qq253498229/lightweight-mysql-migrate-tools/issues[GithubIssues]
+* https://gitee.com/consolelog/lightweight-mysql-migrate-tools/issues[GiteeIssues]
+* https://github.com/qq253498229/lightweight-mysql-migrate-tools/issues[GithubIssues]
