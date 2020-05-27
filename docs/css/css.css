@@ -850,12 +850,12 @@ p a > code:hover {
 
 @media only screen and (min-width: 1280px) {
     body.toc2 {
-        padding-left: 20em;
+        padding-left: 10em;
     }
 
     #toc.toc2 {
         position: fixed;
-        width: 20em;
+        width: 9em;
         left: 0;
         top: 0;
         border-right: 1px solid #cccccc;
