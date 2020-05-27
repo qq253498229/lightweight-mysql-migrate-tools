@@ -6,6 +6,7 @@
 :testdir: {sourcedir}/test/java
 :git-url: https://gitee.com/consolelog/lightweight-mysql-migrate-tools
 :source-link: {git-url}/tree/master/mysql-migrate
+:nofooter:
 
 == 支持模块
 
