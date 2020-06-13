@@ -71,7 +71,7 @@ public class Key implements Difference, Serializable {
                 && ObjectUtils.isEmpty(this.referencedTable)
                 && ObjectUtils.isEmpty(this.referencedColumn)) {
             // 唯一索引
-            sb.append("UNIQUE KEY `").append(this.name).append("` (`").append(this.columnName).append("`),");
+            sb.append("CONSTRAINT `").append(this.name).append("` UNIQUE (`").append(this.columnName).append("`),");
         } else {
             // 外键
             sb.append("KEY `").append(this.name).append("` (`").append(this.columnName).append("`),");
@@ -94,7 +94,8 @@ public class Key implements Difference, Serializable {
                 && ObjectUtils.isEmpty(this.referencedTable)
                 && ObjectUtils.isEmpty(this.referencedColumn)) {
             // 唯一索引
-            sb.append("ALTER TABLE `").append(this.tableName).append("` ADD UNIQUE KEY `").append(this.name).append("` (`").append(this.columnName).append("`);");
+            sb.append("ALTER TABLE `").append(this.tableName)
+                    .append("` ADD CONSTRAINT `").append(this.name).append("` UNIQUE (`").append(this.columnName).append("`);");
         } else {
             // 外键
             sb.append("ALTER TABLE `").append(this.tableName).append("` ADD KEY `").append(this.name).append("` (`").append(this.columnName).append("`); ");
