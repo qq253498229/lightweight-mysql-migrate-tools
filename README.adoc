@@ -1,7 +1,7 @@
 = 轻量级MySQL迁移工具
 :toc: left
 :toclevels: 4
-:version: 1.2.0
+:version: 1.2.1
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
@@ -42,6 +42,9 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 
 
 == 更新日志
+
+* 1.2.1
+** 修复 生成key的SQL和H2兼容 大胃王 2020/6/14 上午3:31
 
 * 1.2.0
 ** 修复 对比逻辑重大错误 大胃王 2020/05/26 11:48 上午
