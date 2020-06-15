@@ -71,7 +71,6 @@ public class Key implements Difference, Serializable {
             sb.append("CONSTRAINT `").append(this.name).append("` UNIQUE (`").append(this.columnName).append("`),");
         } else {
             // 外键
-            sb.append("KEY `").append(this.name).append("` (`").append(this.columnName).append("`),");
             sb.append("CONSTRAINT `").append(this.name).append("` ")
                     .append("FOREIGN KEY (`").append(this.columnName).append("`) ")
                     .append("REFERENCES `").append(this.referencedTable).append("` ")
