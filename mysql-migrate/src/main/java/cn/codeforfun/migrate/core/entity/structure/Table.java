@@ -127,6 +127,7 @@ public class Table implements Serializable, Difference {
             sb.delete(sb.length() - 1, sb.length());
             sb.append("),");
         }
+        this.keys.removeAll(primaryKeyList);
         for (Key key : this.keys) {
             String keySql = key.getCreateTableSql();
             sb.append(keySql);
