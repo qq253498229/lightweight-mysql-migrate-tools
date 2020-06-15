@@ -117,6 +117,16 @@ public class Table implements Serializable, Difference {
             sb.append("),");
             this.keys.removeAll(uniqueIndexList);
         }
+        // 主键
+        List<Key> primaryKeyList = this.keys.stream().filter(k -> "PRIMARY".equals(k.getName())).collect(Collectors.toList());
+        if (primaryKeyList.size() > 0) {
+            sb.append("PRIMARY KEY (");
+            primaryKeyList.forEach(k -> {
+                sb.append("`").append(k.getColumnName()).append("`,");
+            });
+            sb.delete(sb.length() - 1, sb.length());
+            sb.append("),");
+        }
         for (Key key : this.keys) {
             String keySql = key.getCreateTableSql();
             sb.append(keySql);

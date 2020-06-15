@@ -64,10 +64,7 @@ public class Key implements Difference, Serializable {
     public String getCreateTableSql() {
         //获取key sql
         StringBuilder sb = new StringBuilder();
-        if (FLAG_PRIMARY.equals(this.name)) {
-            // 主键
-            sb.append("PRIMARY KEY (`").append(this.columnName).append("`),");
-        } else if (ObjectUtils.isEmpty(this.referencedSchema)
+        if (ObjectUtils.isEmpty(this.referencedSchema)
                 && ObjectUtils.isEmpty(this.referencedTable)
                 && ObjectUtils.isEmpty(this.referencedColumn)) {
             // 唯一索引
