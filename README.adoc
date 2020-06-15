@@ -6,7 +6,7 @@
 :nofooter:
 
 
-:version: 1.2.2
+:version: 1.2.3
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
@@ -46,6 +46,9 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 
 
 == 更新日志
+
+* 1.2.3
+** 修复 联合主键SQL生成错误 大胃王 2020/06/15 10:58
 
 * 1.2.2
 ** 修复 外键SQL生成错误 大胃王 2020/06/15 10:14
