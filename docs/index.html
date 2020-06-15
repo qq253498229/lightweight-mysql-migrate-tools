@@ -2133,7 +2133,7 @@ pre .comment .yardoctag {
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;cn.codeforfun&lt;/groupId&gt;
   &lt;artifactId&gt;mysql-migrate&lt;/artifactId&gt;
-  &lt;version&gt;1.2.1&lt;/version&gt;
+  &lt;version&gt;1.2.2&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -2160,13 +2160,13 @@ public class MigrateTest {
     private static final String FROM_HOST = "localhost";
     private static final String FROM_USERNAME = "root";
     private static final String FROM_PASSWORD = "root";
-    private static final String FROM_DB = "application_configuration";
+    private static final String FROM_DB = "test_db";
 
-    private static final Integer TO_PORT = 3306;
+    private static final Integer TO_PORT = 3307;
     private static final String TO_HOST = "localhost";
     private static final String TO_USERNAME = "root";
     private static final String TO_PASSWORD = "root";
-    private static final String TO_DB = "test";
+    private static final String TO_DB = "test_db_1";
 
     @Test
     @Ignore
@@ -2228,6 +2228,19 @@ public class MigrateTest {
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>1.2.2</p>
+<div class="ulist">
+<ul>
+<li>
+<p>修复 外键SQL生成错误 大胃王 2020/06/15 10:14</p>
+</li>
+<li>
+<p>修复 联合主键SQL生成错误 大胃王 2020/06/15 10:14</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.2.1</p>
 <div class="ulist">
