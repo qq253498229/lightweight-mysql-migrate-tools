@@ -1,12 +1,12 @@
 package cn.codeforfun.migrate.core.diff;
 
 import cn.codeforfun.migrate.core.entity.structure.*;
+import cn.codeforfun.migrate.core.utils.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;

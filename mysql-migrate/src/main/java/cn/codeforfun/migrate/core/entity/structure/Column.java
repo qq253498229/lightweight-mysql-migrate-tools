@@ -2,10 +2,10 @@ package cn.codeforfun.migrate.core.entity.structure;
 
 import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
+import cn.codeforfun.migrate.core.utils.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -1,7 +1,5 @@
 package cn.codeforfun.migrate.core.utils;
 
-import org.springframework.util.ClassUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +31,7 @@ public class FileUtil {
         }
         if (cl == null) {
             // No thread context class loader -> use class loader of this class.
-            cl = ClassUtils.class.getClassLoader();
+            cl = FileUtil.class.getClassLoader();
             if (cl == null) {
                 // getClassLoader() returning null indicates the bootstrap ClassLoader
                 try {

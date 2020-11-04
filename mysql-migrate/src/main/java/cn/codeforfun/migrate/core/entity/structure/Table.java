@@ -4,11 +4,10 @@ import cn.codeforfun.migrate.core.diff.Difference;
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
 import cn.codeforfun.migrate.core.utils.DbUtil;
 import cn.codeforfun.migrate.core.utils.FileUtil;
+import cn.codeforfun.migrate.core.utils.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -108,7 +107,7 @@ public class Table implements Serializable, Difference {
             sb.append(columnSql);
         }
         List<Key> uniqueIndexList = this.keys.stream().filter(s -> "unique_index".equals(s.getName())).collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(uniqueIndexList)) {
+        if (!ObjectUtils.isEmpty(uniqueIndexList)) {
             sb.append(" CONSTRAINT unique_index UNIQUE (");
             for (Key key : uniqueIndexList) {
                 sb.append("`").append(key.getColumnName()).append("`, ");

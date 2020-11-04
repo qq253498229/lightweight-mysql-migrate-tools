@@ -4,11 +4,11 @@ import cn.codeforfun.migrate.core.diff.DiffResult;
 import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import cn.codeforfun.migrate.core.entity.structure.*;
 import cn.codeforfun.migrate.core.utils.DbUtil;
+import cn.codeforfun.migrate.core.utils.ObjectUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ObjectUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -1,11 +1,11 @@
 package cn.codeforfun.migrate.core.entity;
 
+import cn.codeforfun.migrate.core.utils.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.TimeZone;

@@ -1,7 +1,6 @@
 package cn.codeforfun.migrate.core.utils;
 
 import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
-import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
