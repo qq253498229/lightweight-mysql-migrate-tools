@@ -20,7 +20,7 @@
         <mysql.version>8.0.18</mysql.version>
         <lombok.version>1.18.10</lombok.version>
         <logback.version>1.2.3</logback.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
     </properties>
 
     <dependencies>
