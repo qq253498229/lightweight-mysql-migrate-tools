@@ -28,8 +28,17 @@ public class DiffResult {
      * 结构差异SQL
      */
     private List<String> sqlList = new ArrayList<>();
+    /**
+     * 需要执行删除操作的差异
+     */
     private List<Difference> delete = new ArrayList<>();
+    /**
+     * 需要执行创建操作的差异
+     */
     private List<Difference> create = new ArrayList<>();
+    /**
+     * 需要更新创建操作的差异
+     */
     private List<Difference> update = new ArrayList<>();
 
     public DiffResult(Database from, Database to) {
@@ -53,8 +62,11 @@ public class DiffResult {
             return new ArrayList<>();
         }
         log.debug("开始生成sql...");
+        // 解析需要执行删除操作的差异
         resolveDeleteSql();
+        // 解析需要执行创建操作的差异
         resolveCreateSql();
+        // 解析需要执行更新操作的差异
         resolveUpdateSql();
         log.debug("生成sql完成");
         log.trace("sql生成结果: {}", sqlList);
@@ -153,6 +165,7 @@ public class DiffResult {
             if (difference instanceof Key) {
                 // 创建key
                 Key update = (Key) difference;
+                // 先删除后创建
                 String deleteSql = update.getDeleteSql();
                 this.sqlList.add(deleteSql);
                 String createSql = update.getCreateSql();
@@ -170,6 +183,7 @@ public class DiffResult {
             } else if (difference instanceof Function) {
                 // 更新function
                 Function update = (Function) difference;
+                // 先删除后创建
                 String deleteSql = update.getDeleteSql();
                 this.sqlList.add(deleteSql);
                 String createSql = update.getCreateSql();
@@ -177,6 +191,7 @@ public class DiffResult {
             } else if (difference instanceof Procedure) {
                 // 更新Procedure
                 Procedure update = (Procedure) difference;
+                // 先删除后创建
                 String deleteSql = update.getDeleteSql();
                 this.sqlList.add(deleteSql);
                 String createSql = update.getCreateSql();
@@ -184,6 +199,7 @@ public class DiffResult {
             } else if (difference instanceof Trigger) {
                 // 更新Trigger
                 Trigger update = (Trigger) difference;
+                // 先删除后创建
                 String deleteSql = update.getDeleteSql();
                 this.sqlList.add(deleteSql);
                 String createSql = update.getCreateSql();

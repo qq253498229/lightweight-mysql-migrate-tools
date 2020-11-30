@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
+ * Spring包里面复制过来的
  * Miscellaneous object utility methods.
  *
  * <p>Mainly for internal use within the framework.

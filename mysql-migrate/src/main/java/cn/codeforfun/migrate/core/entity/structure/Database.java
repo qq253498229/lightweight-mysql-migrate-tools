@@ -32,11 +32,25 @@ public class Database {
     private String character;
     @DbUtilProperty("DEFAULT_COLLATION_NAME")
     private String collate;
-
+    /**
+     * 包含的tables
+     */
     private List<Table> tables;
+    /**
+     * 包含的views
+     */
     private List<View> views;
+    /**
+     * 包含的functions
+     */
     private List<Function> functions;
+    /**
+     * 包含的procedures
+     */
     private List<Procedure> procedures;
+    /**
+     * 包含的triggers
+     */
     private List<Trigger> triggers;
 
     public static final String SQL = FileUtil.getStringByClasspath("sql/detail/database.sql");
