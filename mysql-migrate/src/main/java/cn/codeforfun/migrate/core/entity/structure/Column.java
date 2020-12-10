@@ -133,7 +133,6 @@ public class Column implements Difference, Serializable {
                 Objects.equals(getDatetimePrecision(), column.getDatetimePrecision()) &&
                 Objects.equals(getCharacter(), column.getCharacter()) &&
                 Objects.equals(getCollation(), column.getCollation()) &&
-                Objects.equals(getColumnType(), column.getColumnType()) &&
                 Objects.equals(getExtra(), column.getExtra()) &&
                 Objects.equals(getComment(), column.getComment()) &&
                 Objects.equals(getGenerationExpression(), column.getGenerationExpression());
