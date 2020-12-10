@@ -745,6 +745,7 @@ table tr.even, table tr.alt, table tr:nth-child(even) { background: #f5f9f9; }
 <ul class="sectlevel2">
 <li><a href="#_引入jar包">引入jar包</a></li>
 <li><a href="#_测试类">测试类</a></li>
+<li><a href="#_示例代码">示例代码</a></li>
 </ul>
 </li>
 <li><a href="#_实现原理">实现原理</a></li>
@@ -792,13 +793,13 @@ public class MigrateTest {
     private static final String FROM_HOST = "localhost";
     private static final String FROM_USERNAME = "root";
     private static final String FROM_PASSWORD = "root";
-    private static final String FROM_DB = "test_db";
+    private static final String FROM_DB = "walmart";
 
-    private static final Integer TO_PORT = 3307;
-    private static final String TO_HOST = "localhost";
+    private static final Integer TO_PORT = 3306;
+    private static final String TO_HOST = "192.168.112.62";
     private static final String TO_USERNAME = "root";
-    private static final String TO_PASSWORD = "root";
-    private static final String TO_DB = "test_db_1";
+    private static final String TO_PASSWORD = "Admin@2019";
+    private static final String TO_DB = "walmart";
 
     @Test
     @Ignore
@@ -824,6 +825,12 @@ public class MigrateTest {
 
 }</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_示例代码">示例代码</h3>
+<div class="paragraph">
+<p><a href="https://gitee.com/consolelog/demo-lightweight-mysql-migrate-tools" class="bare">https://gitee.com/consolelog/demo-lightweight-mysql-migrate-tools</a></p>
 </div>
 </div>
 </div>
@@ -860,6 +867,16 @@ public class MigrateTest {
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>1.2.4</p>
+<div class="ulist">
+<ul>
+<li>
+<p>修复 对比字段类型错误 王斌 2020-12-10, 16:10</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.2.3</p>
 <div class="ulist">
