@@ -51,6 +51,9 @@ https://gitee.com/consolelog/demo-lightweight-mysql-migrate-tools
 
 == 更新日志
 
+* 1.2.4
+** 修复 对比字段类型错误 王斌 2020-12-10, 16:10
+
 * 1.2.3
 ** 修复 联合主键SQL生成错误 大胃王 2020/06/15 10:58
 
