@@ -37,7 +37,7 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 
 example目录
 
-![图片示例](https://gitee.com/consolelog/lightweight-mysql-migrate-tools/raw/master/demo.png "图片示例")
+image::https://gitee.com/consolelog/lightweight-mysql-migrate-tools/raw/master/demo.png[图片示例]
 
 == 实现原理
 
