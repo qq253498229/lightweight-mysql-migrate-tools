@@ -37,6 +37,8 @@ include::{testdir}/cn/codeforfun/migrate/core/MigrateTest.java[]
 
 example目录
 
+![图片示例](https://gitee.com/consolelog/lightweight-mysql-migrate-tools/raw/master/demo.png "图片示例")
+
 == 实现原理
 
 分别查询源数据库以及目标数据库链接下的 `information_schema` 数据库中的信息，根据信息解析成对应的表、函数等结构，再对比差异，拼接成SQL。
