@@ -29,18 +29,21 @@ public class Procedure implements Serializable, Difference {
     private String name;
     private String source;
 
+    private Database database;
+
     private List<Routine> routines = new ArrayList<>();
 
-    public static List<Procedure> configure(Connection connection, String databaseName) throws SQLException {
+    public static List<Procedure> configure(Connection connection, Database database) throws SQLException {
         List<Routine> beanList = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/procedure.sql"),
-                Routine.class, databaseName);
+                Routine.class, database.getInfo().getName());
         Map<String, Procedure> procedures = new HashMap<>(0);
         for (Routine routine : beanList) {
             Procedure procedure = procedures.get(routine.getName());
             if (procedure == null) {
                 procedure = new Procedure();
             }
+            procedure.setDatabase(database);
             procedure.getRoutines().add(routine);
             procedure.setDefiner(routine.getDefiner());
             procedure.setSecurityType(routine.getSecurityType());

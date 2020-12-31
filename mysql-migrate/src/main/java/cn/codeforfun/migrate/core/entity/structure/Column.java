@@ -27,7 +27,7 @@ public class Column implements Difference, Serializable {
     @DbUtilProperty("TABLE_SCHEMA")
     private String schema;
     @DbUtilProperty("TABLE_NAME")
-    private String table;
+    private String tableName;
     @DbUtilProperty("COLUMN_NAME")
     private String name;
     @DbUtilProperty("COLUMN_DEFAULT")
@@ -59,10 +59,12 @@ public class Column implements Difference, Serializable {
     @DbUtilProperty("GENERATION_EXPRESSION")
     private String generationExpression;
 
+    private Table table;
+
     @JsonIgnore
     @Override
     public String getDeleteSql() {
-        return "ALTER TABLE `" + this.table + "` DROP COLUMN `" + this.name + "`;";
+        return "ALTER TABLE `" + this.tableName + "` DROP COLUMN `" + this.name + "`;";
     }
 
     /**
@@ -97,7 +99,7 @@ public class Column implements Difference, Serializable {
     @JsonIgnore
     @Override
     public String getCreateSql() {
-        String createSql = "ALTER TABLE `" + this.table + "` ADD ";
+        String createSql = "ALTER TABLE `" + this.tableName + "` ADD ";
         createSql += getCreateTableSql();
         createSql = createSql.substring(0, createSql.length() - 1) + ";";
         return createSql;
@@ -106,7 +108,7 @@ public class Column implements Difference, Serializable {
     @JsonIgnore
     @Override
     public String getUpdateSql() {
-        String createSql = "ALTER TABLE `" + this.table + "` MODIFY ";
+        String createSql = "ALTER TABLE `" + this.tableName + "` MODIFY ";
         createSql += getCreateTableSql();
         createSql = createSql.substring(0, createSql.length() - 1) + ";";
         return createSql;
@@ -121,7 +123,7 @@ public class Column implements Difference, Serializable {
             return false;
         }
         Column column = (Column) o;
-        return Objects.equals(getTable(), column.getTable()) &&
+        return Objects.equals(getTableName(), column.getTableName()) &&
                 Objects.equals(getName(), column.getName()) &&
                 ((ObjectUtils.isEmpty(getDefaultValue()) && ObjectUtils.isEmpty(column.getDefaultValue()))
                         || Objects.equals(getDefaultValue(), column.getDefaultValue())) &&
@@ -140,7 +142,7 @@ public class Column implements Difference, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTable(), getName(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
+        return Objects.hash(getTableName(), getName(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
     }
 
 }

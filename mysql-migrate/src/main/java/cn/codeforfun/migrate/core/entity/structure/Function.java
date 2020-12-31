@@ -30,18 +30,21 @@ public class Function implements Serializable, Difference {
     private String name;
     private String source;
 
+    private Database database;
+
     private List<Routine> routines = new ArrayList<>();
 
-    public static List<Function> configure(Connection connection, String databaseName) throws SQLException {
+    public static List<Function> configure(Connection connection, Database database) throws SQLException {
         List<Routine> beanList = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/function.sql"),
-                Routine.class, databaseName);
+                Routine.class, database.getInfo().getName());
         Map<String, Function> functions = new HashMap<>(0);
         for (Routine routine : beanList) {
             Function function = functions.get(routine.getName());
             if (function == null) {
                 function = new Function();
             }
+            function.setDatabase(database);
             function.getRoutines().add(routine);
             function.setDefiner(routine.getDefiner());
             function.setSecurityType(routine.getSecurityType());

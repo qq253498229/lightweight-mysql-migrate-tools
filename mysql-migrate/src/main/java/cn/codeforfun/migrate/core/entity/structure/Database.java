@@ -76,11 +76,11 @@ public class Database {
      */
     private Database configure() throws SQLException {
         Database bean = DbUtil.getBean(this.connection, SQL, Database.class, this.info.getName());
-        bean.setTables(Table.configure(this.connection, this.info.getName()));
-        bean.setViews(View.configure(this.connection, this.info.getName()));
-        bean.setFunctions(Function.configure(this.connection, this.info.getName()));
-        bean.setProcedures(Procedure.configure(this.connection, this.info.getName()));
-        bean.setTriggers(Trigger.configure(this.connection, this.info.getName()));
+        bean.setTables(Table.configure(this.connection, this));
+        bean.setViews(View.configure(this.connection, this));
+        bean.setFunctions(Function.configure(this.connection, this));
+        bean.setProcedures(Procedure.configure(this.connection, this));
+        bean.setTriggers(Trigger.configure(this.connection, this));
         bean.setInfo(this.info);
         bean.setConnection(this.connection);
         return bean;

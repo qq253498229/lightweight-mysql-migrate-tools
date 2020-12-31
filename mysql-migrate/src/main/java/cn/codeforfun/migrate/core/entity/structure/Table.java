@@ -50,6 +50,8 @@ public class Table implements Serializable, Difference {
     private List<Column> columns;
     private List<Key> keys;
 
+    private Database database;
+
     public static final String SQL = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
 
     public boolean hasForeignKey() {
@@ -136,19 +138,20 @@ public class Table implements Serializable, Difference {
         return sql;
     }
 
-    public static List<Table> configure(Connection connection, String databaseName) throws SQLException {
+    public static List<Table> configure(Connection connection, Database database) throws SQLException {
         List<Table> list1 = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/table.sql"),
-                Table.class, databaseName);
+                Table.class, database.getInfo().getName());
         List<Column> list2 = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/column.sql"),
-                Column.class, databaseName);
+                Column.class, database.getInfo().getName());
         List<Key> list3 = DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/key.sql"),
-                Key.class, databaseName);
+                Key.class, database.getInfo().getName());
         return list1.stream().peek(o -> {
-            o.setColumns(list2.stream().filter(s -> o.getName().equals(s.getTable())).collect(Collectors.toList()));
-            o.setKeys(list3.stream().filter(s -> o.getName().equals(s.getTableName())).collect(Collectors.toList()));
+            o.setDatabase(database);
+            o.setColumns(list2.stream().peek(s -> s.setTable(o)).filter(s -> o.getName().equals(s.getTableName())).collect(Collectors.toList()));
+            o.setKeys(list3.stream().peek(s -> s.setTable(o)).filter(s -> o.getName().equals(s.getTableName())).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
 

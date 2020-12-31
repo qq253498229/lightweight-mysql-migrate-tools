@@ -183,15 +183,15 @@ public class Migrate {
         List<Column> fromColumnList = fromUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
         List<Column> toColumnList = toUpdateTableList.stream().map(Table::getColumns).flatMap(List::stream).collect(Collectors.toList());
         // 删除字段
-        List<Column> deleteColumnList = toColumnList.stream().filter(s -> fromColumnList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTable().equals(s.getTable()))).collect(Collectors.toList());
+        List<Column> deleteColumnList = toColumnList.stream().filter(s -> fromColumnList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTableName().equals(s.getTableName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteColumnList);
         // 新建字段
-        List<Column> createColumnList = fromColumnList.stream().filter(s -> toColumnList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTable().equals(s.getTable()))).collect(Collectors.toList());
+        List<Column> createColumnList = fromColumnList.stream().filter(s -> toColumnList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTableName().equals(s.getTableName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createColumnList);
         // 更新字段
         List<Column> updateColumnList = toColumnList.stream().map(s -> fromColumnList.stream().filter(j ->
                 s.getName().equals(j.getName())
-                        && s.getTable().equals(j.getTable())
+                        && s.getTableName().equals(j.getTableName())
                         && !s.equals(j)
         ).collect(Collectors.toList())).flatMap(List::stream).collect(Collectors.toList());
         this.diff.getUpdate().addAll(updateColumnList);

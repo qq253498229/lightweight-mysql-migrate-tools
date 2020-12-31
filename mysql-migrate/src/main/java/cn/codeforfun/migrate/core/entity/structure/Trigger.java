@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author wangbin
@@ -41,10 +42,13 @@ public class Trigger implements Serializable, Difference {
     @DbUtilProperty("ACTION_STATEMENT")
     private String source;
 
-    public static List<Trigger> configure(Connection connection, String databaseName) throws SQLException {
+    private Database database;
+
+    public static List<Trigger> configure(Connection connection, Database database) throws SQLException {
         return DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/trigger.sql"),
-                Trigger.class, databaseName);
+                Trigger.class, database.getInfo().getName())
+                .stream().peek(s -> s.setDatabase(database)).collect(Collectors.toList());
     }
 
     @JsonIgnore

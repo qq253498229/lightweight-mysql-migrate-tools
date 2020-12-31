@@ -41,6 +41,8 @@ public class Key implements Difference, Serializable {
     @DbUtilProperty("REFERENCED_COLUMN_NAME")
     private String referencedColumn;
 
+    private Table table;
+
     @JsonIgnore
     @Override
     public String getDeleteSql() {
