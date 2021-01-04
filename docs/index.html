@@ -766,7 +766,7 @@ table tr.even, table tr.alt, table tr:nth-child(even) { background: #f5f9f9; }
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;cn.codeforfun&lt;/groupId&gt;
   &lt;artifactId&gt;mysql-migrate&lt;/artifactId&gt;
-  &lt;version&gt;1.2.4&lt;/version&gt;
+  &lt;version&gt;1.2.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -793,12 +793,12 @@ public class MigrateTest {
     private static final String FROM_HOST = "localhost";
     private static final String FROM_USERNAME = "root";
     private static final String FROM_PASSWORD = "root";
-    private static final String FROM_DB = "walmart";
+    private static final String FROM_DB = "test";
 
     private static final Integer TO_PORT = 3306;
-    private static final String TO_HOST = "192.168.112.62";
+    private static final String TO_HOST = "localhost";
     private static final String TO_USERNAME = "root";
-    private static final String TO_PASSWORD = "Admin@2019";
+    private static final String TO_PASSWORD = "root";
     private static final String TO_DB = "walmart";
 
     @Test
@@ -806,7 +806,7 @@ public class MigrateTest {
     public void diff() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_USERNAME, TO_PASSWORD, TO_DB);
-        Migrate migrate = new Migrate().from(from).to(to);
+        Migrate migrate = new Migrate().from(from).to(to).ignoreCharacterCompare();
         DiffResult diffResult = migrate.diff();
         List&lt;String&gt; sqlList = diffResult.getSqlList();
         for (String sql : sqlList) {
@@ -819,7 +819,7 @@ public class MigrateTest {
     public void update() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_USERNAME, TO_PASSWORD, TO_DB);
-        Migrate migrate = new Migrate().from(from).to(to);
+        Migrate migrate = new Migrate().from(from).to(to).ignoreCharacterCompare();
         migrate.update();
     }
 
@@ -872,6 +872,22 @@ public class MigrateTest {
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>1.2.5</p>
+<div class="ulist">
+<ul>
+<li>
+<p>添加 对比时忽略字符集选项 王斌 2021-01-04, 09:25</p>
+</li>
+<li>
+<p>修改 将数据库对象传入table/view/function/procedure/trigger中，将表对象传入column/key中 王斌 2020-12-31, 18:14</p>
+</li>
+<li>
+<p>添加示例代码 王斌 2020-12-30, 17:24</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.2.4</p>
 <div class="ulist">
