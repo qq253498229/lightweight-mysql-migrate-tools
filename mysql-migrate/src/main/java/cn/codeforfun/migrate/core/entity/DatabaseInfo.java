@@ -46,6 +46,10 @@ public class DatabaseInfo implements Serializable {
      * 数据库连接地址
      */
     private String url;
+    /**
+     * 忽略编码及字符集对比
+     */
+    private Boolean ignoreCharacterCompare = false;
 
     /**
      * @param host     数据库地址

@@ -100,8 +100,13 @@ public class Table implements Serializable, Difference {
         String sql = SQL;
         sql = sql.replace("${tableName}", this.name);
         sql = sql.replace("${engine}", " ENGINE = " + this.engine);
-        sql = sql.replace("${charset}", " DEFAULT CHARSET = " + this.charset);
-        sql = sql.replace("${collate}", " COLLATE = " + this.collate);
+        if (this.getDatabase().getInfo().getIgnoreCharacterCompare()) {
+            sql = sql.replace("${charset}", "");
+            sql = sql.replace("${collate}", "");
+        } else {
+            sql = sql.replace("${charset}", " DEFAULT CHARSET = " + this.charset);
+            sql = sql.replace("${collate}", " COLLATE = " + this.collate);
+        }
         sql = sql.replace("${comment}", ObjectUtils.isEmpty(this.comment) ? "" : " COMMENT = '" + this.comment + "'");
         StringBuilder sb = new StringBuilder();
         for (Column column : this.columns) {

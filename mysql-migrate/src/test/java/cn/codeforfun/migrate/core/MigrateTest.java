@@ -29,7 +29,7 @@ public class MigrateTest {
     public void diff() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_USERNAME, TO_PASSWORD, TO_DB);
-        Migrate migrate = new Migrate().from(from).to(to);
+        Migrate migrate = new Migrate().from(from).to(to).ignoreCharacterCompare();
         DiffResult diffResult = migrate.diff();
         List<String> sqlList = diffResult.getSqlList();
         for (String sql : sqlList) {
@@ -42,7 +42,7 @@ public class MigrateTest {
     public void update() throws SQLException {
         DatabaseInfo from = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
         DatabaseInfo to = new DatabaseInfo(TO_HOST, TO_PORT, TO_USERNAME, TO_PASSWORD, TO_DB);
-        Migrate migrate = new Migrate().from(from).to(to);
+        Migrate migrate = new Migrate().from(from).to(to).ignoreCharacterCompare();
         migrate.update();
     }
 

@@ -77,7 +77,7 @@ public class Column implements Difference, Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("`").append(this.name).append("`").append(" ");
         sb.append(this.columnType).append(" ");
-        if (!ObjectUtils.isEmpty(this.collation)) {
+        if (!this.getTable().getDatabase().getInfo().getIgnoreCharacterCompare() && !ObjectUtils.isEmpty(this.collation)) {
             sb.append("COLLATE ").append(this.collation).append(" ");
         }
         if (FLAG_NOT_NULL.equals(this.nullable)) {
@@ -123,6 +123,11 @@ public class Column implements Difference, Serializable {
             return false;
         }
         Column column = (Column) o;
+
+        boolean other = this.getTable().getDatabase().getInfo().getIgnoreCharacterCompare() || (
+                Objects.equals(getCharacter(), column.getCharacter()) &&
+                        Objects.equals(getCollation(), column.getCollation())
+        );
         return Objects.equals(getTableName(), column.getTableName()) &&
                 Objects.equals(getName(), column.getName()) &&
                 ((ObjectUtils.isEmpty(getDefaultValue()) && ObjectUtils.isEmpty(column.getDefaultValue()))
@@ -133,11 +138,10 @@ public class Column implements Difference, Serializable {
                 Objects.equals(getNumericPrecision(), column.getNumericPrecision()) &&
                 Objects.equals(getNumericScale(), column.getNumericScale()) &&
                 Objects.equals(getDatetimePrecision(), column.getDatetimePrecision()) &&
-                Objects.equals(getCharacter(), column.getCharacter()) &&
-                Objects.equals(getCollation(), column.getCollation()) &&
                 Objects.equals(getExtra(), column.getExtra()) &&
                 Objects.equals(getComment(), column.getComment()) &&
-                Objects.equals(getGenerationExpression(), column.getGenerationExpression());
+                Objects.equals(getGenerationExpression(), column.getGenerationExpression()) &&
+                other;
     }
 
     @Override

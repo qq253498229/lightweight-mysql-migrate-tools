@@ -299,4 +299,10 @@ public class Migrate {
         }
         log.debug("数据库同步完成");
     }
+
+    public Migrate ignoreCharacterCompare() {
+        this.getSourceInfo().setIgnoreCharacterCompare(true);
+        this.getTargetInfo().setIgnoreCharacterCompare(true);
+        return this;
+    }
 }
