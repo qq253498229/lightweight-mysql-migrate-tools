@@ -305,4 +305,22 @@ public class Migrate {
         this.getTargetInfo().setIgnoreCharacterCompare(true);
         return this;
     }
+
+    /**
+     * 显示全库sql
+     *
+     * @param info 数据库信息
+     * @return sql列表
+     * @throws SQLException sql异常
+     */
+    public List<String> showSql(DatabaseInfo info) throws SQLException {
+        Database database = new Database().init(info);
+        DiffResult diff = new DiffResult();
+        diff.getCreate().addAll(database.getTables());
+        diff.getCreate().addAll(database.getFunctions());
+        diff.getCreate().addAll(database.getProcedures());
+        diff.getCreate().addAll(database.getTriggers());
+        diff.getCreate().addAll(database.getViews());
+        return diff.getSqlList();
+    }
 }

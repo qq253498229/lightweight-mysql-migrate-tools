@@ -24,6 +24,17 @@ public class MigrateTest {
     private static final String TO_PASSWORD = "root";
     private static final String TO_DB = "test_db_1";
 
+
+    @Test
+    public void showSql() throws SQLException {
+        DatabaseInfo info = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
+        Migrate migrate = new Migrate();
+        List<String> sql = migrate.showSql(info);
+        for (String s : sql) {
+            System.out.println(s);
+        }
+    }
+
     @Test
     @Ignore
     public void diff() throws SQLException {
