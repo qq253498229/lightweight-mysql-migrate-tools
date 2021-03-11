@@ -24,7 +24,9 @@ public class MigrateTest {
     private static final String TO_PASSWORD = "root";
     private static final String TO_DB = "test_db_1";
 
-
+    /**
+     * 显示数据库建表语句
+     */
     @Test
     @Ignore
     public void showSql() throws SQLException {
@@ -36,6 +38,9 @@ public class MigrateTest {
         }
     }
 
+    /**
+     * 对比数据库
+     */
     @Test
     @Ignore
     public void diff() throws SQLException {
@@ -49,6 +54,9 @@ public class MigrateTest {
         }
     }
 
+    /**
+     * 更新数据库
+     */
     @Test
     @Ignore
     public void update() throws SQLException {
