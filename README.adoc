@@ -6,7 +6,7 @@
 :nofooter:
 
 
-:version: 1.2.5
+:version: 1.2.6
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
@@ -52,6 +52,9 @@ image::https://gitee.com/consolelog/lightweight-mysql-migrate-tools/raw/master/d
 
 
 == 更新日志
+
+* 1.2.6
+** 添加 显示全库sql 王斌 2021-03-11, 15:36
 
 * 1.2.5
 ** 添加 对比时忽略字符集选项 王斌 2021-01-04, 09:25

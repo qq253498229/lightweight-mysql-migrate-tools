@@ -38,6 +38,8 @@ public class Migrate {
      */
     private DiffResult diff;
 
+    private static Boolean IGNORE_CHARACTER_COMPARE = false;
+
     public Migrate(DatabaseInfo targetInfo) {
         this.targetInfo = targetInfo;
     }
@@ -264,6 +266,8 @@ public class Migrate {
             log.error("targetDatabase 为空");
             throw new NullPointerException("targetDatabase 不能为空");
         }
+        sourceInfo.setIgnoreCharacterCompare(IGNORE_CHARACTER_COMPARE);
+        targetInfo.setIgnoreCharacterCompare(IGNORE_CHARACTER_COMPARE);
         log.debug("开始对比数据库");
         Database source = new Database().init(this.sourceInfo);
         Database target = new Database().init(this.targetInfo);
@@ -301,8 +305,7 @@ public class Migrate {
     }
 
     public Migrate ignoreCharacterCompare() {
-        this.getSourceInfo().setIgnoreCharacterCompare(true);
-        this.getTargetInfo().setIgnoreCharacterCompare(true);
+        IGNORE_CHARACTER_COMPARE = true;
         return this;
     }
 
@@ -314,6 +317,7 @@ public class Migrate {
      * @throws SQLException sql异常
      */
     public List<String> showSql(DatabaseInfo info) throws SQLException {
+        info.setIgnoreCharacterCompare(IGNORE_CHARACTER_COMPARE);
         Database database = new Database().init(info);
         DiffResult diff = new DiffResult();
         diff.getCreate().addAll(database.getTables());

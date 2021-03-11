@@ -16,7 +16,7 @@ public class MigrateTest {
     private static final String FROM_HOST = "localhost";
     private static final String FROM_USERNAME = "root";
     private static final String FROM_PASSWORD = "root";
-    private static final String FROM_DB = "test_db";
+    private static final String FROM_DB = "test";
 
     private static final Integer TO_PORT = 3307;
     private static final String TO_HOST = "localhost";
@@ -29,7 +29,7 @@ public class MigrateTest {
     @Ignore
     public void showSql() throws SQLException {
         DatabaseInfo info = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
-        Migrate migrate = new Migrate();
+        Migrate migrate = new Migrate().ignoreCharacterCompare();
         List<String> sql = migrate.showSql(info);
         for (String s : sql) {
             System.out.println(s);
