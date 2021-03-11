@@ -26,6 +26,7 @@ public class MigrateTest {
 
 
     @Test
+    @Ignore
     public void showSql() throws SQLException {
         DatabaseInfo info = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
         Migrate migrate = new Migrate();
