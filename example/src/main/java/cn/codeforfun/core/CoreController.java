@@ -2,6 +2,7 @@ package cn.codeforfun.core;
 
 import cn.codeforfun.migrate.core.Migrate;
 import cn.codeforfun.migrate.core.diff.DiffResult;
+import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,12 @@ public class CoreController {
         Migrate migrate = new Migrate().from(diff.getSource()).to(diff.getTarget());
         DiffResult diffResult = migrate.diff();
         return diffResult.getSqlList();
+    }
+
+    @PostMapping("/showSql")
+    public List<String> showSql(@RequestBody DatabaseInfo info) throws SQLException {
+        Migrate migrate = new Migrate().ignoreCharacterCompare();
+        return migrate.showSql(info);
     }
 
     /**

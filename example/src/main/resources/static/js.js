@@ -3,7 +3,6 @@ app.filter('format', function () {
     return function (inputString) {
         let result = sqlFormatter.format(inputString);
         result = result.replaceAll('\n', '<br>');
-        console.log(result);
         return result;
     }
 })
@@ -43,6 +42,16 @@ app.controller('ctrl', function ($scope, $http) {
     $scope.diff = function () {
         localStorage.setItem('parameter', JSON.stringify($scope.parameter))
         $http.post('/diff', $scope.parameter).then(res => {
+            $scope.list = res.data;
+        })
+    }
+    $scope.showLeftSql = function () {
+        $http.post('/showSql', $scope.parameter.source).then(res => {
+            $scope.list = res.data;
+        })
+    }
+    $scope.showRightSql = function () {
+        $http.post('/showSql', $scope.parameter.target).then(res => {
             $scope.list = res.data;
         })
     }
