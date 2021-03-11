@@ -69,7 +69,9 @@ public class Procedure implements Serializable, Difference {
         for (Routine outList : resultTypeList) {
             sb.append("OUT ").append(outList.getParamName()).append(" ").append(outList.getResultType()).append(",");
         }
-        sb = new StringBuilder(sb.substring(0, sb.length() - 1));
+        if (inputTypeList.size() > 0 || resultTypeList.size() > 0) {
+            sb = new StringBuilder(sb.substring(0, sb.length() - 1));
+        }
         sb.append(") ");
         sb.append(" ").append(this.source).append(";");
         return sb.toString();
