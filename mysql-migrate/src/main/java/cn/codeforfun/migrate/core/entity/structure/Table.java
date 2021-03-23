@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class Table implements Serializable, Difference {
     @DbUtilProperty("ENGINE")
     private String engine;
     @DbUtilProperty("CREATE_TIME")
-    private Date createTime;
+    private Timestamp createTime;
     @DbUtilProperty("UPDATE_TIME")
     private Date updateTime;
     @DbUtilProperty("CHARACTER_SET_NAME")
