@@ -766,7 +766,7 @@ table tr.even, table tr.alt, table tr:nth-child(even) { background: #f5f9f9; }
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;cn.codeforfun&lt;/groupId&gt;
   &lt;artifactId&gt;mysql-migrate&lt;/artifactId&gt;
-  &lt;version&gt;1.2.7&lt;/version&gt;
+  &lt;version&gt;1.2.8&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -790,16 +790,16 @@ import java.util.List;
 public class MigrateTest {
 
     private static final Integer FROM_PORT = 3306;
-    private static final String FROM_HOST = "localhost";
+    private static final String FROM_HOST = "192.168.112.62";
     private static final String FROM_USERNAME = "root";
-    private static final String FROM_PASSWORD = "root";
-    private static final String FROM_DB = "test";
+    private static final String FROM_PASSWORD = "Admin@2019";
+    private static final String FROM_DB = "walmart";
 
-    private static final Integer TO_PORT = 3307;
+    private static final Integer TO_PORT = 3306;
     private static final String TO_HOST = "localhost";
     private static final String TO_USERNAME = "root";
     private static final String TO_PASSWORD = "root";
-    private static final String TO_DB = "test_db_1";
+    private static final String TO_DB = "walmart";
 
     /**
      * 显示数据库建表语句
@@ -808,6 +808,7 @@ public class MigrateTest {
     @Ignore
     public void showSql() throws SQLException {
         DatabaseInfo info = new DatabaseInfo(FROM_HOST, FROM_PORT, FROM_USERNAME, FROM_PASSWORD, FROM_DB);
+//        DatabaseInfo info = new DatabaseInfo(TO_HOST, TO_PORT, TO_USERNAME, TO_PASSWORD, TO_DB);
         Migrate migrate = new Migrate().ignoreCharacterCompare();
         List&lt;String&gt; sql = migrate.showSql(info);
         for (String s : sql) {
@@ -892,6 +893,19 @@ public class MigrateTest {
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>1.2.8</p>
+<div class="ulist">
+<ul>
+<li>
+<p>更新 Maven依赖 王斌 2021-03-23, 14:47</p>
+</li>
+<li>
+<p>修复 新版本MySQL驱动时间类型不兼容的BUG 王斌 2021-03-23, 14:47</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>1.2.7</p>
 <div class="ulist">
