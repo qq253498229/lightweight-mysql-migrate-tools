@@ -128,9 +128,7 @@ public class Table implements Serializable, Difference {
         List<Key> primaryKeyList = this.keys.stream().filter(k -> "PRIMARY".equals(k.getName())).collect(Collectors.toList());
         if (primaryKeyList.size() > 0) {
             sb.append("PRIMARY KEY (");
-            primaryKeyList.forEach(k -> {
-                sb.append("`").append(k.getColumnName()).append("`,");
-            });
+            primaryKeyList.forEach(k -> sb.append("`").append(k.getColumnName()).append("`,"));
             sb.delete(sb.length() - 1, sb.length());
             sb.append("),");
         }
