@@ -18,6 +18,7 @@ app.filter('title', function () {
     }
 })
 app.controller('ctrl', function ($scope, $http) {
+    $scope.info = {}
     $scope.parameter = {
         source: {
             host: '',
@@ -33,12 +34,7 @@ app.controller('ctrl', function ($scope, $http) {
         }
     }
     $scope.list = []
-    $scope.onInit = function () {
-        if (!!localStorage.getItem('parameter')) {
-            $scope.parameter = JSON.parse(localStorage.getItem('parameter'))
-        }
-    }
-    $scope.onInit()
+
     $scope.diff = function () {
         localStorage.setItem('parameter', JSON.stringify($scope.parameter))
         $http.post('/diff', $scope.parameter).then(res => {
@@ -58,4 +54,42 @@ app.controller('ctrl', function ($scope, $http) {
     $scope.update = function () {
         alert('更新太恐怖了，所以没实现。。。。')
     }
+    $scope.loadTab = function () {
+        let tab = localStorage.getItem('tab')
+        if (!tab) {
+            tab = 'tab2'
+        }
+        $scope.tab = tab;
+    }
+    $scope.changeTab = function (name) {
+        localStorage.setItem('tab', name)
+        $scope.tab = name;
+    }
+    $scope.loadExport = function () {
+        let exportString = localStorage.getItem('export')
+        if (!!exportString) {
+            $scope.info = JSON.parse(exportString)
+        }
+    }
+    $scope.export = function () {
+        localStorage.setItem('export', JSON.stringify($scope.info))
+        $http.post('/export', $scope.info, {responseType: 'arraybuffer'}).then(function (res) {
+            const blob = new Blob([res.data], {type: 'text/x-sql'});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'export.sql';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+    }
+
+    $scope.onInit = function () {
+        if (!!localStorage.getItem('parameter')) {
+            $scope.parameter = JSON.parse(localStorage.getItem('parameter'))
+        }
+        $scope.loadTab()
+        $scope.loadExport()
+    }
+    $scope.onInit()
 })
