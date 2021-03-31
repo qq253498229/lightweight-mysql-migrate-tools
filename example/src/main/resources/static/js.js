@@ -83,7 +83,25 @@ app.controller('ctrl', function ($scope, $http) {
             window.URL.revokeObjectURL(url);
         })
     }
-
+    $scope.merge = function () {
+        const file = document.getElementById("file").files;
+        const data = new FormData();
+        for (let i = 0; i < file.length; i++) {
+            data.append('files', file[i])
+        }
+        const config = {
+            headers: {'Content-Type': undefined}
+        };
+        $http.post('/merge', data, config).then(res => {
+            const blob = new Blob([res.data], {type: 'text/x-sql'});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'merge.sql';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+    }
     $scope.onInit = function () {
         if (!!localStorage.getItem('parameter')) {
             $scope.parameter = JSON.parse(localStorage.getItem('parameter'))
