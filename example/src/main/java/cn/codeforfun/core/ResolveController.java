@@ -60,4 +60,9 @@ public class ResolveController {
                 .body(resource)
                 ;
     }
+
+    @PostMapping("/execute")
+    public void executeFiles(MultipartFile[] files) {
+
+    }
 }

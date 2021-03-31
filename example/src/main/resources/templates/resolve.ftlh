@@ -14,7 +14,7 @@
     <div style="margin-top: 15px;margin-bottom: 15px;">
         <ul class="nav nav-tabs">
             <li role="presentation" ng-class="{'active':tab=='tab1'}" ng-click="changeTab('tab1')">
-                <a href="#">导入SQL</a>
+                <a href="#">执行SQL</a>
             </li>
             <li role="presentation" ng-class="{'active':tab=='tab2'}" ng-click="changeTab('tab2')">
                 <a href="#">导出SQL</a>
@@ -25,7 +25,7 @@
         </ul>
     </div>
     <div ng-if="tab == 'tab1'">
-        <#include "./resolve-import-sql.ftlh"/>
+        <#include "./resolve-execute-sql.ftlh"/>
     </div>
     <div ng-if="tab == 'tab2'">
         <#include "./resolve-export-sql.ftlh"/>
