@@ -102,6 +102,26 @@ app.controller('ctrl', function ($scope, $http) {
             window.URL.revokeObjectURL(url);
         })
     }
+    $scope.execute = function () {
+        const file = document.getElementById("file").files;
+        const data = new FormData();
+        for (let i = 0; i < file.length; i++) {
+            data.append('files', file[i])
+        }
+        data.append('host', $scope.info.host)
+        data.append('port', $scope.info.port)
+        data.append('username', $scope.info.username)
+        data.append('password', $scope.info.password)
+        data.append('name', $scope.info.name)
+        const config = {
+            headers: {'Content-Type': undefined},
+        };
+        $http.post('/execute', data, config).then(() => {
+            alert('执行成功');
+        }, () => {
+            alert('执行失败');
+        })
+    }
     $scope.onInit = function () {
         if (!!localStorage.getItem('parameter')) {
             $scope.parameter = JSON.parse(localStorage.getItem('parameter'))
