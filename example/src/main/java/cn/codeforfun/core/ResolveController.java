@@ -1,6 +1,7 @@
 package cn.codeforfun.core;
 
 import cn.codeforfun.migrate.core.Migrate;
+import cn.codeforfun.migrate.core.diff.DiffResult;
 import cn.codeforfun.migrate.core.entity.DatabaseInfo;
 import cn.hutool.core.io.IoUtil;
 import com.alibaba.druid.pool.DruidDataSource;
@@ -53,6 +54,25 @@ public class ResolveController {
         for (MultipartFile file : files) {
             String sql = IoUtil.read(file.getInputStream(), StandardCharsets.UTF_8);
             sb.append(sql).append("\n");
+        }
+        InputStream inputStream = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
+
+        InputStreamResource resource = new InputStreamResource(inputStream);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource)
+                ;
+    }
+
+    @PostMapping("/exportDifference")
+    public ResponseEntity<Resource> exportDifference(@RequestBody Diff diff) throws SQLException {
+        Migrate migrate = new Migrate().from(diff.getSource()).to(diff.getTarget());
+        migrate.ignoreCharacterCompare();
+        DiffResult diffResult = migrate.diff();
+        List<String> sqlList = diffResult.getSqlList();
+        StringBuilder sb = new StringBuilder();
+        for (String s : sqlList) {
+            sb.append(s).append("\n");
         }
         InputStream inputStream = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
 

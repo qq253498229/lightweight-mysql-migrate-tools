@@ -51,6 +51,20 @@ app.controller('ctrl', function ($scope, $http) {
             $scope.list = res.data;
         })
     }
+    $scope.exportDifference = function () {
+        localStorage.setItem('parameter', JSON.stringify($scope.parameter))
+        console.log($scope.parameter)
+        $http.post('/exportDifference', $scope.parameter).then(res => {
+            console.log(res)
+            const blob = new Blob([res.data], {type: 'text/x-sql'});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'diff.sql';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+    }
     $scope.update = function () {
         alert('更新太恐怖了，所以没实现。。。。')
     }

@@ -31,6 +31,7 @@ public class CoreController {
     @PostMapping("/diff")
     public List<String> diff(@RequestBody Diff diff) throws SQLException {
         Migrate migrate = new Migrate().from(diff.getSource()).to(diff.getTarget());
+        migrate.ignoreCharacterCompare();
         DiffResult diffResult = migrate.diff();
         return diffResult.getSqlList();
     }

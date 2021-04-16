@@ -5,4 +5,5 @@
 <div>
     <button type="button" class="btn btn-success btn-lg" ng-click="showLeftSql()">查看<-SQL</button>
     <button type="button" class="btn btn-success btn-lg" ng-click="showRightSql()">查看->SQL</button>
+    <button type="button" class="btn btn-success btn-lg" ng-click="exportDifference()">导出差异SQL</button>
 </div>
