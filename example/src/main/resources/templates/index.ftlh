@@ -11,21 +11,27 @@
 <body ng-controller="ctrl">
 
 <div class="container-fluid" ng-cloak>
-    <div class="row">
-        <div class="col-md-5">
-            <#include "./left.ftlh"/>
-        </div>
-        <div class="col-md-2">
-            <#include "./center.ftlh"/>
-        </div>
-        <div class="col-md-5">
-            <#include "./right.ftlh"/>
-        </div>
+    <div style="margin-top: 15px;margin-bottom: 15px;">
+        <ul class="nav nav-tabs">
+            <li role="presentation" ng-repeat="m in menu track by $index" ng-class="{'active':tab==m.key}"
+                ng-click="changeTab(m.key)">
+                <a href="#">{{m.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <div ng-if="tab == 'tab1'">
+        <#include "./diff.ftlh"/>
+    </div>
+    <div ng-if="tab == 'tab2'">
+        <#include "./resolve-execute-sql.ftlh"/>
+    </div>
+    <div ng-if="tab == 'tab3'">
+        <#include "./resolve-export-sql.ftlh"/>
+    </div>
+    <div ng-if="tab == 'tab4'">
+        <#include "./resolve-merge-multi-sql.ftlh"/>
     </div>
 
-    <div class="row">
-        <#include "./content.ftlh"/>
-    </div>
 </div>
 
 

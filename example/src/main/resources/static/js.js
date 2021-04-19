@@ -19,6 +19,12 @@ app.filter('title', function () {
 })
 app.controller('ctrl', function ($scope, $http) {
     $scope.info = {}
+    $scope.menu = [
+        {name: '对比数据库', key: 'tab1', filename: './diff.ftlh'},
+        {name: '执行SQL', key: 'tab2', filename: './resolve-execute-sql.ftlh'},
+        {name: '导出SQL', key: 'tab3', filename: './resolve-export-sql.ftlh'},
+        {name: '合并多个SQL文件', key: 'tab4', filename: './resolve-merge-multi-sql.ftlh'},
+    ];
     $scope.parameter = {
         source: {
             host: '',
@@ -71,7 +77,7 @@ app.controller('ctrl', function ($scope, $http) {
     $scope.loadTab = function () {
         let tab = localStorage.getItem('tab')
         if (!tab) {
-            tab = 'tab2'
+            tab = 'tab1'
         }
         $scope.tab = tab;
     }

@@ -3,8 +3,11 @@ package cn.codeforfun.core;
 import cn.codeforfun.migrate.core.Migrate;
 import cn.codeforfun.migrate.core.diff.DiffResult;
 import cn.codeforfun.migrate.core.entity.DatabaseInfo;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import com.alibaba.druid.pool.DruidDataSource;
+import cn.hutool.core.io.file.FileAppender;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.SQLExec;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -15,14 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @RestController
 public class ResolveController {
@@ -84,29 +85,25 @@ public class ResolveController {
     }
 
     @PostMapping("/execute")
-    public void executeFiles(@ModelAttribute ExecuteParameter parameter) throws IOException, SQLException {
+    public void executeFiles(@ModelAttribute ExecuteParameter parameter) throws IOException {
         if (CollectionUtils.isEmpty(parameter.getFiles())) {
             return;
         }
-        StringBuilder sb = new StringBuilder();
+        File tempFile = File.createTempFile("test-execute-", ".sql");
         for (MultipartFile file : parameter.getFiles()) {
+            FileAppender fileAppender = new FileAppender(tempFile, 16, true);
             String sql = IoUtil.read(file.getInputStream(), StandardCharsets.UTF_8);
-            sb.append(sql).append("\n");
+            fileAppender.append(sql);
+            fileAppender.flush();
         }
-        String sql = sb.toString();
-        sql = Pattern.compile("^--(.*)$\r\n", Pattern.MULTILINE).matcher(sql).replaceAll("");
-        sql = Pattern.compile("^/\\*!(.*)\\*/;$\r\n", Pattern.MULTILINE).matcher(sql).replaceAll("");
-        DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUsername(parameter.getUsername());
-        druidDataSource.setPassword(parameter.getPassword());
-        druidDataSource.setUrl("jdbc:mysql://" + parameter.getHost() + ":" + parameter.getPort() + "/" + parameter.getName() + "?useUnicode=true&characterEncoding=UTF-8");
-        Connection connection = druidDataSource.getConnection();
-        String[] split = sql.replaceAll("\\r", "").replaceAll("\\n", "")
-                .split("\\s*;\\s*(?=([^']*'[^']*')*[^']*$)");
-        Statement statement = connection.createStatement();
-        for (String s : split) {
-            statement.addBatch(s);
-        }
-        statement.executeBatch();
+        SQLExec sqlExec = new SQLExec();
+        sqlExec.setDriver("com.mysql.cj.jdbc.Driver");
+        sqlExec.setUrl("jdbc:mysql://" + parameter.getHost() + ":" + parameter.getPort() + "/" + parameter.getName() + "?useUnicode=true&characterEncoding=UTF-8");
+        sqlExec.setUserid(parameter.getUsername());
+        sqlExec.setPassword(parameter.getPassword());
+        sqlExec.setSrc(tempFile);
+        sqlExec.setProject(new Project()); // 要指定这个属性，不然会出错
+        sqlExec.execute();
+        FileUtil.del(tempFile);
     }
 }
