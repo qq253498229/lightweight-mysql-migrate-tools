@@ -1,37 +1,52 @@
-select distinct s.SCHEMA_NAME,
-                s.DEFAULT_CHARACTER_SET_NAME,
-                s.DEFAULT_COLLATION_NAME,
-                t.TABLE_NAME,
-                t.ENGINE,
-                ch.CHARACTER_SET_NAME,
-                t.TABLE_COLLATION,
-                t.TABLE_COMMENT,
-                c.COLUMN_NAME,
-                c.ORDINAL_POSITION,
-                c.COLUMN_DEFAULT,
-                c.IS_NULLABLE,
-                c.DATA_TYPE,
-                c.CHARACTER_MAXIMUM_LENGTH,
-                c.CHARACTER_OCTET_LENGTH,
-                c.NUMERIC_PRECISION,
-                c.NUMERIC_SCALE,
-                c.DATETIME_PRECISION,
-                c.CHARACTER_SET_NAME,
-                c.COLLATION_NAME,
-                c.COLUMN_TYPE,
-                c.COLUMN_KEY,
-                c.EXTRA,
-                c.COLUMN_COMMENT,
-                k.CONSTRAINT_SCHEMA,
-                k.CONSTRAINT_NAME,
-                k.ORDINAL_POSITION,
-                k.POSITION_IN_UNIQUE_CONSTRAINT,
-                k.REFERENCED_TABLE_SCHEMA,
-                k.REFERENCED_TABLE_NAME,
-                k.REFERENCED_COLUMN_NAME
-from information_schema.SCHEMATA s
-         left join information_schema.TABLES t on t.TABLE_SCHEMA = s.SCHEMA_NAME
-         left join information_schema.COLLATION_CHARACTER_SET_APPLICABILITY ch on t.TABLE_COLLATION = ch.COLLATION_NAME
-         LEFT JOIN information_schema.COLUMNS c ON c.TABLE_NAME = t.TABLE_NAME
-         left join information_schema.KEY_COLUMN_USAGE k on k.TABLE_NAME = t.TABLE_NAME
-where s.SCHEMA_NAME = ?
+drop database test;
+drop database test1;
+create database test;
+create database test1;
+
+create table test.t_test1
+(
+    id          int auto_increment primary key,
+    test_field1 varchar(20) null comment '测试字段1',
+    test_field2 varchar(20) null comment '测试字段2'
+);
+
+create table test1.t_test1
+(
+    id          int auto_increment primary key,
+    test_field1 varchar(20) null comment '测试字段1',
+    test_field2 varchar(20) null comment '测试字段2',
+    constraint t_test1_test_uindex unique (test_field1, test_field2)
+);
+
+create table test.t_test2
+(
+    id          int auto_increment primary key,
+    test_field1 varchar(20) null comment '测试字段1',
+    test_field2 varchar(20) null comment '测试字段2',
+    constraint t_test2_test_uindex unique (test_field1, test_field2)
+);
+
+create table test1.t_test2
+(
+    id          int auto_increment primary key,
+    test_field1 varchar(20) null comment '测试字段1',
+    test_field2 varchar(20) null comment '测试字段2'
+);
+
+create table test.t_test3
+(
+    id          int auto_increment primary key,
+    test_field1 varchar(20) null comment '测试字段1',
+    test_field2 varchar(20) null comment '测试字段2',
+    constraint t_test3_test_uindex unique (test_field1, test_field2)
+);
+
+create table test1.t_test3
+(
+    id          int auto_increment primary key,
+    test_field1 varchar(20) null comment '测试字段1',
+    test_field2 varchar(20) null comment '测试字段2',
+    constraint t_test3_test_uindex unique (test_field1)
+);
+
+

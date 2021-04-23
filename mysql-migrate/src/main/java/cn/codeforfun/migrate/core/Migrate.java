@@ -12,8 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
 
 /**
  * 迁移核心类
@@ -219,21 +223,37 @@ public class Migrate {
         List<Key> updateKeyList = new ArrayList<>();
         for (Key fromKey : fromKeyList) {
             for (Key toKey : toKeyList) {
-                if ("unique_index".equals(fromKey.getName()) && "unique_index".equals(toKey.getName())
+                if (FLAG_PRIMARY.equals(fromKey.getName()) && FLAG_PRIMARY.equals(toKey.getName())
                         && fromKey.getTableName().equals(toKey.getTableName())
                         && fromKey.getColumnName().equals(toKey.getColumnName())
-                        && !fromKey.equals(toKey)
-                ) {
+                        && !fromKey.equals(toKey)) {
                     updateKeyList.add(fromKey);
-                } else if (!"unique_index".equals(fromKey.getName()) && !"unique_index".equals(toKey.getName())
+                } else if (!ObjectUtils.isEmpty(fromKey.getReferencedColumn()) && !ObjectUtils.isEmpty(toKey.getReferencedColumn())
                         && fromKey.getName().equals(toKey.getName())
                         && fromKey.getTableName().equals(toKey.getTableName())
-                        && !fromKey.equals(toKey)) {
+                        && !fromKey.equals(toKey)
+                ) {
                     updateKeyList.add(fromKey);
                 }
             }
         }
         this.diff.getUpdate().addAll(updateKeyList);
+        // 更新唯一索引
+        Map<String, List<Key>> fromUniqueKeyMap = fromKeyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.groupingBy(Key::getTableName));
+        Map<String, List<Key>> toUniqueKeyMap = toKeyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.groupingBy(Key::getTableName));
+
+        for (Map.Entry<String, List<Key>> fromEntry : fromUniqueKeyMap.entrySet()) {
+            for (Map.Entry<String, List<Key>> toEntry : toUniqueKeyMap.entrySet()) {
+                if (fromEntry.getKey().equals(toEntry.getKey())) {
+                    Object[] fromUniqueColumnNameList = fromEntry.getValue().stream().map(Key::getColumnName).toArray();
+                    Object[] toUniqueColumnNameList = toEntry.getValue().stream().map(Key::getColumnName).toArray();
+                    boolean equals = Arrays.equals(fromUniqueColumnNameList, toUniqueColumnNameList);
+                    if (!equals) {
+                        this.diff.getUpdate().addAll(fromEntry.getValue());
+                    }
+                }
+            }
+        }
     }
 
     /**

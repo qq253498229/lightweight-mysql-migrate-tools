@@ -18,11 +18,11 @@ public class MigrateTest {
     private static final String FROM_PASSWORD = "root";
     private static final String FROM_DB = "test";
 
-    private static final Integer TO_PORT = 3307;
+    private static final Integer TO_PORT = 3306;
     private static final String TO_HOST = "localhost";
     private static final String TO_USERNAME = "root";
     private static final String TO_PASSWORD = "root";
-    private static final String TO_DB = "test_db_1";
+    private static final String TO_DB = "test1";
 
     /**
      * 显示数据库建表语句
