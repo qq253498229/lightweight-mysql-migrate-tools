@@ -63,6 +63,7 @@ public class DiffResult {
         }
         log.debug("开始生成sql...");
         // 解析需要执行删除操作的差异
+        // todo
         resolveDeleteSql();
         // 解析需要执行创建操作的差异
         resolveCreateSql();
