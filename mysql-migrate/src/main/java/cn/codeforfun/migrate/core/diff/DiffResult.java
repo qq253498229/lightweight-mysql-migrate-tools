@@ -117,15 +117,11 @@ public class DiffResult {
     }
 
     public void resolveCreateSql() {
+        Key.resolveCreateSql(this.create, this.sqlList);
         for (Difference difference : this.create) {
             if (difference instanceof Table) {
                 // 创建表
                 Table create = (Table) difference;
-                String createSql = create.getCreateSql();
-                this.sqlList.add(createSql);
-            } else if (difference instanceof Key) {
-                // 创建key
-                Key create = (Key) difference;
                 String createSql = create.getCreateSql();
                 this.sqlList.add(createSql);
             } else if (difference instanceof Column) {
