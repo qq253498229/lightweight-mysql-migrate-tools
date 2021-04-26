@@ -75,6 +75,7 @@ public class DiffResult {
     }
 
     public void resolveDeleteSql() {
+        Key.resolveDeleteSql(this.delete, this.sqlList);
         for (Difference difference : this.delete) {
             if (difference instanceof Table) {
                 Table delete = (Table) difference;
@@ -84,11 +85,6 @@ public class DiffResult {
                     this.sqlList.add(deleteForeignKeySql);
                 }
                 // 再删除表
-                String deleteSql = delete.getDeleteSql();
-                this.sqlList.add(deleteSql);
-            } else if (difference instanceof Key) {
-                // 删除key
-                Key delete = (Key) difference;
                 String deleteSql = delete.getDeleteSql();
                 this.sqlList.add(deleteSql);
             } else if (difference instanceof Column) {

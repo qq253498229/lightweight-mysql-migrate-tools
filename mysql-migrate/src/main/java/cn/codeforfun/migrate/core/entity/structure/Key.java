@@ -8,7 +8,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Key结构定义
@@ -42,6 +46,27 @@ public class Key implements Difference, Serializable {
     private String referencedColumn;
 
     private Table table;
+
+    public static void resolveDeleteSql(List<Difference> delete, List<String> sqlList) {
+        List<Key> deleteKeyList = delete.stream().filter(s -> s instanceof Key).map(s -> (Key) s).collect(Collectors.toList());
+
+        List<Key> uniqueKeyList = deleteKeyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        if (!ObjectUtils.isEmpty(uniqueKeyList)) {
+            Map<String, String> temp = new HashMap<>();
+            for (Key key : uniqueKeyList) {
+                temp.put(key.getName(), key.getTableName());
+            }
+            for (Map.Entry<String, String> entry : temp.entrySet()) {
+                sqlList.add("drop index " + entry.getKey() + " on " + entry.getValue() + ";");
+            }
+        }
+        List<Key> otherKeyList = deleteKeyList.stream().filter(s -> FLAG_PRIMARY.equals(s.getName()) || !ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        if (!ObjectUtils.isEmpty(otherKeyList)) {
+            for (Key key : otherKeyList) {
+                sqlList.add(key.getDeleteSql());
+            }
+        }
+    }
 
     @JsonIgnore
     @Override
