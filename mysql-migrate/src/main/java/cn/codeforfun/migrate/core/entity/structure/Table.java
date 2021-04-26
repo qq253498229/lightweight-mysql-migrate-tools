@@ -113,7 +113,7 @@ public class Table implements Serializable, Difference {
             String columnSql = column.getCreateTableSql();
             sb.append(columnSql);
         }
-        List<Key> uniqueIndexList = this.keys.stream().filter(s -> "unique_index".equals(s.getName())).collect(Collectors.toList());
+        List<Key> uniqueIndexList = this.keys.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueIndexList)) {
             sb.append(" CONSTRAINT unique_index UNIQUE (");
             for (Key key : uniqueIndexList) {
@@ -124,7 +124,7 @@ public class Table implements Serializable, Difference {
             this.keys.removeAll(uniqueIndexList);
         }
         // 主键
-        List<Key> primaryKeyList = this.keys.stream().filter(k -> "PRIMARY".equals(k.getName())).collect(Collectors.toList());
+        List<Key> primaryKeyList = this.keys.stream().filter(k -> FLAG_PRIMARY.equals(k.getName())).collect(Collectors.toList());
         if (primaryKeyList.size() > 0) {
             sb.append("PRIMARY KEY (");
             primaryKeyList.forEach(k -> sb.append("`").append(k.getColumnName()).append("`,"));
