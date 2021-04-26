@@ -63,7 +63,6 @@ public class DiffResult {
         }
         log.debug("开始生成sql...");
         // 解析需要执行删除操作的差异
-        // todo
         resolveDeleteSql();
         // 解析需要执行创建操作的差异
         resolveCreateSql();
@@ -154,16 +153,9 @@ public class DiffResult {
     }
 
     public void resolveUpdateSql() {
+        Key.resolveUpdateSql(this.update, this.sqlList);
         for (Difference difference : this.update) {
-            if (difference instanceof Key) {
-                // 创建key
-                Key update = (Key) difference;
-                // 先删除后创建
-                String deleteSql = update.getDeleteSql();
-                this.sqlList.add(deleteSql);
-                String createSql = update.getCreateSql();
-                this.sqlList.add(createSql);
-            } else if (difference instanceof Column) {
+            if (difference instanceof Column) {
                 // 更新字段
                 Column update = (Column) difference;
                 String updateSql = update.getUpdateSql();

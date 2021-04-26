@@ -69,12 +69,17 @@ public class Key implements Difference, Serializable {
     }
 
     public static void resolveCreateSql(List<Difference> create, List<String> sqlList) {
+        if (ObjectUtils.isEmpty(create)) {
+            return;
+        }
         List<Key> keyList = create.stream().filter(s -> s instanceof Key).map(s -> (Key) s).collect(Collectors.toList());
+        if (ObjectUtils.isEmpty(keyList)) {
+            return;
+        }
         List<Key> uniqueKeyList = keyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueKeyList)) {
             Map<String, List<Key>> tableList = uniqueKeyList.stream().collect(Collectors.groupingBy(Key::getTableName));
             if (!ObjectUtils.isEmpty(tableList)) {
-
                 for (Map.Entry<String, List<Key>> e : tableList.entrySet()) {
                     Map<String, List<Key>> listMap = e.getValue().stream().collect(Collectors.groupingBy(Key::getName));
                     if (ObjectUtils.isEmpty(listMap)) {
@@ -104,6 +109,43 @@ public class Key implements Difference, Serializable {
         List<Key> otherKeyList = keyList.stream().filter(s -> FLAG_PRIMARY.equals(s.getName()) || !ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(otherKeyList)) {
             for (Key key : otherKeyList) {
+                sqlList.add(key.getCreateSql());
+            }
+        }
+    }
+
+    public static void resolveUpdateSql(List<Difference> update, List<String> sqlList) {
+        if (ObjectUtils.isEmpty(update)) {
+            return;
+        }
+        List<Key> keyList = update.stream().filter(s -> s instanceof Key).map(s -> (Key) s).collect(Collectors.toList());
+        if (ObjectUtils.isEmpty(keyList)) {
+            return;
+        }
+        List<Key> uniqueKeyList = keyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        if (!ObjectUtils.isEmpty(uniqueKeyList)) {
+            Map<String, List<Key>> tableList = uniqueKeyList.stream().collect(Collectors.groupingBy(Key::getTableName));
+            if (!ObjectUtils.isEmpty(tableList)) {
+                for (Map.Entry<String, List<Key>> e : tableList.entrySet()) {
+                    Map<String, List<Key>> listMap = e.getValue().stream().collect(Collectors.groupingBy(Key::getName));
+                    if (ObjectUtils.isEmpty(listMap)) {
+                        continue;
+                    }
+                    for (Map.Entry<String, List<Key>> j : listMap.entrySet()) {
+                        List<String> columnList = j.getValue().stream().map(Key::getColumnName).collect(Collectors.toList());
+                        if (ObjectUtils.isEmpty(columnList)) {
+                            continue;
+                        }
+                        sqlList.add("ALTER TABLE `" + e.getKey() + "` DROP KEY `" + j.getKey() + "`;");
+                    }
+                }
+            }
+            resolveCreateSql(update, sqlList);
+        }
+        List<Key> otherKeyList = keyList.stream().filter(s -> FLAG_PRIMARY.equals(s.getName()) || !ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        if (!ObjectUtils.isEmpty(otherKeyList)) {
+            for (Key key : otherKeyList) {
+                sqlList.add(key.getDeleteSql());
                 sqlList.add(key.getCreateSql());
             }
         }
