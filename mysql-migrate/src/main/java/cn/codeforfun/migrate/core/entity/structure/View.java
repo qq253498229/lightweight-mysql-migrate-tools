@@ -69,7 +69,7 @@ public class View implements Serializable, Difference {
     private String getString(String type) {
         return type +
                 "VIEW `" + this.name + "` AS " +
-                this.source;
+                this.source + ";";
     }
 
     @JsonIgnore
