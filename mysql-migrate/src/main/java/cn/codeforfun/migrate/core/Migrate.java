@@ -11,10 +11,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
@@ -245,9 +242,9 @@ public class Migrate {
         for (Map.Entry<String, List<Key>> fromEntry : fromUniqueKeyMap.entrySet()) {
             for (Map.Entry<String, List<Key>> toEntry : toUniqueKeyMap.entrySet()) {
                 if (fromEntry.getKey().equals(toEntry.getKey())) {
-                    Object[] fromUniqueColumnNameList = fromEntry.getValue().stream().map(Key::getColumnName).toArray();
-                    Object[] toUniqueColumnNameList = toEntry.getValue().stream().map(Key::getColumnName).toArray();
-                    boolean equals = Arrays.equals(fromUniqueColumnNameList, toUniqueColumnNameList);
+                    Set<String> fromUniqueColumnNameSet = fromEntry.getValue().stream().map(Key::getColumnName).collect(Collectors.toSet());
+                    Set<String> toUniqueColumnNameSet = toEntry.getValue().stream().map(Key::getColumnName).collect(Collectors.toSet());
+                    boolean equals = fromUniqueColumnNameSet.equals(toUniqueColumnNameSet);
                     if (!equals) {
                         this.diff.getUpdate().addAll(fromEntry.getValue());
                     }

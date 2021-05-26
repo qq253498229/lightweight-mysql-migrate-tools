@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -52,12 +51,12 @@ public class Key implements Difference, Serializable {
 
         List<Key> uniqueKeyList = deleteKeyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueKeyList)) {
-            Map<String, String> temp = new HashMap<>();
-            for (Key key : uniqueKeyList) {
-                temp.put(key.getName(), key.getTableName());
-            }
-            for (Map.Entry<String, String> entry : temp.entrySet()) {
-                sqlList.add("ALTER TABLE `" + entry.getValue() + "` DROP KEY `" + entry.getKey() + "`;");
+            Map<String, List<Key>> collect = uniqueKeyList.stream().collect(Collectors.groupingBy(Key::getTableName));
+            for (Map.Entry<String, List<Key>> entry : collect.entrySet()) {
+                Map<String, List<Key>> collect1 = entry.getValue().stream().collect(Collectors.groupingBy(Key::getName));
+                for (Map.Entry<String, List<Key>> stringListEntry : collect1.entrySet()) {
+                    sqlList.add("ALTER TABLE `" + entry.getKey() + "` DROP KEY `" + stringListEntry.getKey() + "`;");
+                }
             }
         }
         List<Key> otherKeyList = deleteKeyList.stream().filter(s -> FLAG_PRIMARY.equals(s.getName()) || !ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
