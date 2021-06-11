@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.TimeZone;
 
 /**
  * 数据库基本信息
@@ -50,6 +49,10 @@ public class DatabaseInfo implements Serializable {
      * 忽略编码及字符集对比
      */
     private Boolean ignoreCharacterCompare = false;
+    /**
+     * 连接时区
+     */
+    private String timezone;
 
     /**
      * @param host     数据库地址
@@ -73,12 +76,18 @@ public class DatabaseInfo implements Serializable {
      * @return 数据库连接地址
      */
     public String getUrl() {
-        String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + name;
-        url += "?useUnicode=true&characterEncoding=utf8&createDatabaseIfNotExist=true";
-        String timeZone = TimeZone.getDefault().getID();
-        if (!ObjectUtils.isEmpty(timeZone)) {
-            url += "&serverTimezone=" + timeZone;
+        if (!ObjectUtils.isEmpty(this.url)) {
+            return this.url;
         }
+        String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + name;
+        url += "?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true";
+        String timeZone;
+        if (ObjectUtils.isEmpty(this.timezone)) {
+            timeZone = "GMT%2B8";
+        } else {
+            timeZone = this.timezone;
+        }
+        url += "&serverTimezone=" + timeZone;
         return url;
     }
 }
