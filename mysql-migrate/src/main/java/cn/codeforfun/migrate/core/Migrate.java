@@ -211,10 +211,28 @@ public class Migrate {
         List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
         List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
         // 删除key
-        List<Key> deleteKeyList = toKeyList.stream().filter(s -> fromKeyList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTableName().equals(s.getTableName()) && j.getColumnName().equals(s.getColumnName()))).collect(Collectors.toList());
+        List<Key> deleteKeyList = toKeyList.stream().filter(s -> fromKeyList.stream().noneMatch(j -> {
+            if (("unique_index".equals(s.getName()) || "unique_index".equals(j.getName()))
+                    && j.getTableName().equals(s.getTableName())
+                    && j.getColumnName().equals(s.getColumnName())) {
+                return true;
+            }
+            return j.getName().equals(s.getName())
+                    && j.getTableName().equals(s.getTableName())
+                    && j.getColumnName().equals(s.getColumnName());
+        })).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteKeyList);
         // 新建key
-        List<Key> createKeyList = fromKeyList.stream().filter(s -> toKeyList.stream().noneMatch(j -> j.getName().equals(s.getName()) && j.getTableName().equals(s.getTableName()))).collect(Collectors.toList());
+        List<Key> createKeyList = fromKeyList.stream().filter(s -> toKeyList.stream().noneMatch(j -> {
+            if (("unique_index".equals(s.getName()) || "unique_index".equals(j.getName()))
+                    && j.getTableName().equals(s.getTableName())
+                    && j.getColumnName().equals(s.getColumnName())) {
+                return true;
+            }
+            return j.getName().equals(s.getName())
+                    && j.getTableName().equals(s.getTableName())
+                    && j.getColumnName().equals(s.getColumnName());
+        })).collect(Collectors.toList());
         this.diff.getCreate().addAll(createKeyList);
         // 更新key
         List<Key> updateKeyList = new ArrayList<>();
