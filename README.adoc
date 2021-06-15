@@ -6,7 +6,7 @@
 :nofooter:
 
 
-:version: 1.3.2
+:version: 1.3.3
 :sourcedir: mysql-migrate/src
 :javadir: {sourcedir}/main/java
 :testdir: {sourcedir}/test/java
