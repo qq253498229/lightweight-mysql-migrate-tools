@@ -46,6 +46,20 @@ public class Key implements Difference, Serializable {
 
     private Table table;
 
+    public enum KeyType {
+        PRIMARY, FOREIGN, UNIQUE
+    }
+
+    public KeyType getKeyType() {
+        if ("PRIMARY".equals(this.getName())) {
+            return KeyType.PRIMARY;
+        } else if (this.getReferencedSchema() != null || this.getReferencedTable() != null || this.getReferencedColumn() != null) {
+            return KeyType.FOREIGN;
+        } else {
+            return KeyType.UNIQUE;
+        }
+    }
+
     public static void resolveDeleteSql(List<Difference> delete, List<String> sqlList) {
         List<Key> deleteKeyList = delete.stream().filter(s -> s instanceof Key).map(s -> (Key) s).collect(Collectors.toList());
 
@@ -227,6 +241,15 @@ public class Key implements Difference, Serializable {
             return false;
         }
         Key key = (Key) o;
+        if (getKeyType() == KeyType.UNIQUE && key.getKeyType() == KeyType.UNIQUE) {
+            return Objects.equals(getTableName(), key.getTableName()) &&
+                    Objects.equals(getColumnName(), key.getColumnName()) &&
+                    Objects.equals(getOrdinalPosition(), key.getOrdinalPosition()) &&
+                    Objects.equals(getPositionInUniqueConstraint(), key.getPositionInUniqueConstraint()) &&
+                    Objects.equals(getReferencedSchema(), key.getReferencedSchema()) &&
+                    Objects.equals(getReferencedTable(), key.getReferencedTable()) &&
+                    Objects.equals(getReferencedColumn(), key.getReferencedColumn());
+        }
         return Objects.equals(getName(), key.getName()) &&
                 Objects.equals(getTableName(), key.getTableName()) &&
                 Objects.equals(getColumnName(), key.getColumnName()) &&

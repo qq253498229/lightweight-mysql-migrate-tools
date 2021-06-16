@@ -207,37 +207,61 @@ public class Migrate {
      * @param toUpdateTableList   需要更新的目标表
      */
     private void compareKey(List<Table> fromUpdateTableList, List<Table> toUpdateTableList) {
-        // key
-        List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
-        List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
-        // 删除key
-        List<Key> deleteKeyList = toKeyList.stream().filter(s -> fromKeyList.stream().noneMatch(j -> {
-            if (("unique_index".equals(s.getName()) || "unique_index".equals(j.getName()))
-                    && j.getTableName().equals(s.getTableName())
-                    && j.getColumnName().equals(s.getColumnName())) {
-                return true;
+        // all key list
+//        List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
+//        List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
+
+        // unique key list
+        List<Key> fromKeyListIncludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
+        List<Key> toKeyListIncludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
+
+        // unique key map that mapped by table name
+        Map<String, List<Key>> from = fromKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName));
+        Map<String, List<Key>> to = toKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName));
+
+        // unique key list that need to delete
+        List<Map.Entry<String, List<Key>>> deleteUniqueList = to.entrySet().stream().filter(s -> from.entrySet().stream().noneMatch(j -> j.getKey().equals(s.getKey()))).collect(Collectors.toList());
+        this.diff.getDelete().addAll(deleteUniqueList.stream().flatMap(s -> s.getValue().stream()).collect(Collectors.toList()));
+        // unique key list that need to create
+        List<Map.Entry<String, List<Key>>> createUniqueList = from.entrySet().stream().filter(s -> to.entrySet().stream().noneMatch(j -> j.getKey().equals(s.getKey()))).collect(Collectors.toList());
+        this.diff.getCreate().addAll(createUniqueList.stream().flatMap(s -> s.getValue().stream()).collect(Collectors.toList()));
+        // unique key list that need to update
+        for (Map.Entry<String, List<Key>> f : from.entrySet()) {
+            for (Map.Entry<String, List<Key>> t : to.entrySet()) {
+                if (f.getKey().equals(t.getKey())) {
+                    boolean flag;
+                    flag = checkKeyListEquals(f, t);
+                    if (!flag) {
+                        this.getDiff().getUpdate().addAll(f.getValue());
+                        break;
+                    }
+                    flag = checkKeyListEquals(t, f);
+                    if (!flag) {
+                        this.getDiff().getUpdate().addAll(f.getValue());
+                        break;
+                    }
+                }
             }
-            return j.getName().equals(s.getName())
-                    && j.getTableName().equals(s.getTableName())
-                    && j.getColumnName().equals(s.getColumnName());
-        })).collect(Collectors.toList());
+        }
+
+        // key list exclude unique key
+        List<Key> fromKeyListExcludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE != s.getKeyType()).collect(Collectors.toList());
+        List<Key> toKeyListExcludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE != s.getKeyType()).collect(Collectors.toList());
+
+        // delete key list
+        List<Key> deleteKeyList = toKeyListExcludeUnique.stream().filter(s -> fromKeyListExcludeUnique.stream().noneMatch(j -> j.getName().equals(s.getName())
+                && j.getTableName().equals(s.getTableName())
+                && j.getColumnName().equals(s.getColumnName()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteKeyList);
-        // 新建key
-        List<Key> createKeyList = fromKeyList.stream().filter(s -> toKeyList.stream().noneMatch(j -> {
-            if (("unique_index".equals(s.getName()) || "unique_index".equals(j.getName()))
-                    && j.getTableName().equals(s.getTableName())
-                    && j.getColumnName().equals(s.getColumnName())) {
-                return true;
-            }
-            return j.getName().equals(s.getName())
-                    && j.getTableName().equals(s.getTableName())
-                    && j.getColumnName().equals(s.getColumnName());
-        })).collect(Collectors.toList());
+        // create key list
+        List<Key> createKeyList = fromKeyListExcludeUnique.stream().filter(s -> toKeyListExcludeUnique.stream().noneMatch(j -> j.getName().equals(s.getName())
+                && j.getTableName().equals(s.getTableName())
+                && j.getColumnName().equals(s.getColumnName()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createKeyList);
-        // 更新key
+        // update key list
         List<Key> updateKeyList = new ArrayList<>();
-        for (Key fromKey : fromKeyList) {
-            for (Key toKey : toKeyList) {
+        for (Key fromKey : fromKeyListExcludeUnique) {
+            for (Key toKey : toKeyListExcludeUnique) {
                 if (FLAG_PRIMARY.equals(fromKey.getName()) && FLAG_PRIMARY.equals(toKey.getName())
                         && fromKey.getTableName().equals(toKey.getTableName())
                         && fromKey.getColumnName().equals(toKey.getColumnName())
@@ -253,22 +277,22 @@ public class Migrate {
             }
         }
         this.diff.getUpdate().addAll(updateKeyList);
-        // 更新唯一索引
-        Map<String, List<Key>> fromUniqueKeyMap = fromKeyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.groupingBy(Key::getTableName));
-        Map<String, List<Key>> toUniqueKeyMap = toKeyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.groupingBy(Key::getTableName));
+    }
 
-        for (Map.Entry<String, List<Key>> fromEntry : fromUniqueKeyMap.entrySet()) {
-            for (Map.Entry<String, List<Key>> toEntry : toUniqueKeyMap.entrySet()) {
-                if (fromEntry.getKey().equals(toEntry.getKey())) {
-                    Set<String> fromUniqueColumnNameSet = fromEntry.getValue().stream().map(Key::getColumnName).collect(Collectors.toSet());
-                    Set<String> toUniqueColumnNameSet = toEntry.getValue().stream().map(Key::getColumnName).collect(Collectors.toSet());
-                    boolean equals = fromUniqueColumnNameSet.equals(toUniqueColumnNameSet);
-                    if (!equals) {
-                        this.diff.getUpdate().addAll(fromEntry.getValue());
-                    }
+    private boolean checkKeyListEquals(Map.Entry<String, List<Key>> f, Map.Entry<String, List<Key>> t) {
+        for (Key fKey : f.getValue()) {
+            boolean flag1 = false;
+            for (Key tKey : t.getValue()) {
+                if (fKey.equals(tKey)) {
+                    flag1 = true;
+                    break;
                 }
             }
+            if (!flag1) {
+                return false;
+            }
         }
+        return true;
     }
 
     /**
