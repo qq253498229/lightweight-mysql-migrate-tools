@@ -244,7 +244,6 @@ public class Key implements Difference, Serializable {
         if (getKeyType() == KeyType.UNIQUE && key.getKeyType() == KeyType.UNIQUE) {
             return Objects.equals(getTableName(), key.getTableName()) &&
                     Objects.equals(getColumnName(), key.getColumnName()) &&
-                    Objects.equals(getOrdinalPosition(), key.getOrdinalPosition()) &&
                     Objects.equals(getPositionInUniqueConstraint(), key.getPositionInUniqueConstraint()) &&
                     Objects.equals(getReferencedSchema(), key.getReferencedSchema()) &&
                     Objects.equals(getReferencedTable(), key.getReferencedTable()) &&
