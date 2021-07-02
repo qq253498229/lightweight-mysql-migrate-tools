@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
@@ -115,12 +116,25 @@ public class Table implements Serializable, Difference {
         }
         List<Key> uniqueIndexList = this.keys.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueIndexList)) {
-            sb.append(" CONSTRAINT unique_index UNIQUE (");
-            for (Key key : uniqueIndexList) {
-                sb.append("`").append(key.getColumnName()).append("`, ");
+            Map<String, List<Key>> tableList = uniqueIndexList.stream().collect(Collectors.groupingBy(Key::getTableName));
+            if (!ObjectUtils.isEmpty(tableList)) {
+                for (Map.Entry<String, List<Key>> e : tableList.entrySet()) {
+                    Map<String, List<Key>> listMap = e.getValue().stream().collect(Collectors.groupingBy(Key::getName));
+                    if (!ObjectUtils.isEmpty(listMap)) {
+                        for (Map.Entry<String, List<Key>> j : listMap.entrySet()) {
+                            sb.append("UNIQUE KEY `").append(j.getKey()).append("`(");
+                            List<String> columnList = j.getValue().stream().map(Key::getColumnName).collect(Collectors.toList());
+                            if (!ObjectUtils.isEmpty(columnList)) {
+                                for (String s : columnList) {
+                                    sb.append("`").append(s).append("`, ");
+                                }
+                            }
+                            sb.delete(sb.length() - 2, sb.length());
+                            sb.append("),");
+                        }
+                    }
+                }
             }
-            sb.delete(sb.length() - 2, sb.length());
-            sb.append("),");
             this.keys.removeAll(uniqueIndexList);
         }
         // 主键
