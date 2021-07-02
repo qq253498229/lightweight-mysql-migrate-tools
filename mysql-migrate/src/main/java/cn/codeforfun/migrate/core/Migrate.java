@@ -215,15 +215,27 @@ public class Migrate {
         List<Key> fromKeyListIncludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
         List<Key> toKeyListIncludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
 
-        // unique key map that mapped by table name
-        Map<String, List<Key>> from = fromKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName));
-        Map<String, List<Key>> to = toKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName));
+        // todo
+
+        // unique key map that mapped by table name and key name
+        Map<String, List<Key>> from = fromKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName))
+                .entrySet().stream().flatMap(s -> s.getValue().stream()).collect(Collectors.groupingBy(Key::getName));
+        Map<String, List<Key>> to = toKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName))
+                .entrySet().stream().flatMap(s -> s.getValue().stream()).collect(Collectors.groupingBy(Key::getName));
 
         // unique key list that need to delete
-        List<Map.Entry<String, List<Key>>> deleteUniqueList = to.entrySet().stream().filter(s -> from.entrySet().stream().noneMatch(j -> j.getKey().equals(s.getKey()))).collect(Collectors.toList());
+        List<Map.Entry<String, List<Key>>> deleteUniqueList = to.entrySet().stream().filter(s -> {
+            return from.entrySet().stream().noneMatch(j -> {
+                return j.getKey().equals(s.getKey());
+            });
+        }).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteUniqueList.stream().flatMap(s -> s.getValue().stream()).collect(Collectors.toList()));
         // unique key list that need to create
-        List<Map.Entry<String, List<Key>>> createUniqueList = from.entrySet().stream().filter(s -> to.entrySet().stream().noneMatch(j -> j.getKey().equals(s.getKey()))).collect(Collectors.toList());
+        List<Map.Entry<String, List<Key>>> createUniqueList = from.entrySet().stream().filter(s -> {
+            return to.entrySet().stream().noneMatch(j -> {
+                return j.getKey().equals(s.getKey());
+            });
+        }).collect(Collectors.toList());
         this.diff.getCreate().addAll(createUniqueList.stream().flatMap(s -> s.getValue().stream()).collect(Collectors.toList()));
         // unique key list that need to update
         for (Map.Entry<String, List<Key>> f : from.entrySet()) {
