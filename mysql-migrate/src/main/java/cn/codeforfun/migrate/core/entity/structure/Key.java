@@ -241,7 +241,6 @@ public class Key implements Difference, Serializable {
             return false;
         }
         Key key = (Key) o;
-        // todo
         if (getKeyType() == KeyType.UNIQUE && key.getKeyType() == KeyType.UNIQUE) {
             return Objects.equals(getName(), key.getName()) &&
                     Objects.equals(getTableName(), key.getTableName()) &&
