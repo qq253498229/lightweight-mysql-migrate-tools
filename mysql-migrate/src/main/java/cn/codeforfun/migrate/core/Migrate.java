@@ -207,35 +207,17 @@ public class Migrate {
      * @param toUpdateTableList   需要更新的目标表
      */
     private void compareKey(List<Table> fromUpdateTableList, List<Table> toUpdateTableList) {
-        // all key list
-//        List<Key> fromKeyList = fromUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
-//        List<Key> toKeyList = toUpdateTableList.stream().map(Table::getKeys).flatMap(List::stream).collect(Collectors.toList());
-
         // unique key list
         List<Key> fromKeyListIncludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
         List<Key> toKeyListIncludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
-
-        // todo
-
         // unique key map that mapped by table name and key name
-        Map<String, List<Key>> from = fromKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName))
-                .entrySet().stream().flatMap(s -> s.getValue().stream()).collect(Collectors.groupingBy(Key::getName));
-        Map<String, List<Key>> to = toKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName))
-                .entrySet().stream().flatMap(s -> s.getValue().stream()).collect(Collectors.groupingBy(Key::getName));
-
+        Map<String, List<Key>> from = fromKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName)).entrySet().stream().flatMap(s -> s.getValue().stream()).collect(Collectors.groupingBy(Key::getName));
+        Map<String, List<Key>> to = toKeyListIncludeUnique.stream().collect(Collectors.groupingBy(Key::getTableName)).entrySet().stream().flatMap(s -> s.getValue().stream()).collect(Collectors.groupingBy(Key::getName));
         // unique key list that need to delete
-        List<Map.Entry<String, List<Key>>> deleteUniqueList = to.entrySet().stream().filter(s -> {
-            return from.entrySet().stream().noneMatch(j -> {
-                return j.getKey().equals(s.getKey());
-            });
-        }).collect(Collectors.toList());
+        List<Map.Entry<String, List<Key>>> deleteUniqueList = to.entrySet().stream().filter(s -> from.entrySet().stream().noneMatch(j -> j.getKey().equals(s.getKey()))).collect(Collectors.toList());
         this.diff.getDelete().addAll(deleteUniqueList.stream().flatMap(s -> s.getValue().stream()).collect(Collectors.toList()));
         // unique key list that need to create
-        List<Map.Entry<String, List<Key>>> createUniqueList = from.entrySet().stream().filter(s -> {
-            return to.entrySet().stream().noneMatch(j -> {
-                return j.getKey().equals(s.getKey());
-            });
-        }).collect(Collectors.toList());
+        List<Map.Entry<String, List<Key>>> createUniqueList = from.entrySet().stream().filter(s -> to.entrySet().stream().noneMatch(j -> j.getKey().equals(s.getKey()))).collect(Collectors.toList());
         this.diff.getCreate().addAll(createUniqueList.stream().flatMap(s -> s.getValue().stream()).collect(Collectors.toList()));
         // unique key list that need to update
         for (Map.Entry<String, List<Key>> f : from.entrySet()) {
@@ -255,11 +237,9 @@ public class Migrate {
                 }
             }
         }
-
         // key list exclude unique key
         List<Key> fromKeyListExcludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE != s.getKeyType()).collect(Collectors.toList());
         List<Key> toKeyListExcludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE != s.getKeyType()).collect(Collectors.toList());
-
         // delete key list
         List<Key> deleteKeyList = toKeyListExcludeUnique.stream().filter(s -> fromKeyListExcludeUnique.stream().noneMatch(j -> j.getName().equals(s.getName())
                 && j.getTableName().equals(s.getTableName())
