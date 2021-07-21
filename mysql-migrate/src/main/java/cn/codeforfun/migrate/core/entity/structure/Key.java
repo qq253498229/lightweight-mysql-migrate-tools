@@ -122,7 +122,24 @@ public class Key implements Difference, Serializable {
                 }
             }
         }
-        List<Key> otherKeyList = keyList.stream().filter(s -> s.getKeyType() != KeyType.UNIQUE).collect(Collectors.toList());
+        final String splitStr = "#@#";
+        Map<String, List<Key>> otherKeyListMap = keyList.stream().filter(s -> s.getKeyType() == KeyType.OTHER).collect(Collectors.groupingBy(s -> s.getTableName() + splitStr + s.getName()));
+        if (!ObjectUtils.isEmpty(otherKeyListMap)) {
+            StringBuilder sbKey = new StringBuilder();
+            for (Map.Entry<String, List<Key>> m : otherKeyListMap.entrySet()) {
+                String tableName = m.getKey().split(splitStr)[0];
+                String keyName = m.getKey().split(splitStr)[1];
+                List<String> columnNameList = m.getValue().stream().map(Key::getColumnName).collect(Collectors.toList());
+                sbKey.append("CREATE INDEX `").append(keyName).append("` ON `").append(tableName).append("` (");
+                for (String s : columnNameList) {
+                    sbKey.append("`").append(s).append("`, ");
+                }
+                sbKey.setLength(sbKey.length() - 2);
+                sbKey.append(");");
+                sqlList.add(sbKey.toString());
+            }
+        }
+        List<Key> otherKeyList = keyList.stream().filter(s -> s.getKeyType() != KeyType.UNIQUE && s.getKeyType() != KeyType.OTHER).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(otherKeyList)) {
             for (Key key : otherKeyList) {
                 sqlList.add(key.getCreateSql());

@@ -140,10 +140,6 @@ public class Table implements Serializable, Difference {
         if (!ObjectUtils.isEmpty(otherKeyList)) {
             StringBuilder sbKey = new StringBuilder();
             for (Map.Entry<String, List<Key>> m : otherKeyList.entrySet()) {
-                List<Key> keys = m.getValue();
-                if (ObjectUtils.isEmpty(m.getKey()) || ObjectUtils.isEmpty(keys)) {
-                    continue;
-                }
                 String tableName = m.getKey().split(splitStr)[0];
                 String keyName = m.getKey().split(splitStr)[1];
                 List<String> columnNameList = keys.stream().map(Key::getColumnName).collect(Collectors.toList());
