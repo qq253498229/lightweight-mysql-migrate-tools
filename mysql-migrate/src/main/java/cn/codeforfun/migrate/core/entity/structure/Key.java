@@ -43,11 +43,13 @@ public class Key implements Difference, Serializable {
     private String referencedTable;
     @DbUtilProperty("REFERENCED_COLUMN_NAME")
     private String referencedColumn;
+    @DbUtilProperty("NON_UNIQUE")
+    private Integer nonUnique;
 
     private Table table;
 
     public enum KeyType {
-        PRIMARY, FOREIGN, UNIQUE
+        PRIMARY, FOREIGN, UNIQUE, OTHER
     }
 
     public KeyType getKeyType() {
@@ -55,15 +57,16 @@ public class Key implements Difference, Serializable {
             return KeyType.PRIMARY;
         } else if (this.getReferencedSchema() != null || this.getReferencedTable() != null || this.getReferencedColumn() != null) {
             return KeyType.FOREIGN;
-        } else {
+        } else if (this.getNonUnique() == 0) {
             return KeyType.UNIQUE;
         }
+        return KeyType.OTHER;
     }
 
     public static void resolveDeleteSql(List<Difference> delete, List<String> sqlList) {
         List<Key> deleteKeyList = delete.stream().filter(s -> s instanceof Key).map(s -> (Key) s).collect(Collectors.toList());
 
-        List<Key> uniqueKeyList = deleteKeyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        List<Key> uniqueKeyList = deleteKeyList.stream().filter(s -> s.getKeyType() == KeyType.UNIQUE).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueKeyList)) {
             Map<String, List<Key>> collect = uniqueKeyList.stream().collect(Collectors.groupingBy(Key::getTableName));
             for (Map.Entry<String, List<Key>> entry : collect.entrySet()) {
@@ -73,7 +76,7 @@ public class Key implements Difference, Serializable {
                 }
             }
         }
-        List<Key> otherKeyList = deleteKeyList.stream().filter(s -> FLAG_PRIMARY.equals(s.getName()) || !ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        List<Key> otherKeyList = deleteKeyList.stream().filter(s -> s.getKeyType() != KeyType.UNIQUE).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(otherKeyList)) {
             for (Key key : otherKeyList) {
                 sqlList.add(key.getDeleteSql());
@@ -89,7 +92,7 @@ public class Key implements Difference, Serializable {
         if (ObjectUtils.isEmpty(keyList)) {
             return;
         }
-        List<Key> uniqueKeyList = keyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        List<Key> uniqueKeyList = keyList.stream().filter(s -> s.getKeyType() == KeyType.UNIQUE).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueKeyList)) {
             Map<String, List<Key>> tableList = uniqueKeyList.stream().collect(Collectors.groupingBy(Key::getTableName));
             if (!ObjectUtils.isEmpty(tableList)) {
@@ -119,7 +122,7 @@ public class Key implements Difference, Serializable {
                 }
             }
         }
-        List<Key> otherKeyList = keyList.stream().filter(s -> FLAG_PRIMARY.equals(s.getName()) || !ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        List<Key> otherKeyList = keyList.stream().filter(s -> s.getKeyType() != KeyType.UNIQUE).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(otherKeyList)) {
             for (Key key : otherKeyList) {
                 sqlList.add(key.getCreateSql());
@@ -135,7 +138,7 @@ public class Key implements Difference, Serializable {
         if (ObjectUtils.isEmpty(keyList)) {
             return;
         }
-        List<Key> uniqueKeyList = keyList.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        List<Key> uniqueKeyList = keyList.stream().filter(s -> s.getKeyType() == KeyType.UNIQUE).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueKeyList)) {
             Map<String, List<Key>> tableList = uniqueKeyList.stream().collect(Collectors.groupingBy(Key::getTableName));
             if (!ObjectUtils.isEmpty(tableList)) {
@@ -155,7 +158,7 @@ public class Key implements Difference, Serializable {
             }
             resolveCreateSql(update, sqlList);
         }
-        List<Key> otherKeyList = keyList.stream().filter(s -> FLAG_PRIMARY.equals(s.getName()) || !ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        List<Key> otherKeyList = keyList.stream().filter(s -> s.getKeyType() != KeyType.UNIQUE).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(otherKeyList)) {
             for (Key key : otherKeyList) {
                 sqlList.add(key.getDeleteSql());
@@ -168,17 +171,15 @@ public class Key implements Difference, Serializable {
     @Override
     public String getDeleteSql() {
         StringBuilder sb = new StringBuilder();
-        if (FLAG_PRIMARY.equals(this.name)) {
+        if (this.getKeyType() == KeyType.PRIMARY) {
             // 主键
             sb.append("ALTER TABLE `").append(this.tableName).append("` DROP PRIMARY KEY;");
-        } else if (ObjectUtils.isEmpty(this.referencedSchema)
-                && ObjectUtils.isEmpty(this.referencedTable)
-                && ObjectUtils.isEmpty(this.referencedColumn)) {
-            // 唯一索引
-            sb.append("ALTER TABLE `").append(this.tableName).append("` DROP KEY `").append(this.name).append("`;");
-        } else {
+        } else if (this.getKeyType() == KeyType.FOREIGN) {
             // 外键
             sb.append("ALTER TABLE `").append(this.tableName).append("` DROP FOREIGN KEY `").append(this.name).append("`;");
+        } else if (this.getKeyType() == KeyType.UNIQUE || this.getKeyType() == KeyType.OTHER) {
+            // 唯一索引 或 其它索引
+            sb.append("ALTER TABLE `").append(this.tableName).append("` DROP KEY `").append(this.name).append("`;");
         }
         return sb.toString();
     }
@@ -187,12 +188,10 @@ public class Key implements Difference, Serializable {
     public String getCreateTableSql() {
         //获取key sql
         StringBuilder sb = new StringBuilder();
-        if (ObjectUtils.isEmpty(this.referencedSchema)
-                && ObjectUtils.isEmpty(this.referencedTable)
-                && ObjectUtils.isEmpty(this.referencedColumn)) {
+        if (this.getKeyType() == KeyType.UNIQUE) {
             // 唯一索引
             sb.append("CONSTRAINT `").append(this.name).append("` UNIQUE (`").append(this.columnName).append("`),");
-        } else {
+        } else if (this.getKeyType() == KeyType.FOREIGN) {
             // 外键
             sb.append("CONSTRAINT `").append(this.name).append("` ")
                     .append("FOREIGN KEY (`").append(this.columnName).append("`) ")
@@ -206,22 +205,22 @@ public class Key implements Difference, Serializable {
     @Override
     public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
-        if (FLAG_PRIMARY.equals(this.name)) {
+        if (this.getKeyType() == KeyType.PRIMARY) {
             // 主键
             sb.append("ALTER TABLE `").append(this.tableName).append("` ADD PRIMARY KEY (`").append(this.columnName).append("`);");
-        } else if (ObjectUtils.isEmpty(this.referencedSchema)
-                && ObjectUtils.isEmpty(this.referencedTable)
-                && ObjectUtils.isEmpty(this.referencedColumn)) {
+        } else if (this.getKeyType() == KeyType.UNIQUE) {
             // 唯一索引
             sb.append("ALTER TABLE `").append(this.tableName)
                     .append("` ADD CONSTRAINT `").append(this.name).append("` UNIQUE (`").append(this.columnName).append("`);");
-        } else {
+        } else if (this.getKeyType() == KeyType.FOREIGN) {
             // 外键
             sb.append("ALTER TABLE `").append(this.tableName).append("` ADD KEY `").append(this.name).append("` (`").append(this.columnName).append("`); ");
             sb.append("ALTER TABLE `").append(this.tableName).append("` ADD CONSTRAINT `").append(this.name).append("` ")
                     .append("FOREIGN KEY (`").append(this.columnName).append("`) ")
                     .append("REFERENCES `").append(this.referencedTable).append("` ")
                     .append("(`").append(this.referencedColumn).append("`);");
+        } else if (this.getKeyType() == KeyType.OTHER) {
+            sb.append("CREATE INDEX `").append(this.name).append("` ON `").append(this.tableName).append("` (`").append(this.columnName).append("`)");
         }
         return sb.toString();
     }

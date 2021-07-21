@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
-
 /**
  * 表结构定义
  *
@@ -55,28 +53,11 @@ public class Table implements Serializable, Difference {
 
     public static final String SQL = FileUtil.getStringByClasspath("sql/diff/create-table.sql");
 
-    public boolean hasForeignKey() {
-        for (Key key : this.keys) {
-            if (!FLAG_PRIMARY.equals(key.getName())
-                    && !ObjectUtils.isEmpty(key.getReferencedSchema())
-                    && !ObjectUtils.isEmpty(key.getReferencedTable())
-                    && !ObjectUtils.isEmpty(key.getReferencedColumn())
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @JsonIgnore
     public String getDeleteForeignKeySql() {
         StringBuilder sb = new StringBuilder();
         for (Key key : this.keys) {
-            if (!FLAG_PRIMARY.equals(key.getName())
-                    && !ObjectUtils.isEmpty(key.getReferencedSchema())
-                    && !ObjectUtils.isEmpty(key.getReferencedTable())
-                    && !ObjectUtils.isEmpty(key.getReferencedColumn())
-            ) {
+            if (key.getKeyType() == Key.KeyType.FOREIGN) {
                 sb.append("ALTER TABLE `").append(key.getTableName()).append("` DROP FOREIGN KEY `").append(key.getName()).append("`;");
             }
         }
@@ -114,7 +95,8 @@ public class Table implements Serializable, Difference {
             String columnSql = column.getCreateTableSql();
             sb.append(columnSql);
         }
-        List<Key> uniqueIndexList = this.keys.stream().filter(s -> !FLAG_PRIMARY.equals(s.getName()) && ObjectUtils.isEmpty(s.getReferencedColumn())).collect(Collectors.toList());
+        // 唯一索引
+        List<Key> uniqueIndexList = this.keys.stream().filter(s -> s.getKeyType() == Key.KeyType.UNIQUE).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueIndexList)) {
             Map<String, List<Key>> tableList = uniqueIndexList.stream().collect(Collectors.groupingBy(Key::getTableName));
             if (!ObjectUtils.isEmpty(tableList)) {
@@ -138,7 +120,7 @@ public class Table implements Serializable, Difference {
             this.keys.removeAll(uniqueIndexList);
         }
         // 主键
-        List<Key> primaryKeyList = this.keys.stream().filter(k -> FLAG_PRIMARY.equals(k.getName())).collect(Collectors.toList());
+        List<Key> primaryKeyList = this.keys.stream().filter(k -> k.getKeyType() == Key.KeyType.PRIMARY).collect(Collectors.toList());
         if (primaryKeyList.size() > 0) {
             sb.append("PRIMARY KEY (");
             primaryKeyList.forEach(k -> sb.append("`").append(k.getColumnName()).append("`,"));
@@ -152,6 +134,28 @@ public class Table implements Serializable, Difference {
         }
         String columnSql = sb.substring(0, sb.length() - 1);
         sql = sql.replace("${columnSql}", columnSql);
+        // 索引
+        final String splitStr = "#@#";
+        Map<String, List<Key>> otherKeyList = this.keys.stream().filter(k -> k.getKeyType() == Key.KeyType.OTHER).collect(Collectors.groupingBy(s -> s.getTableName() + splitStr + s.getName()));
+        if (!ObjectUtils.isEmpty(otherKeyList)) {
+            StringBuilder sbKey = new StringBuilder();
+            for (Map.Entry<String, List<Key>> m : otherKeyList.entrySet()) {
+                List<Key> keys = m.getValue();
+                if (ObjectUtils.isEmpty(m.getKey()) || ObjectUtils.isEmpty(keys)) {
+                    continue;
+                }
+                String tableName = m.getKey().split(splitStr)[0];
+                String keyName = m.getKey().split(splitStr)[1];
+                List<String> columnNameList = keys.stream().map(Key::getColumnName).collect(Collectors.toList());
+                sbKey.append("\nCREATE INDEX `").append(keyName).append("` ON `").append(tableName).append("` (");
+                for (String s : columnNameList) {
+                    sbKey.append("`").append(s).append("`, ");
+                }
+                sbKey.setLength(sbKey.length() - 2);
+                sbKey.append(");");
+            }
+            sql += sbKey;
+        }
         return sql;
     }
 

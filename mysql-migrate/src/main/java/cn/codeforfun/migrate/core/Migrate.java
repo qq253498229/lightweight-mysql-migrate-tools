@@ -11,10 +11,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import static cn.codeforfun.migrate.core.entity.structure.Key.FLAG_PRIMARY;
 
 /**
  * 迁移核心类
@@ -208,8 +209,8 @@ public class Migrate {
      */
     private void compareKey(List<Table> fromUpdateTableList, List<Table> toUpdateTableList) {
         // unique key list
-        List<Key> fromKeyListIncludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
-        List<Key> toKeyListIncludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE == s.getKeyType()).collect(Collectors.toList());
+        List<Key> fromKeyListIncludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() == Key.KeyType.UNIQUE).collect(Collectors.toList());
+        List<Key> toKeyListIncludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() == Key.KeyType.UNIQUE).collect(Collectors.toList());
         // unique key map that mapped by table name and key name
         final String splitStr = "#@#";
         Map<String, List<Key>> from = fromKeyListIncludeUnique.stream().collect(Collectors.groupingBy(s -> s.getTableName() + splitStr + s.getName()));
@@ -239,8 +240,8 @@ public class Migrate {
             }
         }
         // key list exclude unique key
-        List<Key> fromKeyListExcludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE != s.getKeyType()).collect(Collectors.toList());
-        List<Key> toKeyListExcludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> Key.KeyType.UNIQUE != s.getKeyType()).collect(Collectors.toList());
+        List<Key> fromKeyListExcludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() != Key.KeyType.UNIQUE).collect(Collectors.toList());
+        List<Key> toKeyListExcludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() != Key.KeyType.UNIQUE).collect(Collectors.toList());
         // delete key list
         List<Key> deleteKeyList = toKeyListExcludeUnique.stream().filter(s -> fromKeyListExcludeUnique.stream().noneMatch(j -> j.getName().equals(s.getName())
                 && j.getTableName().equals(s.getTableName())
@@ -255,12 +256,12 @@ public class Migrate {
         List<Key> updateKeyList = new ArrayList<>();
         for (Key fromKey : fromKeyListExcludeUnique) {
             for (Key toKey : toKeyListExcludeUnique) {
-                if (FLAG_PRIMARY.equals(fromKey.getName()) && FLAG_PRIMARY.equals(toKey.getName())
+                if (fromKey.getKeyType() == Key.KeyType.PRIMARY && toKey.getKeyType() == Key.KeyType.PRIMARY
                         && fromKey.getTableName().equals(toKey.getTableName())
                         && fromKey.getColumnName().equals(toKey.getColumnName())
                         && !fromKey.equals(toKey)) {
                     updateKeyList.add(fromKey);
-                } else if (!ObjectUtils.isEmpty(fromKey.getReferencedColumn()) && !ObjectUtils.isEmpty(toKey.getReferencedColumn())
+                } else if (fromKey.getKeyType() == Key.KeyType.FOREIGN && toKey.getKeyType() == Key.KeyType.FOREIGN
                         && fromKey.getName().equals(toKey.getName())
                         && fromKey.getTableName().equals(toKey.getTableName())
                         && !fromKey.equals(toKey)

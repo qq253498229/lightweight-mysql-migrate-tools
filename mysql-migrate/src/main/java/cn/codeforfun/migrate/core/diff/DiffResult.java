@@ -78,7 +78,7 @@ public class DiffResult {
         for (Difference difference : this.delete) {
             if (difference instanceof Table) {
                 Table delete = (Table) difference;
-                if (delete.hasForeignKey()) {
+                if (delete.getKeys().stream().anyMatch(s -> s.getKeyType() == Key.KeyType.FOREIGN)) {
                     // 先判断有没有外键，如果有就先删除外键
                     String deleteForeignKeySql = delete.getDeleteForeignKeySql();
                     this.sqlList.add(deleteForeignKeySql);
