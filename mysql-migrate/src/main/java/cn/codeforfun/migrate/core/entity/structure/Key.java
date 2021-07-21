@@ -220,7 +220,7 @@ public class Key implements Difference, Serializable {
                     .append("REFERENCES `").append(this.referencedTable).append("` ")
                     .append("(`").append(this.referencedColumn).append("`);");
         } else if (this.getKeyType() == KeyType.OTHER) {
-            sb.append("CREATE INDEX `").append(this.name).append("` ON `").append(this.tableName).append("` (`").append(this.columnName).append("`)");
+            sb.append("CREATE INDEX `").append(this.name).append("` ON `").append(this.tableName).append("` (`").append(this.columnName).append("`); ");
         }
         return sb.toString();
     }
