@@ -155,7 +155,7 @@ public class Key implements Difference, Serializable {
         if (ObjectUtils.isEmpty(keyList)) {
             return;
         }
-        List<Key> uniqueKeyList = keyList.stream().filter(s -> s.getKeyType() == KeyType.UNIQUE).collect(Collectors.toList());
+        List<Key> uniqueKeyList = keyList.stream().filter(s -> s.getKeyType() == KeyType.UNIQUE || s.getKeyType() == KeyType.OTHER).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(uniqueKeyList)) {
             Map<String, List<Key>> tableList = uniqueKeyList.stream().collect(Collectors.groupingBy(Key::getTableName));
             if (!ObjectUtils.isEmpty(tableList)) {
@@ -175,7 +175,7 @@ public class Key implements Difference, Serializable {
             }
             resolveCreateSql(update, sqlList);
         }
-        List<Key> otherKeyList = keyList.stream().filter(s -> s.getKeyType() != KeyType.UNIQUE).collect(Collectors.toList());
+        List<Key> otherKeyList = keyList.stream().filter(s -> s.getKeyType() != KeyType.UNIQUE && s.getKeyType() != KeyType.OTHER).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(otherKeyList)) {
             for (Key key : otherKeyList) {
                 sqlList.add(key.getDeleteSql());

@@ -208,9 +208,9 @@ public class Migrate {
      * @param toUpdateTableList   需要更新的目标表
      */
     private void compareKey(List<Table> fromUpdateTableList, List<Table> toUpdateTableList) {
-        // unique key list
-        List<Key> fromKeyListIncludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() == Key.KeyType.UNIQUE).collect(Collectors.toList());
-        List<Key> toKeyListIncludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() == Key.KeyType.UNIQUE).collect(Collectors.toList());
+        // unique and other key list
+        List<Key> fromKeyListIncludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() == Key.KeyType.UNIQUE || s.getKeyType() == Key.KeyType.OTHER).collect(Collectors.toList());
+        List<Key> toKeyListIncludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() == Key.KeyType.UNIQUE || s.getKeyType() == Key.KeyType.OTHER).collect(Collectors.toList());
         // unique key map that mapped by table name and key name
         final String splitStr = "#@#";
         Map<String, List<Key>> from = fromKeyListIncludeUnique.stream().collect(Collectors.groupingBy(s -> s.getTableName() + splitStr + s.getName()));
@@ -239,9 +239,9 @@ public class Migrate {
                 }
             }
         }
-        // key list exclude unique key
-        List<Key> fromKeyListExcludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() != Key.KeyType.UNIQUE).collect(Collectors.toList());
-        List<Key> toKeyListExcludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() != Key.KeyType.UNIQUE).collect(Collectors.toList());
+        // key list exclude unique and other key
+        List<Key> fromKeyListExcludeUnique = fromUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() != Key.KeyType.UNIQUE && s.getKeyType() != Key.KeyType.OTHER).collect(Collectors.toList());
+        List<Key> toKeyListExcludeUnique = toUpdateTableList.stream().map(Table::getKeys).flatMap(Collection::stream).filter(s -> s.getKeyType() != Key.KeyType.UNIQUE && s.getKeyType() != Key.KeyType.OTHER).collect(Collectors.toList());
         // delete key list
         List<Key> deleteKeyList = toKeyListExcludeUnique.stream().filter(s -> fromKeyListExcludeUnique.stream().noneMatch(j -> j.getName().equals(s.getName())
                 && j.getTableName().equals(s.getTableName())
