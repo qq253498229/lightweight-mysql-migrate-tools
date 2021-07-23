@@ -6,3 +6,5 @@ rm -rf docs
 mkdir -p docs/images
 cp -r css/images/ docs/images
 asciidoctor README.adoc -o ./docs/index.html
+rm -rf docs.zip
+zip -r docs.zip docs
