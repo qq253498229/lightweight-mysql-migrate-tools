@@ -17,9 +17,7 @@ select a.TABLE_SCHEMA as CONSTRAINT_SCHEMA,
        a.NULLABLE,
        a.INDEX_TYPE,
        a.COMMENT,
-       a.INDEX_COMMENT,
-       a.IS_VISIBLE,
-       a.EXPRESSION
+       a.INDEX_COMMENT
 from information_schema.STATISTICS a
          left join information_schema.KEY_COLUMN_USAGE b
                    on a.TABLE_SCHEMA = b.TABLE_SCHEMA and a.TABLE_NAME = b.TABLE_NAME and
