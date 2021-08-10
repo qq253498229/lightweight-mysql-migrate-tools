@@ -142,7 +142,7 @@ public class Table implements Serializable, Difference {
             for (Map.Entry<String, List<Key>> m : otherKeyList.entrySet()) {
                 String tableName = m.getKey().split(splitStr)[0];
                 String keyName = m.getKey().split(splitStr)[1];
-                List<String> columnNameList = keys.stream().map(Key::getColumnName).collect(Collectors.toList());
+                List<String> columnNameList = m.getValue().stream().map(Key::getColumnName).collect(Collectors.toList());
                 sbKey.append("\nCREATE INDEX `").append(keyName).append("` ON `").append(tableName).append("` (");
                 for (String s : columnNameList) {
                     sbKey.append("`").append(s).append("`, ");
