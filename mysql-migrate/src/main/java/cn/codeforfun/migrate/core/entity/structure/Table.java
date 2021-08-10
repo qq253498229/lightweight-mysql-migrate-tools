@@ -132,26 +132,23 @@ public class Table implements Serializable, Difference {
             String keySql = key.getCreateTableSql();
             sb.append(keySql);
         }
-        String columnSql = sb.substring(0, sb.length() - 1);
-        sql = sql.replace("${columnSql}", columnSql);
         // 索引
         final String splitStr = "#@#";
         Map<String, List<Key>> otherKeyList = this.keys.stream().filter(k -> k.getKeyType() == Key.KeyType.OTHER).collect(Collectors.groupingBy(s -> s.getTableName() + splitStr + s.getName()));
         if (!ObjectUtils.isEmpty(otherKeyList)) {
-            StringBuilder sbKey = new StringBuilder();
             for (Map.Entry<String, List<Key>> m : otherKeyList.entrySet()) {
-                String tableName = m.getKey().split(splitStr)[0];
                 String keyName = m.getKey().split(splitStr)[1];
                 List<String> columnNameList = m.getValue().stream().map(Key::getColumnName).collect(Collectors.toList());
-                sbKey.append("\nCREATE INDEX `").append(keyName).append("` ON `").append(tableName).append("` (");
+                sb.append("KEY `").append(keyName).append("` (");
                 for (String s : columnNameList) {
-                    sbKey.append("`").append(s).append("`, ");
+                    sb.append("`").append(s).append("`, ");
                 }
-                sbKey.setLength(sbKey.length() - 2);
-                sbKey.append(");");
+                sb.setLength(sb.length() - 2);
+                sb.append("),");
             }
-            sql += sbKey;
         }
+        String columnSql = sb.substring(0, sb.length() - 1);
+        sql = sql.replace("${columnSql}", columnSql);
         return sql;
     }
 
