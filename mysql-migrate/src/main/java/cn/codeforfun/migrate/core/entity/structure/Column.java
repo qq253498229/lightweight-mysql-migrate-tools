@@ -84,16 +84,40 @@ public class Column implements Difference, Serializable {
             sb.append("NOT NULL ");
         }
         if (!ObjectUtils.isEmpty(this.defaultValue)) {
-            sb.append("DEFAULT ").append(this.defaultValue).append(" ");
+            String defaultValue = resolveDefaultValue(this.type, this.defaultValue);
+            sb.append("DEFAULT ").append(defaultValue).append(" ");
         } else if (FLAG_DEFAULT_NULL.equals(this.nullable)) {
             sb.append("DEFAULT NULL ");
         }
-        sb.append(this.extra).append(" ");
+        String extra = resolveExtra(this.extra);
+        sb.append(extra).append(" ");
         if (!ObjectUtils.isEmpty(this.comment)) {
             sb.append("COMMENT '").append(this.comment).append("' ");
         }
         sb.append(",");
         return sb.toString();
+    }
+
+    private String resolveDefaultValue(String type, String defaultValue) {
+        if ("char".equalsIgnoreCase(type)
+                || "varchar".equalsIgnoreCase(type)
+                || "binary".equalsIgnoreCase(type)
+                || "varbinary".equalsIgnoreCase(type)
+                || "blob".equalsIgnoreCase(type)
+                || "text".equalsIgnoreCase(type)
+                || "enum".equalsIgnoreCase(type)
+                || "set".equalsIgnoreCase(type)
+        ) {
+            return "'" + defaultValue + "'";
+        }
+        return defaultValue;
+    }
+
+    private String resolveExtra(String extra) {
+        if ("default_generated".equalsIgnoreCase(extra)) {
+            return "";
+        }
+        return extra;
     }
 
     @JsonIgnore
