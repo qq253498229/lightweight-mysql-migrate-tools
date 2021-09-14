@@ -63,5 +63,3 @@ include::CHANGELOG.adoc[]
 
 * https://gitee.com/consolelog/lightweight-mysql-migrate-tools/issues[GiteeIssues]
 * https://github.com/qq253498229/lightweight-mysql-migrate-tools/issues[GithubIssues]
-
-image::https://gitee.com/consolelog/lightweight-mysql-migrate-tools/raw/master/css/images/qrcode.jpg[二维码]
