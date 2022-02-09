@@ -83,12 +83,9 @@ public class Column implements Difference, Serializable {
         if (FLAG_NOT_NULL.equals(this.nullable)) {
             sb.append("NOT NULL ");
         }
-        if (!ObjectUtils.isEmpty(this.defaultValue)) {
-            String defaultValue = resolveDefaultValue(this.type, this.defaultValue);
-            sb.append("DEFAULT ").append(defaultValue).append(" ");
-        } else if (FLAG_DEFAULT_NULL.equals(this.nullable)) {
-            sb.append("DEFAULT NULL ");
-        }
+
+        sb.append("DEFAULT ").append(resolveDefaultValue()).append(" ");
+
         String extra = resolveExtra(this.extra);
         sb.append(extra).append(" ");
         if (!ObjectUtils.isEmpty(this.comment)) {
@@ -98,19 +95,35 @@ public class Column implements Difference, Serializable {
         return sb.toString();
     }
 
-    private String resolveDefaultValue(String type, String defaultValue) {
-        if ("char".equalsIgnoreCase(type)
-                || "varchar".equalsIgnoreCase(type)
-                || "binary".equalsIgnoreCase(type)
-                || "varbinary".equalsIgnoreCase(type)
-                || "blob".equalsIgnoreCase(type)
-                || "text".equalsIgnoreCase(type)
-                || "enum".equalsIgnoreCase(type)
-                || "set".equalsIgnoreCase(type)
+    private String resolveDefaultValue() {
+        if (ObjectUtils.isEmpty(defaultValue)) {
+            return "NULL";
+        }
+//        https://dev.mysql.com/doc/refman/8.0/en/numeric-types.html
+        if ("integer".equalsIgnoreCase(type)
+                || "int".equalsIgnoreCase(type)
+                || "smallint".equalsIgnoreCase(type)
+                || "tinyint".equalsIgnoreCase(type)
+                || "mediumint".equalsIgnoreCase(type)
+                || "bigint".equalsIgnoreCase(type)
+                || "decimal".equalsIgnoreCase(type)
+                || "numeric".equalsIgnoreCase(type)
+                || "float".equalsIgnoreCase(type)
+                || "double".equalsIgnoreCase(type)
+                || "bit".equalsIgnoreCase(type)
+                || "real".equalsIgnoreCase(type)
         ) {
+            return defaultValue;
+        } else if (
+                "datetime".equalsIgnoreCase(type) || "timestamp".equalsIgnoreCase(type)
+        ) {
+//            https://dev.mysql.com/doc/refman/8.0/en/timestamp-initialization.html
+            if ("CURRENT_TIMESTAMP".equalsIgnoreCase(defaultValue)) {
+                return "CURRENT_TIMESTAMP";
+            }
             return "'" + defaultValue + "'";
         }
-        return defaultValue;
+        return "'" + defaultValue + "'";
     }
 
     private String resolveExtra(String extra) {
